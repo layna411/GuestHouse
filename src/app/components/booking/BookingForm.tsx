@@ -425,7 +425,7 @@ export function BookingForm({ room, onSubmit, onClose }: BookingFormProps) {
                             {/* Policies cell */}
                             <td className="p-6 px-6 align-top space-y-3">
                               {pkg.isLowest && (
-                                <span className="inline-block px-2.5 py-0.5 rounded text-[9px] font-extrabold bg-[#4bd395] text-white tracking-widest uppercase">
+                                <span className="inline-block px-2.5 py-0.5 rounded text-[9px] font-extrabold bg-success text-success-foreground tracking-widest uppercase">
                                   Lowest Price
                                 </span>
                               )}
@@ -565,7 +565,7 @@ export function BookingForm({ room, onSubmit, onClose }: BookingFormProps) {
                           <div className="space-y-1">
                             <h3 className="text-sm font-bold text-foreground">{pkg.name}</h3>
                             {pkg.isLowest && (
-                              <span className="inline-block px-2 py-0.5 rounded text-[8px] font-extrabold bg-[#4bd395] text-white uppercase tracking-wider">
+                              <span className="inline-block px-2 py-0.5 rounded text-[8px] font-extrabold bg-success text-success-foreground uppercase tracking-wider">
                                 Lowest Price
                               </span>
                             )}

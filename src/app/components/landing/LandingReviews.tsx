@@ -123,7 +123,7 @@ export function LandingReviews({
             {/* Bottom Row */}
             <div className="flex justify-between items-center mt-3">
               <div className="flex items-center gap-2">
-                <span className="font-serif text-sm md:text-base font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
+                <span className="font-serif text-sm md:text-base font-bold text-accent hover:underline cursor-pointer">
                   Saveetha GuestHouse Booking
                 </span>
                 <div className="flex text-amber-400 gap-0.5">
@@ -145,7 +145,7 @@ export function LandingReviews({
                 <div className="flex justify-between items-start">
                   <div className="flex items-center gap-3">
                     {/* Rating Square Badge (Booking.com style) */}
-                    <div className="w-9 h-9 rounded-lg bg-[#0a2239] dark:bg-accent text-white dark:text-accent-foreground font-extrabold flex items-center justify-center text-sm shadow-sm flex-shrink-0">
+                    <div className="w-9 h-9 rounded-lg bg-primary dark:bg-accent text-primary-foreground dark:text-accent-foreground font-extrabold flex items-center justify-center text-sm shadow-sm flex-shrink-0">
                       {review.rating}
                     </div>
                     <div>
@@ -164,7 +164,7 @@ export function LandingReviews({
                   {/* Advantages */}
                   {review.advantages && review.advantages.trim() && (
                     <div className="flex items-start gap-2.5 text-xs font-semibold text-foreground/80 leading-relaxed">
-                      <span className="w-4 h-4 rounded-full bg-[#4bd395] text-white flex items-center justify-center text-[10px] font-extrabold flex-shrink-0 mt-0.5">+</span>
+                      <span className="w-4 h-4 rounded-full bg-accent text-accent-foreground flex items-center justify-center text-[10px] font-extrabold flex-shrink-0 mt-0.5">+</span>
                       <p>{review.advantages}</p>
                     </div>
                   )}
@@ -367,7 +367,7 @@ export function LandingReviews({
             <div className="flex justify-center pt-2">
               <button
                 type="submit"
-                className="w-1/2 text-center bg-[#4bd395] hover:bg-[#3dbf83] text-white font-bold py-3 rounded-full text-xs uppercase tracking-widest transition-all shadow-md cursor-pointer"
+                className="w-1/2 text-center bg-accent hover:bg-accent/90 text-accent-foreground font-bold py-3 rounded-full text-xs uppercase tracking-widest transition-all shadow-md cursor-pointer"
               >
                 SEND
               </button>

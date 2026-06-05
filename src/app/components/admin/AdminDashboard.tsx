@@ -26,8 +26,8 @@ export function AdminDashboard({ rooms, bookings }: AdminDashboardProps) {
   const occupancyRate = ((stats.bookedRooms / stats.totalRooms) * 100).toFixed(0);
 
   const roomTypeData = [
-    { name: 'AC Rooms', value: rooms.filter(r => r.type === 'AC').length, color: '#0a2239' },
-    { name: 'Non-AC Rooms', value: rooms.filter(r => r.type === 'Non-AC').length, color: '#4bd395' },
+    { name: 'AC Rooms', value: rooms.filter(r => r.type === 'AC').length, color: '#0f766e' },
+    { name: 'Non-AC Rooms', value: rooms.filter(r => r.type === 'Non-AC').length, color: '#00ccc4' },
   ];
 
   const statusData = [
@@ -128,7 +128,7 @@ export function AdminDashboard({ rooms, bookings }: AdminDashboardProps) {
                 <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
                 <YAxis stroke="#6b7280" fontSize={12} />
                 <Tooltip />
-                <Bar dataKey="bookings" fill="#0a2239" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="bookings" fill="#0f766e" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

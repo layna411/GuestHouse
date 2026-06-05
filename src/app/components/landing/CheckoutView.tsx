@@ -313,7 +313,7 @@ export function CheckoutView({
               </button>
               <button
                 type="submit"
-                className="flex-[2] bg-[#4bd395] hover:bg-[#4bd395]/90 text-black font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#4bd395]/15 cursor-pointer text-center"
+                className="flex-[2] bg-accent hover:bg-accent/90 text-accent-foreground font-bold py-3.5 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg shadow-accent/15 cursor-pointer text-center"
               >
                 Continue the reservation
                 <ArrowRight className="w-4 h-4" />
@@ -337,7 +337,7 @@ export function CheckoutView({
                     <span className="text-[9px] text-accent uppercase font-bold tracking-widest">{selectedRoomForBooking.type} Suite</span>
                     <h4 className="font-serif text-lg font-bold text-white">Room {selectedRoomForBooking.roomNumber}</h4>
                   </div>
-                  <span className="bg-[#4bd395]/20 border border-[#4bd395]/30 text-[#4bd395] px-2.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider backdrop-blur-md flex items-center gap-1">
+                  <span className="bg-accent/20 border border-accent/30 text-accent px-2.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider backdrop-blur-md flex items-center gap-1">
                     ★ 9.3 Perfect
                   </span>
                 </div>

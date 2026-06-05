@@ -14,10 +14,10 @@ interface SettingsProps {
 // Preset color themes for full functional personalization
 export const themes = {
   blue: {
-    name: 'Somerset Corporate (Navy & Mint)',
-    primary: '#0a2239',
-    accent: '#4bd395',
-    gold: '#4bd395',
+    name: 'Vibrant Bright Teal',
+    primary: '#0f766e',
+    accent: '#00ccc4',
+    gold: '#00ccc4',
     class: 'blue-theme'
   },
   green: {

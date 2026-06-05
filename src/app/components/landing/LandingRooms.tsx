@@ -72,7 +72,7 @@ export const LandingRooms: React.FC<LandingRoomsProps> = ({
                 <div className="absolute top-4 right-4 flex gap-2">
                   <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border backdrop-blur-md ${
                     room.status === 'vacant' 
-                      ? 'bg-[#4bd395]/20 border-[#4bd395]/30 text-[#4bd395]' 
+                      ? 'bg-success/20 border-success/30 text-success' 
                       : room.status === 'booked'
                       ? 'bg-amber-500/20 border-amber-500/30 text-amber-300'
                       : 'bg-red-500/20 border-red-500/30 text-red-300'

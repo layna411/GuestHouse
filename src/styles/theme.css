@@ -3,92 +3,92 @@
 :root {
   --font-size: 16px;
   --background: #ffffff;
-  --foreground: #0a2239;
+  --foreground: #082d2d;
   --card: #ffffff;
-  --card-foreground: #0a2239;
+  --card-foreground: #082d2d;
   --popover: #ffffff;
-  --popover-foreground: #0a2239;
-  --primary: #0a2239;
+  --popover-foreground: #082d2d;
+  --primary: #0f766e;
   --primary-foreground: #ffffff;
-  --secondary: #eff3f6;
-  --secondary-foreground: #0a2239;
-  --muted: #eff3f6;
-  --muted-foreground: #4e6678;
-  --accent: #4bd395;
-  --accent-foreground: #ffffff;
+  --secondary: #e6f7f7;
+  --secondary-foreground: #0f766e;
+  --muted: #e6f7f7;
+  --muted-foreground: #407070;
+  --accent: #00ccc4;
+  --accent-foreground: #051919;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --success: #4bd395;
+  --success: #0d9488;
   --success-foreground: #ffffff;
   --warning: #f59e0b;
   --warning-foreground: #ffffff;
-  --gold: #4bd395;
-  --gold-foreground: #ffffff;
-  --border: #cfd9e0;
-  --input: #eff3f6;
+  --gold: #00ccc4;
+  --gold-foreground: #051919;
+  --border: #bce5e5;
+  --input: #e6f7f7;
   --input-background: #ffffff;
-  --switch-background: #cbd5e1;
+  --switch-background: #a5d3d3;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: rgba(75, 211, 149, 0.5);
-  --chart-1: #0a2239;
-  --chart-2: #4bd395;
-  --chart-3: #4e6678;
-  --chart-4: #10b981;
-  --chart-5: #8b5cf6;
+  --ring: rgba(0, 204, 196, 0.5);
+  --chart-1: #0f766e;
+  --chart-2: #00ccc4;
+  --chart-3: #407070;
+  --chart-4: #0d9488;
+  --chart-5: #0ea5e9;
   --radius: 4px;
-  --sidebar: #0a2239;
+  --sidebar: #0a4d4d;
   --sidebar-foreground: #ffffff;
-  --sidebar-primary: #4bd395;
-  --sidebar-primary-foreground: #ffffff;
+  --sidebar-primary: #00ccc4;
+  --sidebar-primary-foreground: #051919;
   --sidebar-accent: rgba(255, 255, 255, 0.1);
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(255, 255, 255, 0.1);
-  --sidebar-ring: rgba(75, 211, 149, 0.5);
-  --background-overlay-start: rgba(239, 243, 246, 0.95);
+  --sidebar-ring: rgba(0, 204, 196, 0.5);
+  --background-overlay-start: rgba(230, 247, 247, 0.95);
   --background-overlay-end: rgba(255, 255, 255, 0.97);
 }
 
 .dark {
-  --background: #030d16;
-  --foreground: #f4f6f8;
-  --card: #051421;
-  --card-foreground: #f4f6f8;
-  --popover: #051421;
-  --popover-foreground: #f4f6f8;
-  --primary: #4bd395;
-  --primary-foreground: #030d16;
-  --secondary: #071a2a;
-  --secondary-foreground: #f4f6f8;
-  --muted: #071a2a;
-  --muted-foreground: #8ca6b9;
-  --accent: #4bd395;
-  --accent-foreground: #030d16;
+  --background: #051919;
+  --foreground: #f0fdfa;
+  --card: #092525;
+  --card-foreground: #f0fdfa;
+  --popover: #092525;
+  --popover-foreground: #f0fdfa;
+  --primary: #2dd4bf;
+  --primary-foreground: #051919;
+  --secondary: #0d2d2d;
+  --secondary-foreground: #f0fdfa;
+  --muted: #0d2d2d;
+  --muted-foreground: #78a3a3;
+  --accent: #00ccc4;
+  --accent-foreground: #051919;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --success: #4bd395;
+  --success: #00ccc4;
   --success-foreground: #ffffff;
-  --border: #152e42;
-  --input: #071a2a;
-  --input-background: #051421;
-  --ring: rgba(75, 211, 149, 0.5);
+  --border: #153c3c;
+  --input: #0d2d2d;
+  --input-background: #092525;
+  --ring: rgba(0, 204, 196, 0.5);
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --chart-1: #4bd395;
-  --chart-2: #0a2239;
-  --chart-3: #8ca6b9;
-  --chart-4: #10b981;
-  --chart-5: #8b5cf6;
-  --sidebar: #051421;
-  --sidebar-foreground: #f4f6f8;
-  --sidebar-primary: #4bd395;
-  --sidebar-primary-foreground: #030d16;
+  --chart-1: #00ccc4;
+  --chart-2: #0a4d4d;
+  --chart-3: #78a3a3;
+  --chart-4: #0d9488;
+  --chart-5: #0ea5e9;
+  --sidebar: #092525;
+  --sidebar-foreground: #f0fdfa;
+  --sidebar-primary: #00ccc4;
+  --sidebar-primary-foreground: #051919;
   --sidebar-accent: rgba(255, 255, 255, 0.05);
-  --sidebar-accent-foreground: #f4f6f8;
-  --sidebar-border: #152e42;
-  --sidebar-ring: rgba(75, 211, 149, 0.5);
-  --background-overlay-start: rgba(3, 13, 22, 0.95);
-  --background-overlay-end: rgba(5, 20, 33, 0.97);
+  --sidebar-accent-foreground: #f0fdfa;
+  --sidebar-border: #153c3c;
+  --sidebar-ring: rgba(0, 204, 196, 0.5);
+  --background-overlay-start: rgba(5, 25, 25, 0.95);
+  --background-overlay-end: rgba(9, 37, 37, 0.97);
 }
 
 @theme inline {
@@ -234,26 +234,26 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(207, 217, 224, 0.6);
-  box-shadow: 0 4px 20px 0 rgba(10, 34, 57, 0.04);
+  box-shadow: 0 4px 20px 0 rgba(8, 45, 45, 0.04);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
   background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(75, 211, 149, 0.4);
-  box-shadow: 0 10px 30px 0 rgba(10, 34, 57, 0.08);
+  border-color: rgba(0, 204, 196, 0.4);
+  box-shadow: 0 10px 30px 0 rgba(8, 45, 45, 0.08);
   transform: translateY(-4px);
 }
 
 .dark .glass-card {
-  background: rgba(5, 20, 33, 0.7);
-  border-color: rgba(21, 46, 66, 0.6);
+  background: rgba(5, 25, 25, 0.7);
+  border-color: rgba(21, 60, 60, 0.6);
   box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2);
 }
 
 .dark .glass-card:hover {
-  background: rgba(5, 20, 33, 0.85);
-  border-color: rgba(75, 211, 149, 0.4);
+  background: rgba(5, 25, 25, 0.85);
+  border-color: rgba(0, 204, 196, 0.4);
   box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.35);
 }
 
@@ -275,55 +275,55 @@
 }
 
 .dark .glass-input {
-  background: rgba(5, 20, 33, 0.8) !important;
-  border-color: rgba(21, 46, 66, 0.8) !important;
+  background: rgba(5, 25, 25, 0.8) !important;
+  border-color: rgba(21, 60, 60, 0.8) !important;
 }
 
 .dark .glass-input:focus {
-  background: #051421 !important;
+  background: #051919 !important;
 }
 
 .glass-button {
-  background: linear-gradient(135deg, rgba(239, 243, 246, 0.9) 0%, rgba(239, 243, 246, 0.6) 100%);
-  border: 1px solid rgba(207, 217, 224, 0.8);
-  color: #0a2239;
+  background: linear-gradient(135deg, rgba(230, 247, 247, 0.9) 0%, rgba(230, 247, 247, 0.6) 100%);
+  border: 1px solid rgba(188, 229, 229, 0.8);
+  color: #0f766e;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: all 0.2s;
-  box-shadow: 0 2px 10px 0 rgba(10, 34, 57, 0.04);
+  box-shadow: 0 2px 10px 0 rgba(8, 45, 45, 0.04);
 }
 
 .glass-button:hover {
-  background: linear-gradient(135deg, rgba(239, 243, 246, 1) 0%, rgba(207, 217, 224, 0.8) 100%);
-  border-color: rgba(10, 34, 57, 0.3);
+  background: linear-gradient(135deg, rgba(230, 247, 247, 1) 0%, rgba(188, 229, 229, 0.8) 100%);
+  border-color: rgba(15, 118, 110, 0.3);
   transform: translateY(-1px);
 }
 
 .dark .glass-button {
-  background: linear-gradient(135deg, rgba(7, 26, 42, 0.8) 0%, rgba(5, 20, 33, 0.6) 100%);
-  border-color: rgba(21, 46, 66, 0.8);
-  color: #f4f6f8;
+  background: linear-gradient(135deg, rgba(13, 45, 45, 0.8) 0%, rgba(9, 37, 37, 0.6) 100%);
+  border-color: rgba(21, 60, 60, 0.8);
+  color: #f0fdfa;
 }
 
 .dark .glass-button:hover {
-  background: linear-gradient(135deg, rgba(7, 26, 42, 0.95) 0%, rgba(21, 46, 66, 0.8) 100%);
-  border-color: rgba(75, 211, 149, 0.4);
+  background: linear-gradient(135deg, rgba(13, 45, 45, 0.95) 0%, rgba(21, 60, 60, 0.8) 100%);
+  border-color: rgba(0, 204, 196, 0.4);
 }
 
 .glass-button-gold {
-  background: linear-gradient(135deg, rgba(75, 211, 149, 0.9) 0%, rgba(75, 211, 149, 0.75) 100%);
-  border: 1px solid rgba(75, 211, 149, 0.8);
-  color: #ffffff;
+  background: linear-gradient(135deg, rgba(0, 204, 196, 0.9) 0%, rgba(0, 204, 196, 0.75) 100%);
+  border: 1px solid rgba(0, 204, 196, 0.8);
+  color: var(--gold-foreground);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: all 0.2s;
-  box-shadow: 0 2px 10px 0 rgba(75, 211, 149, 0.2);
+  box-shadow: 0 2px 10px 0 rgba(0, 204, 196, 0.2);
 }
 
 .glass-button-gold:hover {
-  background: linear-gradient(135deg, rgba(75, 211, 149, 1) 0%, rgba(75, 211, 149, 0.9) 100%);
-  border-color: rgba(75, 211, 149, 1);
-  box-shadow: 0 4px 20px 0 rgba(75, 211, 149, 0.3);
+  background: linear-gradient(135deg, rgba(0, 204, 196, 1) 0%, rgba(0, 204, 196, 0.9) 100%);
+  border-color: rgba(0, 204, 196, 1);
+  box-shadow: 0 4px 20px 0 rgba(0, 204, 196, 0.3);
   transform: translateY(-1px);
 }
 

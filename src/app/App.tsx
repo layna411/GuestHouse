@@ -38,7 +38,7 @@ export default function App() {
     const savedColorTheme = localStorage.getItem('colorTheme');
     if (savedColorTheme) {
       const colors: Record<string, { primary: string, accent: string, gold: string }> = {
-        blue: { primary: '#0a2239', accent: '#4bd395', gold: '#4bd395' },
+        blue: { primary: '#0f766e', accent: '#00ccc4', gold: '#00ccc4' },
         green: { primary: '#064e3b', accent: '#34d399', gold: '#fbbf24' },
         rose: { primary: '#881337', accent: '#fb7185', gold: '#f59e0b' },
         purple: { primary: '#4c1d95', accent: '#a78bfa', gold: '#fbbf24' }

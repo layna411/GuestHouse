@@ -83,7 +83,7 @@ export const RoomDetailsView: React.FC<RoomDetailsViewProps> = ({
               <span className="text-xs uppercase font-bold tracking-widest text-accent font-sans">{selectedRoomForBooking.type} Suite</span>
               <h2 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mt-1">Room {selectedRoomForBooking.roomNumber}</h2>
               <div className="flex items-center gap-2 mt-3 font-sans">
-                <span className="bg-[#4bd395]/15 border border-[#4bd395]/30 text-[#4bd395] text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                <span className="bg-success/15 border border-success/30 text-success text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                   ★ 9.3 Perfect
                 </span>
                 <span className="text-xs text-muted-foreground font-semibold">Verified Saveetha Residency Reviews</span>
@@ -167,7 +167,7 @@ export const RoomDetailsView: React.FC<RoomDetailsViewProps> = ({
                   let policyColor = "text-muted-foreground/75";
                   if (plan !== 'Room without Breakfast') {
                     policy = "Free cancellation 24h before check-in";
-                    policyColor = "text-[#4bd395] font-semibold flex items-center gap-1";
+                    policyColor = "text-success font-semibold flex items-center gap-1";
                   }
                   
                   return (
@@ -178,7 +178,7 @@ export const RoomDetailsView: React.FC<RoomDetailsViewProps> = ({
                       </td>
                       <td className="p-4">
                         <span className={policyColor}>
-                          {plan !== 'Room without Breakfast' && <Check className="w-3.5 h-3.5 inline text-[#4bd395]" />}
+                          {plan !== 'Room without Breakfast' && <Check className="w-3.5 h-3.5 inline text-success" />}
                           {policy}
                         </span>
                       </td>

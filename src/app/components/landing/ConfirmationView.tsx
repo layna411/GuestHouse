@@ -82,11 +82,11 @@ export function ConfirmationView({
             >
               {/* Glowing Success Ring */}
               <div className="mx-auto w-20 h-20 rounded-full bg-success/10 border border-success/30 flex items-center justify-center shadow-lg shadow-success/10 mb-2">
-                <Check className="w-10 h-10 text-[#4bd395]" />
+                <Check className="w-10 h-10 text-success" />
               </div>
 
               <div className="space-y-2 text-center">
-                <span className="text-xs uppercase font-bold tracking-widest text-[#4bd395] bg-[#4bd395]/10 px-3 py-1 rounded-full border border-[#4bd395]/20 inline-block font-sans">
+                <span className="text-xs uppercase font-bold tracking-widest text-success bg-success/10 px-3 py-1 rounded-full border border-success/20 inline-block font-sans">
                   Reservation Pending Approval
                 </span>
                 <h3 className="font-serif text-2xl font-bold text-foreground">Your booking is secured!</h3>
@@ -153,7 +153,7 @@ export function ConfirmationView({
 
                 <div className="border-t border-border/15 pt-2 flex justify-between">
                   <span className="text-muted-foreground">Payment Details:</span>
-                  <span className="font-bold text-[#4bd395]">Pay on Arrival</span>
+                  <span className="font-bold text-success">Pay on Arrival</span>
                 </div>
               </div>
 
