@@ -91,7 +91,9 @@ export function RoomManagement({ rooms, onAddRoom, onEditRoom, onDeleteRoom }: R
               <Card key={room.id} glass hoverable className="overflow-hidden flex flex-col h-full">
                 <div className="relative aspect-video overflow-hidden bg-slate-950">
                   <img
-                    src={room.imageUrl || '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg'}
+                    src={room.type.toLowerCase().includes('super')
+                      ? '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg'
+                      : '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg'}
                     alt={`Room ${room.roomNumber}`}
                     className="w-full h-full object-cover"
                   />

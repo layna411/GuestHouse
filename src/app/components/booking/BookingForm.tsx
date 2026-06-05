@@ -225,7 +225,9 @@ export function BookingForm({ room, onSubmit, onClose }: BookingFormProps) {
     }
   ];
 
-  const imageSrc = room.imageUrl || ROOM_IMAGE_MAP[room.roomNumber] || '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg';
+  const imageSrc = room.type.toLowerCase().includes('super')
+    ? '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg'
+    : '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg';
 
   const roomDescription = room.type.toLowerCase().includes('super')
     ? `Super Deluxe Room offers guests premium air-conditioned comfort, access to high-speed complimentary Wi-Fi, a modern smart TV, mini fridge, and comfortable sofa seating to ensure an exceptional stay.`

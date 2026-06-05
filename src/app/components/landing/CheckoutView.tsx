@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { Room } from '../../types';
 import { format } from 'date-fns';
+import { getRoomImage } from './constants';
 
 interface CheckoutViewProps {
   selectedRoomForBooking: Room;
@@ -38,7 +39,6 @@ interface CheckoutViewProps {
   guestCount: number;
   selectedMealPlan: string;
   getPriceDetails: (roomType: string, guests: number, mealPlan: string, extraBed: boolean) => any;
-  ROOM_IMAGE_MAP: Record<string, string>;
   activeTaxInfoRow: string | null;
   setActiveTaxInfoRow: (row: string | null) => void;
 }
@@ -61,12 +61,11 @@ export function CheckoutView({
   guestCount,
   selectedMealPlan,
   getPriceDetails,
-  ROOM_IMAGE_MAP,
   activeTaxInfoRow,
   setActiveTaxInfoRow
 }: CheckoutViewProps) {
   const timer = formatTime(timeLeft);
-  const imageSrc = selectedRoomForBooking.imageUrl || ROOM_IMAGE_MAP[selectedRoomForBooking.roomNumber] || '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg';
+  const imageSrc = getRoomImage(selectedRoomForBooking.type);
 
   const inDate = new Date(checkIn);
   const outDate = new Date(checkOut);

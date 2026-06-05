@@ -361,12 +361,19 @@ export function CustomerDashboard({
           return (
             <Card key={room.id} glass hoverable className={`${borderStyle} overflow-hidden flex flex-col h-full`}>
               <div className="relative aspect-video overflow-hidden bg-slate-950 group cursor-zoom-in">
-                <img
-                  src={room.imageUrl || '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg'}
-                  alt={`Room ${room.roomNumber}`}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  onClick={() => setZoomedImage(room.imageUrl || '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg')}
-                />
+                {(() => {
+                  const imageSrc = room.type.toLowerCase().includes('super')
+                    ? '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg'
+                    : '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg';
+                  return (
+                    <img
+                      src={imageSrc}
+                      alt={`Room ${room.roomNumber}`}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      onClick={() => setZoomedImage(imageSrc)}
+                    />
+                  );
+                })()}
                 <div className="absolute top-3 right-3 z-10">
                   <StatusChip status={room.status} size="sm" />
                 </div>

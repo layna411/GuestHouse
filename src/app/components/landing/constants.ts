@@ -200,15 +200,22 @@ export const FAQS = [
   }
 ];
 
+export const getRoomImage = (roomType: string): string => {
+  if (roomType.toLowerCase().includes('super')) {
+    return '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg';
+  }
+  return '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg';
+};
+
 export const ROOM_IMAGE_MAP: Record<string, string> = {
-  '101': '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg',
-  '102': '/images/WhatsApp Image 2026-06-04 at 3.41.03 PM.jpeg',
-  '103': '/images/WhatsApp Image 2026-06-04 at 3.41.04 PM.jpeg',
+  '101': '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
+  '102': '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
+  '103': '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
   '201': '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
-  '202': '/images/WhatsApp Image 2026-06-04 at 3.41.07 PM.jpeg',
-  '203': '/images/WhatsApp Image 2026-06-04 at 3.41.08 PM.jpeg',
-  '301': '/images/WhatsApp Image 2026-06-04 at 3.41.12 PM (1).jpeg',
-  '302': '/images/WhatsApp Image 2026-06-04 at 3.41.12 PM.jpeg',
+  '202': '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
+  '203': '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
+  '301': '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg',
+  '302': '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg',
 };
 
 export const getPriceDetails = (roomType: string, guests: number, mealPlan: string, extraBed: boolean) => {

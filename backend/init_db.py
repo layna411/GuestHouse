@@ -297,7 +297,7 @@ def seed_all_tables(reset=False):
                     capacity=r_data["capacity"],
                     price=r_data["price"],
                     status=r_data["status"],
-                    image_url=r_data.get("image_url")
+                    image_url="/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg" if "super" in r_data["type"].lower() else "/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg"
                 )
                 r.amenities = r_data["amenities"]  # Setter parses JSON list
                 rooms.append(r)

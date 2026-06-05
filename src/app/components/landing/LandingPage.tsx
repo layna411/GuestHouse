@@ -8,6 +8,7 @@ import {
   INITIAL_REVIEWS, 
   ROOM_IMAGE_MAP, 
   getPriceDetails,
+  getRoomImage,
   GuestReview
 } from './constants';
 
@@ -118,7 +119,7 @@ export function LandingPage({
   // Set active detail image on room selection
   useEffect(() => {
     if (selectedRoomForBooking) {
-      const defaultImg = selectedRoomForBooking.imageUrl || ROOM_IMAGE_MAP[selectedRoomForBooking.roomNumber] || '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg';
+      const defaultImg = getRoomImage(selectedRoomForBooking.type);
       setActiveDetailImage(defaultImg);
     }
   }, [selectedRoomForBooking]);
