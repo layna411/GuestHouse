@@ -109,6 +109,7 @@ export default function App() {
         onOpenLogin={() => authVM.setAppState('login')}
         onLogout={handleLogout}
         onNavigateToDashboard={() => authVM.setAppState('dashboard')}
+        onBookingSubmit={handleBookingSubmit}
       />
     );
   }
@@ -282,17 +283,6 @@ export default function App() {
             </div>
           </main>
         </div>
-
-        {showBookingForm && selectedRoom && (
-          <BookingForm
-            room={selectedRoom}
-            onSubmit={handleBookingSubmit}
-            onClose={() => {
-              setShowBookingForm(false);
-              setSelectedRoom(null);
-            }}
-          />
-        )}
       </div>
     );
   }
