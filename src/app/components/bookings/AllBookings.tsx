@@ -12,9 +12,10 @@ interface AllBookingsProps {
   rooms: Room[];
   onCancelBooking: (id: string) => void;
   onCompleteBooking: (id: string) => void;
+  onConfirmBooking?: (id: string) => void;
 }
 
-export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBooking }: AllBookingsProps) {
+export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBooking, onConfirmBooking }: AllBookingsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'confirmed' | 'pending' | 'cancelled' | 'completed'>('all');
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
@@ -124,6 +125,8 @@ export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBookin
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Room</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Check-in</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Check-out</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Meal Plan</th>
+                  <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Total Price</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Status</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-muted-foreground">Actions</th>
                 </tr>
@@ -143,6 +146,8 @@ export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBookin
                       <td className="py-3 px-4 text-sm">{room?.roomNumber}</td>
                       <td className="py-3 px-4 text-sm">{format(booking.checkIn, 'MMM dd, yyyy')}</td>
                       <td className="py-3 px-4 text-sm">{format(booking.checkOut, 'MMM dd, yyyy')}</td>
+                      <td className="py-3 px-4 text-xs font-medium max-w-[120px] truncate">{booking.mealPlan || 'Room without Breakfast'}</td>
+                      <td className="py-3 px-4 text-sm font-semibold text-accent">₹{booking.totalPrice?.toFixed(2) || 'N/A'}</td>
                       <td className="py-3 px-4">
                         <StatusChip status={booking.status} size="sm" />
                       </td>
@@ -155,6 +160,34 @@ export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBookin
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
+                          {booking.status === 'pending' && onConfirmBooking && (
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  if (confirm('Approve and confirm this booking request?')) {
+                                    onConfirmBooking(booking.id);
+                                  }
+                                }}
+                                title="Approve Booking"
+                              >
+                                <CheckCircle className="w-4 h-4 text-success" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  if (confirm('Cancel/Reject this booking request?')) {
+                                    onCancelBooking(booking.id);
+                                  }
+                                }}
+                                title="Reject Booking"
+                              >
+                                <XCircle className="w-4 h-4 text-destructive" />
+                              </Button>
+                            </>
+                          )}
                           {booking.status === 'confirmed' && (
                             <>
                               <Button
@@ -244,6 +277,18 @@ export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBookin
                     <p className="font-medium">{selectedBooking.numberOfGuests}</p>
                   </div>
                   <div>
+                    <p className="text-sm text-muted-foreground">Meal Plan</p>
+                    <p className="font-medium">{selectedBooking.mealPlan || 'Room without Breakfast'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Rate / Night</p>
+                    <p className="font-medium">₹{selectedBooking.pricePerNight?.toFixed(2) || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Total Price (Incl. Tax)</p>
+                    <p className="font-bold text-accent">₹{selectedBooking.totalPrice?.toFixed(2) || 'N/A'}</p>
+                  </div>
+                  <div>
                     <p className="text-sm text-muted-foreground">Status</p>
                     <StatusChip status={selectedBooking.status} />
                   </div>
@@ -262,6 +307,32 @@ export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBookin
                 <Button variant="outline" onClick={() => setSelectedBooking(null)} className="flex-1">
                   Close
                 </Button>
+                 {selectedBooking.status === 'pending' && onConfirmBooking && (
+                  <>
+                    <Button
+                      variant="success"
+                      onClick={() => {
+                        onConfirmBooking(selectedBooking.id);
+                        setSelectedBooking(null);
+                      }}
+                      className="flex-1"
+                    >
+                      Approve Booking
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => {
+                        if (confirm('Reject this booking request?')) {
+                          onCancelBooking(selectedBooking.id);
+                          setSelectedBooking(null);
+                        }
+                      }}
+                      className="flex-1"
+                    >
+                      Reject Booking
+                    </Button>
+                  </>
+                )}
                 {selectedBooking.status === 'confirmed' && (
                   <>
                     <Button

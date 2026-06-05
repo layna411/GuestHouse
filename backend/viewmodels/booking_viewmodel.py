@@ -22,7 +22,10 @@ class BookingViewModel:
             "purpose": booking.purpose,
             "status": booking.status,
             "bookedBy": booking.booked_by,
-            "createdAt": booking.created_at.isoformat()
+            "createdAt": booking.created_at.isoformat(),
+            "mealPlan": booking.meal_plan or "Room without Breakfast",
+            "pricePerNight": float(booking.price_per_night) if booking.price_per_night is not None else 0,
+            "totalPrice": float(booking.total_price) if booking.total_price is not None else 0
         }
 
     @classmethod
@@ -62,6 +65,9 @@ class BookingViewModel:
         number_of_guests = data.get("numberOfGuests")
         purpose = data.get("purpose", "")
         booked_by = data.get("bookedBy", "demo")
+        meal_plan = data.get("mealPlan", "Room without Breakfast")
+        price_per_night = data.get("pricePerNight")
+        total_price = data.get("totalPrice")
 
         if not room_id_str or not guest_name or not guest_phone or not guest_email or not check_in_str or not check_out_str or number_of_guests is None:
             raise ValueError("Room ID, guest name, contact info, and check-in/out dates are required.")
@@ -112,6 +118,16 @@ class BookingViewModel:
                 f"and {conflicting_booking.check_out.strftime('%Y-%m-%d %H:%M')}."
             )
 
+        # Determine initial booking status
+        # If the user placing it is an admin, confirm immediately. Otherwise, set to pending.
+        from models.user import UserModel
+        user = UserModel.query.get(booked_by)
+        initial_status = "confirmed"
+        if user and user.role == "customer":
+            initial_status = "pending"
+        elif not user:
+            initial_status = "pending"
+
         # Create reservation
         booking_id = cls._generate_booking_id()
         booking = BookingModel(
@@ -124,14 +140,32 @@ class BookingViewModel:
             check_out=check_out,
             number_of_guests=int(number_of_guests),
             purpose=purpose,
-            status="confirmed",
-            booked_by=booked_by
+            status=initial_status,
+            booked_by=booked_by,
+            meal_plan=meal_plan,
+            price_per_night=float(price_per_night) if price_per_night is not None else None,
+            total_price=float(total_price) if total_price is not None else None
         )
         
-        # Automatically update room status to booked
-        room.status = "booked"
+        # Automatically update room status to booked ONLY if confirmed immediately
+        if initial_status == "confirmed":
+            room.status = "booked"
 
         db.session.add(booking)
+        db.session.flush() # Flush to populate booking ID
+
+        # Create notification for admin
+        from models.notification import NotificationModel
+        notif_msg = f"New pending booking {booking_id} request from {guest_name} for Room {room.room_number}."
+        if initial_status == "confirmed":
+            notif_msg = f"New booking {booking_id} confirmed by Admin for Room {room.room_number}."
+            
+        notification = NotificationModel(
+            booking_id=booking_id,
+            message=notif_msg,
+            is_read=False
+        )
+        db.session.add(notification)
         db.session.commit()
         return cls.to_dict(booking)
 
@@ -185,3 +219,23 @@ class BookingViewModel:
 
         db.session.commit()
         return cls.to_dict(booking)
+
+    @classmethod
+    def confirm_booking(cls, booking_id):
+        """Confirms a pending booking and sets the room to booked."""
+        booking = BookingModel.query.get(booking_id)
+        if not booking:
+            raise ValueError("Reservation not found.")
+            
+        if booking.status != "pending":
+            raise ValueError(f"Only pending bookings can be confirmed. Current status is {booking.status}.")
+
+        booking.status = "confirmed"
+        
+        room = RoomModel.query.get(booking.room_id)
+        if room:
+            room.status = "booked"
+
+        db.session.commit()
+        return cls.to_dict(booking)
+

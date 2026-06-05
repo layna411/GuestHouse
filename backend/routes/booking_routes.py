@@ -59,3 +59,18 @@ def complete_booking(booking_id):
         return jsonify({"error": str(e)}), 400
     except Exception as e:
         return jsonify({"error": "Failed to complete booking."}), 500
+
+@booking_bp.route("/<booking_id>/confirm", methods=["POST"])
+def confirm_booking(booking_id):
+    """Confirms a pending reservation."""
+    try:
+        updated_booking = BookingViewModel.confirm_booking(booking_id)
+        return jsonify({
+            "message": "Booking confirmed successfully.",
+            "booking": updated_booking
+        }), 200
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error": "Failed to confirm booking."}), 500
+

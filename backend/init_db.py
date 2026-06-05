@@ -14,6 +14,7 @@ from database import db
 from models.user import UserModel
 from models.room import RoomModel
 from models.booking import BookingModel
+from models.notification import NotificationModel
 
 def bootstrap_database():
     """Connects to XAMPP MySQL server directly and creates database if missing."""
@@ -60,7 +61,7 @@ def seed_all_tables(reset=False):
         db.create_all()
         print("Database tables validated/created successfully.")
 
-        # 1. Seed Users (Admin & Employees)
+        # 1. Seed Users (Admin & Customers)
         if UserModel.query.count() == 0:
             print("Seeding users...")
             admin = UserModel(
@@ -73,27 +74,27 @@ def seed_all_tables(reset=False):
             )
             admin.set_password("password123")
 
-            emp1 = UserModel(
-                id="emp001",
+            cust1 = UserModel(
+                id="cust001",
                 name="Priya Menon",
                 email="priya.menon@simats.edu",
-                role="employee",
-                department="Guest Relations",
+                role="customer",
+                department="Customer",
                 phone="+91 98765 11111"
             )
-            emp1.set_password("password123")
+            cust1.set_password("password123")
 
-            emp2 = UserModel(
-                id="emp002",
+            cust2 = UserModel(
+                id="cust002",
                 name="Arjun Reddy",
                 email="arjun.reddy@simats.edu",
-                role="employee",
-                department="Front Desk",
+                role="customer",
+                department="Customer",
                 phone="+91 98765 22222"
             )
-            emp2.set_password("password123")
+            cust2.set_password("password123")
 
-            db.session.add_all([admin, emp1, emp2])
+            db.session.add_all([admin, cust1, cust2])
             db.session.commit()
             print("Users seeded.")
         else:
@@ -103,77 +104,187 @@ def seed_all_tables(reset=False):
         if RoomModel.query.count() == 0:
             print("Seeding rooms...")
             rooms_to_seed = [
+                # 6 Deluxe Rooms - 1st Floor (floor = 1)
                 {
                     "room_number": "101",
                     "floor": 1,
-                    "type": "AC",
-                    "capacity": 2,
-                    "price": 1500.0,
+                    "type": "Deluxe Room",
+                    "capacity": 3,
+                    "price": 2250.0,
                     "status": "vacant",
-                    "amenities": ["WiFi", "TV", "Bathroom", "Hot Water"]
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "twin bed"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg"
                 },
                 {
                     "room_number": "102",
                     "floor": 1,
-                    "type": "AC",
+                    "type": "Deluxe Room",
                     "capacity": 3,
-                    "price": 2000.0,
+                    "price": 2250.0,
                     "status": "booked",
-                    "amenities": ["WiFi", "TV", "Bathroom", "Hot Water", "Mini Fridge"]
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "twin bed"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.03 PM.jpeg"
                 },
                 {
                     "room_number": "103",
                     "floor": 1,
-                    "type": "Non-AC",
-                    "capacity": 2,
-                    "price": 1000.0,
+                    "type": "Deluxe Room",
+                    "capacity": 3,
+                    "price": 2250.0,
                     "status": "vacant",
-                    "amenities": ["WiFi", "Bathroom"]
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "twin bed"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.04 PM.jpeg"
                 },
                 {
-                    "room_number": "201",
-                    "floor": 2,
-                    "type": "AC",
-                    "capacity": 4,
-                    "price": 2500.0,
+                    "room_number": "104",
+                    "floor": 1,
+                    "type": "Deluxe Room",
+                    "capacity": 3,
+                    "price": 2250.0,
                     "status": "vacant",
-                    "amenities": ["WiFi", "TV", "Bathroom", "Hot Water", "Mini Fridge", "Work Desk"]
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "twin bed"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.04 PM (1).jpeg"
                 },
                 {
-                    "room_number": "202",
-                    "floor": 2,
-                    "type": "AC",
-                    "capacity": 2,
-                    "price": 1500.0,
+                    "room_number": "105",
+                    "floor": 1,
+                    "type": "Deluxe Room",
+                    "capacity": 3,
+                    "price": 2250.0,
+                    "status": "vacant",
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "twin bed"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.05 PM.jpeg"
+                },
+                {
+                    "room_number": "106",
+                    "floor": 1,
+                    "type": "Deluxe Room",
+                    "capacity": 3,
+                    "price": 2250.0,
+                    "status": "vacant",
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "twin bed"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.05 PM (1).jpeg"
+                },
+                # 12 Super Deluxe Rooms - Ground Floor (floor = 0)
+                {
+                    "room_number": "G01",
+                    "floor": 0,
+                    "type": "Super Deluxe Room",
+                    "capacity": 3,
+                    "price": 2350.0,
+                    "status": "vacant",
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "mini fridge", "2 seater sofa", "ceiling fan"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg"
+                },
+                {
+                    "room_number": "G02",
+                    "floor": 0,
+                    "type": "Super Deluxe Room",
+                    "capacity": 3,
+                    "price": 2350.0,
                     "status": "booked",
-                    "amenities": ["WiFi", "TV", "Bathroom", "Hot Water"]
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "mini fridge", "2 seater sofa", "ceiling fan"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.07 PM.jpeg"
                 },
                 {
-                    "room_number": "203",
-                    "floor": 2,
-                    "type": "Non-AC",
+                    "room_number": "G03",
+                    "floor": 0,
+                    "type": "Super Deluxe Room",
                     "capacity": 3,
-                    "price": 1200.0,
+                    "price": 2350.0,
                     "status": "vacant",
-                    "amenities": ["WiFi", "Bathroom", "Fan"]
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "mini fridge", "2 seater sofa", "ceiling fan"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.07 PM (1).jpeg"
                 },
                 {
-                    "room_number": "301",
-                    "floor": 3,
-                    "type": "AC",
-                    "capacity": 2,
-                    "price": 1800.0,
-                    "status": "vacant",
-                    "amenities": ["WiFi", "TV", "Bathroom", "Hot Water", "Balcony"]
-                },
-                {
-                    "room_number": "302",
-                    "floor": 3,
-                    "type": "AC",
+                    "room_number": "G04",
+                    "floor": 0,
+                    "type": "Super Deluxe Room",
                     "capacity": 3,
-                    "price": 2200.0,
+                    "price": 2350.0,
+                    "status": "vacant",
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "mini fridge", "2 seater sofa", "ceiling fan"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.08 PM.jpeg"
+                },
+                {
+                    "room_number": "G05",
+                    "floor": 0,
+                    "type": "Super Deluxe Room",
+                    "capacity": 3,
+                    "price": 2350.0,
+                    "status": "vacant",
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "mini fridge", "2 seater sofa", "ceiling fan"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.09 PM.jpeg"
+                },
+                {
+                    "room_number": "G06",
+                    "floor": 0,
+                    "type": "Super Deluxe Room",
+                    "capacity": 3,
+                    "price": 2350.0,
+                    "status": "vacant",
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "mini fridge", "2 seater sofa", "ceiling fan"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.09 PM (1).jpeg"
+                },
+                {
+                    "room_number": "G07",
+                    "floor": 0,
+                    "type": "Super Deluxe Room",
+                    "capacity": 3,
+                    "price": 2350.0,
+                    "status": "vacant",
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "mini fridge", "2 seater sofa", "ceiling fan"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.10 PM.jpeg"
+                },
+                {
+                    "room_number": "G08",
+                    "floor": 0,
+                    "type": "Super Deluxe Room",
+                    "capacity": 3,
+                    "price": 2350.0,
                     "status": "maintenance",
-                    "amenities": ["WiFi", "TV", "Bathroom", "Hot Water", "Mini Fridge"]
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "mini fridge", "2 seater sofa", "ceiling fan"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg"
+                },
+                {
+                    "room_number": "G09",
+                    "floor": 0,
+                    "type": "Super Deluxe Room",
+                    "capacity": 3,
+                    "price": 2350.0,
+                    "status": "vacant",
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "mini fridge", "2 seater sofa", "ceiling fan"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.11 PM.jpeg"
+                },
+                {
+                    "room_number": "G10",
+                    "floor": 0,
+                    "type": "Super Deluxe Room",
+                    "capacity": 3,
+                    "price": 2350.0,
+                    "status": "vacant",
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "mini fridge", "2 seater sofa", "ceiling fan"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.12 PM.jpeg"
+                },
+                {
+                    "room_number": "G11",
+                    "floor": 0,
+                    "type": "Super Deluxe Room",
+                    "capacity": 3,
+                    "price": 2350.0,
+                    "status": "vacant",
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "mini fridge", "2 seater sofa", "ceiling fan"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.12 PM (1).jpeg"
+                },
+                {
+                    "room_number": "G12",
+                    "floor": 0,
+                    "type": "Super Deluxe Room",
+                    "capacity": 3,
+                    "price": 2350.0,
+                    "status": "vacant",
+                    "amenities": ["50 inch smart TV", "cupboard", "Air conditioned", "mini fridge", "2 seater sofa", "ceiling fan"],
+                    "image_url": "/images/WhatsApp Image 2026-06-04 at 3.41.12 PM.jpeg"
                 }
             ]
 
@@ -185,7 +296,8 @@ def seed_all_tables(reset=False):
                     type=r_data["type"],
                     capacity=r_data["capacity"],
                     price=r_data["price"],
-                    status=r_data["status"]
+                    status=r_data["status"],
+                    image_url=r_data.get("image_url")
                 )
                 r.amenities = r_data["amenities"]  # Setter parses JSON list
                 rooms.append(r)
@@ -201,9 +313,9 @@ def seed_all_tables(reset=False):
             print("Seeding bookings...")
             # Query rooms to map IDs correctly
             room_102 = RoomModel.query.filter_by(room_number="102").first()
-            room_202 = RoomModel.query.filter_by(room_number="202").first()
+            room_g02 = RoomModel.query.filter_by(room_number="G02").first()
 
-            if room_102 and room_202:
+            if room_102 and room_g02:
                 b1 = BookingModel(
                     id="B001",
                     room_id=room_102.id,
@@ -215,13 +327,16 @@ def seed_all_tables(reset=False):
                     number_of_guests=2,
                     purpose="Conference Speaker",
                     status="confirmed",
-                    booked_by="emp001",
+                    booked_by="cust001",
+                    meal_plan="Room with Breakfast",
+                    price_per_night=2600.00,
+                    total_price=5460.00, # 2 nights * 2600 + 5% tax
                     created_at=datetime(2026, 5, 15)
                 )
 
                 b2 = BookingModel(
                     id="B002",
-                    room_id=room_202.id,
+                    room_id=room_g02.id,
                     guest_name="Prof. Anita Sharma",
                     guest_phone="+91 98765 43211",
                     guest_email="anita.sharma@email.com",
@@ -230,7 +345,10 @@ def seed_all_tables(reset=False):
                     number_of_guests=1,
                     purpose="Guest Lecture",
                     status="confirmed",
-                    booked_by="emp002",
+                    booked_by="cust002",
+                    meal_plan="Room without Breakfast",
+                    price_per_night=2350.00,
+                    total_price=4935.00, # 2 nights * 2350 + 5% tax
                     created_at=datetime(2026, 5, 12)
                 )
 
@@ -238,7 +356,7 @@ def seed_all_tables(reset=False):
                 db.session.commit()
                 print("Bookings seeded.")
             else:
-                print("WARNING: Could not find rooms 102 and 202. Skipping booking seed.")
+                print("WARNING: Could not find rooms 102 and G02. Skipping booking seed.")
         else:
             print("Bookings table already populated.")
             

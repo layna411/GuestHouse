@@ -23,15 +23,27 @@ export interface Booking {
   status: 'confirmed' | 'pending' | 'cancelled' | 'completed';
   bookedBy: string;
   createdAt: Date;
+  mealPlan?: string;
+  pricePerNight?: number;
+  totalPrice?: number;
 }
 
 export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'employee';
+  role: 'admin' | 'customer';
   department?: string;
   phone?: string;
 }
 
-export type UserRole = 'admin' | 'employee';
+export type UserRole = 'admin' | 'customer';
+
+export interface Notification {
+  id: number;
+  bookingId: string;
+  message: string;
+  isRead: boolean;
+  createdAt: string;
+}
+

@@ -88,14 +88,23 @@ export function RoomManagement({ rooms, onAddRoom, onEditRoom, onDeleteRoom }: R
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredRooms.map((room) => (
-              <Card key={room.id} glass hoverable>
-                <CardContent className="p-5">
+              <Card key={room.id} glass hoverable className="overflow-hidden flex flex-col h-full">
+                <div className="relative aspect-video overflow-hidden bg-slate-950">
+                  <img
+                    src={room.imageUrl || '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg'}
+                    alt={`Room ${room.roomNumber}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-3 right-3">
+                    <StatusChip status={room.status} size="sm" />
+                  </div>
+                </div>
+                <CardContent className="p-5 flex-1 flex flex-col justify-between">
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <h3 className="text-xl font-bold text-foreground">Room {room.roomNumber}</h3>
                       <p className="text-sm text-muted-foreground">Floor {room.floor}</p>
                     </div>
-                    <StatusChip status={room.status} size="sm" />
                   </div>
 
                   <div className="space-y-2 mb-4">

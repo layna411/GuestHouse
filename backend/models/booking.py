@@ -15,6 +15,9 @@ class BookingModel(db.Model):
     purpose = db.Column(db.String(255), nullable=False)
     status = db.Column(db.String(20), nullable=False, default='confirmed')  # 'confirmed', 'pending', 'cancelled', 'completed'
     booked_by = db.Column(db.String(50), db.ForeignKey('users.id'), nullable=False)
+    meal_plan = db.Column(db.String(100), nullable=True, default='Room without Breakfast')
+    price_per_night = db.Column(db.Numeric(10, 2), nullable=True)
+    total_price = db.Column(db.Numeric(10, 2), nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):

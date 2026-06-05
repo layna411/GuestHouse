@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from config import Config
 from database import db
-from routes import auth_bp, room_bp, booking_bp, employee_bp, portal_bp
+from routes import auth_bp, room_bp, booking_bp, customer_bp, notification_bp, portal_bp
 import os
 
 def create_app(config_class=Config):
@@ -23,7 +23,8 @@ def create_app(config_class=Config):
     app.register_blueprint(auth_bp)     # Serves login / session profile updates
     app.register_blueprint(room_bp)     # Serves rooms CRUD APIs
     app.register_blueprint(booking_bp)  # Serves reservation placements & status transitions
-    app.register_blueprint(employee_bp) # Serves employee listings & CRUD
+    app.register_blueprint(customer_bp) # Serves customer listings & CRUD
+    app.register_blueprint(notification_bp) # Serves notifications API
 
     return app
 

@@ -98,6 +98,14 @@ export function MyBookings({ bookings, rooms, currentUserId }: MyBookingsProps) 
                         <span className="font-medium">{booking.numberOfGuests}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
+                        <span className="text-muted-foreground">Meal Plan:</span>
+                        <span className="font-medium text-xs truncate max-w-[160px]">{booking.mealPlan || 'Room without Breakfast'}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        <span className="text-muted-foreground">Total Price:</span>
+                        <span className="font-bold text-accent">₹{booking.totalPrice?.toFixed(2) || 'N/A'}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
                         <Calendar className="w-3 h-3 text-muted-foreground" />
                         <span className="text-xs text-muted-foreground">
                           {format(booking.checkIn, 'MMM dd')} - {format(booking.checkOut, 'MMM dd, yyyy')}
@@ -174,6 +182,18 @@ export function MyBookings({ bookings, rooms, currentUserId }: MyBookingsProps) 
                   <div>
                     <p className="text-sm text-muted-foreground">Number of Guests</p>
                     <p className="font-medium">{selectedBooking.numberOfGuests}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Meal Plan</p>
+                    <p className="font-medium">{selectedBooking.mealPlan || 'Room without Breakfast'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Rate / Night</p>
+                    <p className="font-medium">₹{selectedBooking.pricePerNight?.toFixed(2) || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Total Price (Incl. Tax)</p>
+                    <p className="font-bold text-accent">₹{selectedBooking.totalPrice?.toFixed(2) || 'N/A'}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Status</p>

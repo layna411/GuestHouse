@@ -9,9 +9,18 @@ interface MobileHeaderProps {
   menuItems: Array<{ id: string; label: string; icon: any }>;
   onTabChange: (tab: string) => void;
   onLogout: () => void;
+  notificationCenterEl?: React.ReactNode;
 }
 
-export function MobileHeader({ role, userName, activeTab, menuItems, onTabChange, onLogout }: MobileHeaderProps) {
+export function MobileHeader({ 
+  role, 
+  userName, 
+  activeTab, 
+  menuItems, 
+  onTabChange, 
+  onLogout,
+  notificationCenterEl
+}: MobileHeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleTabChange = (tab: string) => {
@@ -25,16 +34,19 @@ export function MobileHeader({ role, userName, activeTab, menuItems, onTabChange
         <div className="flex items-center gap-3">
           <Building2 className="w-6 h-6" />
           <div>
-            <h2 className="font-bold">SIMATS Guest House</h2>
+            <h2 className="font-bold">Saveetha GuestHouse</h2>
             <p className="text-xs text-white/70">{userName}</p>
           </div>
         </div>
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-        >
-          {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="flex items-center gap-2">
+          {notificationCenterEl}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+          >
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </header>
 
       {isMenuOpen && (

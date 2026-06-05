@@ -42,3 +42,37 @@ def update_profile():
         return jsonify({"error": str(e)}), 400
     except Exception as e:
         return jsonify({"error": "An internal server error occurred."}), 500
+
+@auth_bp.route("/register", methods=["POST"])
+def register():
+    """Handles customer sign up."""
+    data = request.get_json() or {}
+    email = data.get("email")
+    name = data.get("name")
+    password = data.get("password")
+    phone = data.get("phone", "")
+    
+    if not email or not name or not password:
+        return jsonify({"error": "Name, email, and password are required fields."}), 400
+        
+    try:
+        import uuid
+        user_id = f"cust_{uuid.uuid4().hex[:8]}"
+        new_user = UserViewModel.create_user(
+            user_id=user_id,
+            name=name,
+            email=email,
+            password=password,
+            role="customer",
+            department="Customer",
+            phone=phone
+        )
+        return jsonify({
+            "message": "Registration successful",
+            "user": new_user
+        }), 201
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error": "Failed to register user."}), 500
+

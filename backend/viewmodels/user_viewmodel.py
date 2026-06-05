@@ -31,7 +31,7 @@ class UserViewModel:
         # as described in App.tsx: email.includes('@simats.edu') && password === 'password123'
         if not user and email.endswith("@simats.edu") and password == "password123":
             # If role is not provided, determine it from the email
-            determined_role = role if role else ("admin" if "admin" in email.lower() else "employee")
+            determined_role = role if role else ("admin" if "admin" in email.lower() else "customer")
             
             # Auto-create the user in database if it doesn't exist for seamless user-friendliness
             username = email.split("@")[0].replace(".", " ").title()
@@ -42,7 +42,7 @@ class UserViewModel:
                 email=email,
                 password=password,
                 role=determined_role,
-                department="Guest Relations" if determined_role == "employee" else "Administration",
+                department="Guest Relations" if determined_role == "customer" else "Administration",
                 phone=""
             )
             return new_user
@@ -106,17 +106,17 @@ class UserViewModel:
         return cls.to_dict(user)
 
     @classmethod
-    def get_all_employees(cls):
-        """Returns a list of all employees in the system."""
-        employees = UserModel.query.filter_by(role="employee").all()
-        return [cls.to_dict(emp) for emp in employees]
+    def get_all_customers(cls):
+        """Returns a list of all customers in the system."""
+        customers = UserModel.query.filter_by(role="customer").all()
+        return [cls.to_dict(cust) for cust in customers]
 
     @classmethod
-    def delete_employee(cls, emp_id):
-        """Deletes an employee from the system."""
-        user = UserModel.query.filter_by(id=emp_id, role="employee").first()
+    def delete_customer(cls, cust_id):
+        """Deletes a customer from the system."""
+        user = UserModel.query.filter_by(id=cust_id, role="customer").first()
         if not user:
-            raise ValueError("Employee not found.")
+            raise ValueError("Customer not found.")
         
         db.session.delete(user)
         db.session.commit()

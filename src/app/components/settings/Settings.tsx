@@ -14,10 +14,10 @@ interface SettingsProps {
 // Preset color themes for full functional personalization
 export const themes = {
   blue: {
-    name: 'SIMATS Professional (Deep Blue & Gold)',
-    primary: '#1e3a8a',
-    accent: '#22d3ee',
-    gold: '#fbbf24',
+    name: 'Somerset Corporate (Navy & Mint)',
+    primary: '#0a2239',
+    accent: '#4bd395',
+    gold: '#4bd395',
     class: 'blue-theme'
   },
   green: {

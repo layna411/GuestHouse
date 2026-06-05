@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 
 export function useBookingsViewModel(
   currentUserId?: string,
-  currentUserRole?: 'admin' | 'employee',
+  currentUserRole?: 'admin' | 'customer',
   onRoomsRefresh?: () => void
 ) {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -15,9 +15,9 @@ export function useBookingsViewModel(
     if (!currentUserId || !currentUserRole) return;
     setLoading(true);
     try {
-      // If employee, only get their bookings. If admin, get all bookings.
-      const employeeId = currentUserRole === 'employee' ? currentUserId : undefined;
-      const data = await bookingApi.getAll(employeeId);
+      // If customer, only get their bookings. If admin, get all bookings.
+      const customerId = currentUserRole === 'customer' ? currentUserId : undefined;
+      const data = await bookingApi.getAll(customerId);
       setBookings(data);
     } catch (err: any) {
       toast.error(err.message || 'Failed to retrieve reservation details.');
@@ -85,12 +85,27 @@ export function useBookingsViewModel(
     }
   };
 
+  const handleConfirmBooking = async (id: string) => {
+    try {
+      const updated = await bookingApi.confirm(id);
+      setBookings(prev => prev.map(b => b.id === id ? updated : b));
+      toast.success('Booking confirmed successfully!');
+      
+      if (onRoomsRefresh) {
+        onRoomsRefresh();
+      }
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to confirm reservation.');
+    }
+  };
+
   return {
     bookings,
     loading,
     refreshBookings: fetchBookings,
     handleBookingSubmit,
     handleCancelBooking,
-    handleCompleteBooking
+    handleCompleteBooking,
+    handleConfirmBooking
   };
 }

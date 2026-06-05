@@ -33,11 +33,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://contest-scolding-karma.ngrok-free.dev',
+        target: 'http://localhost:5000',
         changeOrigin: true,
-        headers: {
-          'ngrok-skip-browser-warning': 'true',
-        },
       },
     },
   },

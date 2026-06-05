@@ -5,6 +5,26 @@ import { Button } from '../Button';
 import { Input } from '../Input';
 import { Room } from '../../types';
 
+const PRE_UPLOADED_IMAGES = [
+  '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.03 PM.jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.04 PM (1).jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.04 PM.jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.05 PM (1).jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.05 PM.jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.07 PM (1).jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.07 PM.jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.08 PM.jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.09 PM (1).jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.09 PM.jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM.jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.11 PM.jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.12 PM (1).jpeg',
+  '/images/WhatsApp Image 2026-06-04 at 3.41.12 PM.jpeg',
+];
+
 interface AddEditRoomModalProps {
   room?: Room;
   onSubmit: (roomData: Omit<Room, 'id'>) => void;
@@ -20,6 +40,7 @@ export function AddEditRoomModal({ room, onSubmit, onClose }: AddEditRoomModalPr
     price: room?.price || 1500,
     status: room?.status || 'vacant' as const,
     amenities: room?.amenities.join(', ') || 'WiFi, TV, Bathroom',
+    imageUrl: room?.imageUrl || '',
   });
 
   const [errors, setErrors] = useState<any>({});
@@ -69,6 +90,7 @@ export function AddEditRoomModal({ room, onSubmit, onClose }: AddEditRoomModalPr
       price: formData.price,
       status: formData.status,
       amenities: amenitiesArray,
+      imageUrl: formData.imageUrl,
     });
   };
 
@@ -164,6 +186,43 @@ export function AddEditRoomModal({ room, onSubmit, onClose }: AddEditRoomModalPr
                     <option value="booked">Booked</option>
                     <option value="maintenance">Maintenance</option>
                   </select>
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="block mb-2 text-sm text-foreground">Room Image</label>
+                  <div className="mb-3">
+                    <p className="text-xs text-muted-foreground mb-2">Select from local gallery images:</p>
+                    <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-40 overflow-y-auto p-2 border border-border rounded-lg bg-input-background/50">
+                      {PRE_UPLOADED_IMAGES.map((imgUrl, idx) => {
+                        const isSelected = formData.imageUrl === imgUrl;
+                        return (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => setFormData(prev => ({ ...prev, imageUrl: imgUrl }))}
+                            className={`relative aspect-video rounded-md overflow-hidden border-2 transition-all ${
+                              isSelected ? 'border-accent scale-95 shadow-md' : 'border-transparent hover:border-muted'
+                            }`}
+                          >
+                            <img src={imgUrl} alt={`Option ${idx + 1}`} className="w-full h-full object-cover" />
+                            {isSelected && (
+                              <div className="absolute inset-0 bg-accent/20 flex items-center justify-center">
+                                <span className="bg-accent text-white rounded-full p-0.5 text-[10px] font-bold">✓</span>
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <Input
+                    label="Or Enter Custom Image URL"
+                    name="imageUrl"
+                    value={formData.imageUrl}
+                    onChange={handleChange}
+                    placeholder="https://example.com/room.jpg or /images/image.png"
+                  />
                 </div>
 
                 <div className="md:col-span-2">

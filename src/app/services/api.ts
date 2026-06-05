@@ -1,4 +1,4 @@
-import { Room, Booking, User } from '../types';
+import { Room, Booking, User, Notification } from '../types';
 
 const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_URL || '');
 
@@ -47,6 +47,21 @@ export const authApi = {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData)
+    });
+    const data = await handleResponse<{ message: string; user: User }>(res);
+    return data.user;
+  },
+
+  async register(userData: { name: string; email: string; password_hash: string; phone?: string }): Promise<User> {
+    const res = await apiFetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: userData.name,
+        email: userData.email,
+        password: userData.password_hash,
+        phone: userData.phone
+      })
     });
     const data = await handleResponse<{ message: string; user: User }>(res);
     return data.user;
@@ -156,39 +171,76 @@ export const bookingApi = {
       checkOut: new Date(data.booking.checkOut),
       createdAt: new Date(data.booking.createdAt)
     };
+  },
+
+  async confirm(bookingId: string): Promise<Booking> {
+    const res = await apiFetch(`/api/bookings/${bookingId}/confirm`, {
+      method: 'POST'
+    });
+    const data = await handleResponse<{ message: string; booking: any }>(res);
+    
+    return {
+      ...data.booking,
+      checkIn: new Date(data.booking.checkIn),
+      checkOut: new Date(data.booking.checkOut),
+      createdAt: new Date(data.booking.createdAt)
+    };
   }
 };
 
-export const employeeApi = {
+export const customerApi = {
   async getAll(): Promise<User[]> {
-    const res = await apiFetch('/api/employees');
+    const res = await apiFetch('/api/customers');
     return handleResponse<User[]>(res);
   },
 
-  async create(employeeData: Omit<User, 'id'>): Promise<User> {
-    const res = await apiFetch('/api/employees', {
+  async create(customerData: Omit<User, 'id'>): Promise<User> {
+    const res = await apiFetch('/api/customers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(employeeData)
+      body: JSON.stringify(customerData)
     });
-    const data = await handleResponse<{ message: string; employee: User }>(res);
-    return data.employee;
+    const data = await handleResponse<{ message: string; customer: User }>(res);
+    return data.customer;
   },
 
-  async update(employeeData: User): Promise<User> {
-    const res = await apiFetch(`/api/employees/${employeeData.id}`, {
+  async update(customerData: User): Promise<User> {
+    const res = await apiFetch(`/api/customers/${customerData.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(employeeData)
+      body: JSON.stringify(customerData)
     });
-    const data = await handleResponse<{ message: string; employee: User }>(res);
-    return data.employee;
+    const data = await handleResponse<{ message: string; customer: User }>(res);
+    return data.customer;
   },
 
-  async delete(employeeId: string): Promise<void> {
-    const res = await apiFetch(`/api/employees/${employeeId}`, {
+  async delete(customerId: string): Promise<void> {
+    const res = await apiFetch(`/api/customers/${customerId}`, {
       method: 'DELETE'
     });
     await handleResponse<{ message: string }>(res);
   }
 };
+
+export const notificationApi = {
+  async getAll(): Promise<Notification[]> {
+    const res = await apiFetch('/api/notifications');
+    return handleResponse<Notification[]>(res);
+  },
+
+  async markAsRead(id: number): Promise<Notification> {
+    const res = await apiFetch(`/api/notifications/${id}/read`, {
+      method: 'PUT'
+    });
+    const data = await handleResponse<{ message: string; notification: Notification }>(res);
+    return data.notification;
+  },
+
+  async markAllAsRead(): Promise<void> {
+    const res = await apiFetch('/api/notifications/read-all', {
+      method: 'PUT'
+    });
+    await handleResponse<{ message: string }>(res);
+  }
+};
+

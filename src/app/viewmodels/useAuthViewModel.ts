@@ -3,10 +3,10 @@ import { User, UserRole } from '../types';
 import { authApi } from '../services/api';
 import { toast } from 'sonner';
 
-type AppState = 'splash' | 'role-selection' | 'login' | 'dashboard';
+type AppState = 'splash' | 'role-selection' | 'login' | 'dashboard' | 'landing-page';
 
 export function useAuthViewModel() {
-  const [appState, setAppState] = useState<AppState>('splash');
+  const [appState, setAppState] = useState<AppState>('landing-page');
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
@@ -46,8 +46,28 @@ export function useAuthViewModel() {
   const handleLogout = () => {
     setCurrentUser(null);
     setSelectedRole(null);
-    setAppState('login');
+    setAppState('landing-page');
     toast.success('Logged out successfully');
+  };
+
+  const handleRegister = async (name: string, email: string, password_hash: string, phone?: string) => {
+    setLoading(true);
+    try {
+      const user = await authApi.register({
+        name,
+        email,
+        password_hash,
+        phone
+      });
+      setCurrentUser(user);
+      setSelectedRole(user.role);
+      setAppState('dashboard');
+      toast.success(`Registration successful! Welcome, ${user.name}!`);
+    } catch (err: any) {
+      toast.error(err.message || 'Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleUpdateProfile = async (data: Partial<User>) => {
@@ -77,6 +97,8 @@ export function useAuthViewModel() {
     handleLogin,
     handleBackToRoleSelection,
     handleLogout,
-    handleUpdateProfile
+    handleRegister,
+    handleUpdateProfile,
+    setAppState
   };
 }

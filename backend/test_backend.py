@@ -49,7 +49,7 @@ class TestGuestHouseBackend(unittest.TestCase):
             id="emp001",
             name="Priya Menon",
             email="priya.menon@simats.edu",
-            role="employee",
+            role="customer",
             department="Guest Relations",
             phone="+91 98765 11111"
         )
@@ -196,18 +196,18 @@ class TestGuestHouseBackend(unittest.TestCase):
         db_booking = BookingModel.query.get(self.booking.id)
         self.assertEqual(db_booking.status, "cancelled")
 
-    # --- Test Case 4: Employee CRUD ---
-    def test_get_employees(self):
-        """Test employee fetching list."""
-        response = self.client.get("/api/employees")
+    # --- Test Case 4: Customer CRUD ---
+    def test_get_customers(self):
+        """Test customer fetching list."""
+        response = self.client.get("/api/customers")
         self.assertEqual(response.status_code, 200)
-        employees = json.loads(response.data)
-        self.assertEqual(len(employees), 1)
-        self.assertEqual(employees[0]["name"], "Priya Menon")
+        customers = json.loads(response.data)
+        self.assertEqual(len(customers), 1)
+        self.assertEqual(customers[0]["name"], "Priya Menon")
 
-    def test_add_employee(self):
-        """Test registering a new employee staff member."""
-        response = self.client.post("/api/employees", json={
+    def test_add_customer(self):
+        """Test registering a new customer member."""
+        response = self.client.post("/api/customers", json={
             "name": "Karan Johar",
             "email": "karan@simats.edu",
             "department": "Housekeeping",
@@ -215,12 +215,12 @@ class TestGuestHouseBackend(unittest.TestCase):
         })
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.data)
-        self.assertEqual(data["employee"]["name"], "Karan Johar")
+        self.assertEqual(data["customer"]["name"], "Karan Johar")
         
         # Verify in database
         db_user = UserModel.query.filter_by(email="karan@simats.edu").first()
         self.assertIsNotNone(db_user)
-        self.assertEqual(db_user.role, "employee")
+        self.assertEqual(db_user.role, "customer")
 
 if __name__ == "__main__":
     unittest.main()

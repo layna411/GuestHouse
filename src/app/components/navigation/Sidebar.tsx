@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, BedDouble, Calendar, Users, Settings, LogOut, Building2 } from 'lucide-react';
+import { LayoutDashboard, BedDouble, Calendar, Users, Settings, LogOut, Building2, Image } from 'lucide-react';
 import { UserRole } from '../../types';
 
 interface SidebarProps {
@@ -14,16 +14,17 @@ export function Sidebar({ role, activeTab, onTabChange, onLogout }: SidebarProps
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'rooms', label: 'Room Management', icon: BedDouble },
     { id: 'bookings', label: 'All Bookings', icon: Calendar },
-    { id: 'employees', label: 'Employees', icon: Users },
+    { id: 'customers', label: 'Customers', icon: Users },
+    { id: 'gallery', label: 'Gallery', icon: Image },
   ];
 
-  const employeeMenuItems = [
+  const customerMenuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'availability', label: 'Room Availability', icon: BedDouble },
     { id: 'bookings', label: 'My Bookings', icon: Calendar },
   ];
 
-  const menuItems = role === 'admin' ? adminMenuItems : employeeMenuItems;
+  const menuItems = role === 'admin' ? adminMenuItems : customerMenuItems;
 
   return (
     <div className="h-screen w-64 bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border">
@@ -33,8 +34,8 @@ export function Sidebar({ role, activeTab, onTabChange, onLogout }: SidebarProps
             <Building2 className="w-6 h-6 text-sidebar-primary-foreground" />
           </div>
           <div>
-            <h2 className="font-bold text-lg">SIMATS</h2>
-            <p className="text-xs text-sidebar-foreground/70">Guest House</p>
+            <h2 className="font-bold text-base leading-tight">Saveetha</h2>
+            <p className="text-[10px] text-sidebar-foreground/70">GuestHouse Booking</p>
           </div>
         </div>
       </div>
