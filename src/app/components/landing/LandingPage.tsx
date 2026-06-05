@@ -70,7 +70,7 @@ export function LandingPage({
   const [selectedRoomForBooking, setSelectedRoomForBooking] = useState<Room | null>(null);
   const [activeDetailImage, setActiveDetailImage] = useState<string>('');
   const [selectedMealPlan, setSelectedMealPlan] = useState('Room without Breakfast');
-  const [selectedBedPreference, setSelectedBedPreference] = useState<'1 King-size bed' | '2 Single beds'>('1 King-size bed');
+  const [selectedBedPreference, setSelectedBedPreference] = useState<string>('Twin beds');
   const [timeLeft, setTimeLeft] = useState(900); // 15 mins
   const [bookingFormDetails, setBookingFormDetails] = useState({
     guestName: '',
@@ -123,14 +123,22 @@ export function LandingPage({
     }
   }, [selectedRoomForBooking]);
 
-  // Filter rooms when catalog loads or filters change
+  // Filter and group rooms by category (Deluxe Room & Super Deluxe Room)
   useEffect(() => {
-    let result = rooms;
-    if (roomTypeFilter !== 'ALL') {
-      result = result.filter(r => r.type === roomTypeFilter);
-    }
+    const uniqueTypes = ['Deluxe Room', 'Super Deluxe Room'];
+    const result: Room[] = [];
+    uniqueTypes.forEach(type => {
+      const typeRooms = rooms.filter(r => r.type === type);
+      if (typeRooms.length > 0) {
+        let selected = typeRooms.find(r => r.status === 'vacant');
+        if (!selected) {
+          selected = typeRooms[0];
+        }
+        result.push(selected);
+      }
+    });
     setFilteredRooms(result);
-  }, [rooms, roomTypeFilter]);
+  }, [rooms]);
 
   // 15 Minutes Timer
   useEffect(() => {
@@ -202,8 +210,8 @@ export function LandingPage({
       bookingFormDetails.extraBed
     );
 
-    // Final bed preference string combined into purpose
-    const finalPurpose = `[Bed Preference: ${selectedBedPreference}] ${bookingFormDetails.purpose}`;
+    // All rooms have twin beds only
+    const finalPurpose = `[Bed Preference: Twin beds] ${bookingFormDetails.purpose}`;
 
     const bookingPayload = {
       roomId: selectedRoomForBooking.id,

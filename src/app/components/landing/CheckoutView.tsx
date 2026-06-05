@@ -202,36 +202,7 @@ export function CheckoutView({
                   </div>
                 </div>
 
-                {/* Bed Preferences */}
-                <div>
-                  <label className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
-                    Bed Preference
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {(['1 King-size bed', '2 Single beds'] as const).map((bed) => (
-                      <label
-                        key={bed}
-                        className={`border rounded-xl p-3.5 flex items-center justify-between cursor-pointer transition-all ${
-                          selectedBedPreference === bed
-                            ? 'border-accent bg-accent/5 shadow-sm'
-                            : 'border-border hover:bg-secondary/40'
-                        }`}
-                      >
-                        <div className="flex flex-col">
-                          <span className="text-xs font-semibold text-foreground">{bed}</span>
-                          <span className="text-[10px] text-muted-foreground">Subject to availability</span>
-                        </div>
-                        <input
-                          type="radio"
-                          name="bedPreference"
-                          checked={selectedBedPreference === bed}
-                          onChange={() => setSelectedBedPreference(bed)}
-                          className="w-4 h-4 accent-accent"
-                        />
-                      </label>
-                    ))}
-                  </div>
-                </div>
+
 
                 {/* Extra Bed Request */}
                 <div className="border border-border/50 rounded-xl p-4 bg-secondary/15 flex items-center justify-between">
@@ -334,8 +305,8 @@ export function CheckoutView({
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
                   <div>
-                    <span className="text-[9px] text-accent uppercase font-bold tracking-widest">{selectedRoomForBooking.type} Suite</span>
-                    <h4 className="font-serif text-lg font-bold text-white">Room {selectedRoomForBooking.roomNumber}</h4>
+                    <span className="text-[9px] text-accent uppercase font-bold tracking-widest">{selectedRoomForBooking.type}</span>
+                    <h4 className="font-serif text-lg font-bold text-white">{selectedRoomForBooking.type}</h4>
                   </div>
                   <span className="bg-accent/20 border border-accent/30 text-accent px-2.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider backdrop-blur-md flex items-center gap-1">
                     ★ 9.3 Perfect
@@ -431,7 +402,7 @@ export function CheckoutView({
 
                   <div className="bg-secondary/30 border border-border/30 rounded-lg p-3 text-[10.5px] leading-relaxed text-muted-foreground mt-2">
                     <span className="font-semibold text-foreground block mb-0.5">Payment Terms:</span>
-                    No reservation deposits required today. You will pay directly upon arrival at the Guest House reception desk.
+                    You will pay directly upon checkout at guest house reception desk. Pay via online mode only like gpay/phonepe.
                   </div>
                 </div>
               </div>

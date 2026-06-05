@@ -81,7 +81,7 @@ export function BookingForm({ room, onSubmit, onClose }: BookingFormProps) {
   const [step, setStep] = useState<'overview' | 'checkout'>('overview');
   
   // Bed preference: radio select option
-  const [bedPreference, setBedPreference] = useState<'1 King-size bed' | '2 Single beds'>('1 King-size bed');
+  const [bedPreference, setBedPreference] = useState<string>('Twin beds');
 
   // Drawer toggle for detailed description
   const [showRoomDetails, setShowRoomDetails] = useState(false);
@@ -168,8 +168,8 @@ export function BookingForm({ room, onSubmit, onClose }: BookingFormProps) {
     const checkIn = new Date(`${formData.checkInDate}T${formData.checkInTime}`);
     const checkOut = new Date(`${formData.checkOutDate}T${formData.checkOutTime}`);
 
-    // Append bed preference into the purpose summary so the reservation record holds the preference
-    const finalPurpose = `[Bed Preference: ${bedPreference}] ${formData.purpose}`;
+    // All rooms have twin beds only
+    const finalPurpose = `[Bed Preference: Twin beds] ${formData.purpose}`;
 
     onSubmit({
       ...formData,
@@ -205,7 +205,7 @@ export function BookingForm({ room, onSubmit, onClose }: BookingFormProps) {
       mealTitle: 'Breakfast not included',
       mealsIcon: false,
       isLowest: true,
-      policies: ['Non-refundable', 'Prepayment required'],
+      policies: ['Free cancellation 24h before check-in'],
     },
     {
       id: 'with_breakfast',
@@ -213,7 +213,7 @@ export function BookingForm({ room, onSubmit, onClose }: BookingFormProps) {
       mealTitle: 'Breakfast included',
       mealsIcon: true,
       isLowest: false,
-      policies: ['Non-refundable', 'Prepayment required'],
+      policies: ['Free cancellation 24h before check-in'],
     },
     {
       id: 'full_board',
@@ -221,15 +221,15 @@ export function BookingForm({ room, onSubmit, onClose }: BookingFormProps) {
       mealTitle: 'All Meals Included (Breakfast, Lunch & Dinner)',
       mealsIcon: true,
       isLowest: false,
-      policies: ['Non-refundable', 'Prepayment required'],
+      policies: ['Free cancellation 24h before check-in'],
     }
   ];
 
   const imageSrc = room.imageUrl || ROOM_IMAGE_MAP[room.roomNumber] || '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg';
 
-  const roomDescription = room.type === 'AC'
-    ? `${room.roomNumber} Deluxe Suite offers guests premium air-conditioned comfort, access to high-speed complimentary Wi-Fi, and a modern LCD TV. The suite provides a pristine walk-in shower and separate toilet, hair dryer, and premium bath amenities to ensure an exceptional university stay.`
-    : `${room.roomNumber} Comfort Suite features natural ventilation with ceiling fans, access to a private writing desk, and high-speed complimentary Wi-Fi. Designed with academic guests in mind, this standard unit offers clean bathrooms, daily housekeeping, and proximity to campus lounges.`;
+  const roomDescription = room.type.toLowerCase().includes('super')
+    ? `Super Deluxe Room offers guests premium air-conditioned comfort, access to high-speed complimentary Wi-Fi, a modern smart TV, mini fridge, and comfortable sofa seating to ensure an exceptional stay.`
+    : `Deluxe Room offers guests premium air-conditioned comfort, access to high-speed complimentary Wi-Fi, smart TV, and clean bath amenities to ensure a comfortable stay.`;
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-start justify-center p-4 z-50 overflow-y-auto">
@@ -244,7 +244,7 @@ export function BookingForm({ room, onSubmit, onClose }: BookingFormProps) {
                   <Sparkles className="w-4.5 h-4.5 text-accent" />
                 </div>
                 <CardTitle className="text-xl font-bold font-serif">
-                  {step === 'overview' ? `Book Suite - Room ${room.roomNumber}` : 'Checkout Reservation'}
+                  {step === 'overview' ? `Book - ${room.type}` : 'Checkout Reservation'}
                 </CardTitle>
               </div>
               <button
@@ -354,11 +354,11 @@ export function BookingForm({ room, onSubmit, onClose }: BookingFormProps) {
                   <div className="flex-1 flex flex-col justify-between space-y-4">
                     <div className="space-y-2">
                       <h2 className="text-2xl font-serif font-bold text-foreground">
-                        {room.type === 'AC' ? 'Studio Executive Room (AC Suite)' : 'Comfort Residency Suite (Non-AC Room)'}
+                        {room.type}
                       </h2>
                       <div className="w-16 h-0.5 bg-accent rounded"></div>
                       <p className="text-xs text-muted-foreground tracking-wide font-medium">
-                        1 King-size bed / 2 Single beds • Fully sanitised and prepared
+                        Twin beds • Fully sanitised and prepared
                       </p>
                     </div>
 
@@ -458,38 +458,18 @@ export function BookingForm({ room, onSubmit, onClose }: BookingFormProps) {
                             </td>
 
                             {/* Sleeps / Bed Preference cell */}
+                            {/* Beds cell */}
                             <td className="p-6 px-6 align-top">
-                              <div className="bg-secondary/40 border border-border/40 p-4 rounded-xl space-y-3.5 max-w-[260px]">
+                              <div className="bg-secondary/40 border border-border/40 p-4 rounded-xl space-y-2 max-w-[200px]">
                                 <div className="flex items-center gap-1.5 text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground pb-1 border-b border-border/20">
-                                  <span>Bed preference</span>
-                                  <Info className="w-3.5 h-3.5 text-muted-foreground/50 hover:text-foreground cursor-pointer" />
+                                  <span>Beds</span>
                                 </div>
-                                <div className="space-y-2">
-                                  <label className="flex items-center gap-2 text-xs font-bold text-foreground/80 cursor-pointer">
-                                    <input
-                                      type="radio"
-                                      name={`bedPref_${pkg.id}`}
-                                      checked={bedPreference === '1 King-size bed'}
-                                      onChange={() => setBedPreference('1 King-size bed')}
-                                      className="w-3.5 h-3.5 text-accent bg-slate-900 border-border focus:ring-accent"
-                                    />
-                                    1 King-size bed
-                                  </label>
-                                  <label className="flex items-center gap-2 text-xs font-bold text-foreground/80 cursor-pointer">
-                                    <input
-                                      type="radio"
-                                      name={`bedPref_${pkg.id}`}
-                                      checked={bedPreference === '2 Single beds'}
-                                      onChange={() => setBedPreference('2 Single beds')}
-                                      className="w-3.5 h-3.5 text-accent bg-slate-900 border-border focus:ring-accent"
-                                    />
-                                    2 Single beds
-                                  </label>
+                                <div className="text-xs font-bold text-foreground/80">
+                                  Twin beds
                                 </div>
                                 <div className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground/80 pt-1 border-t border-border/20">
                                   <Users className="w-4 h-4 text-accent" />
                                   <span>{formData.numberOfGuests} Guest{formData.numberOfGuests > 1 ? 's' : ''}</span>
-                                  <Info className="w-3.5 h-3.5 text-muted-foreground/50 hover:text-foreground cursor-pointer" />
                                 </div>
                               </div>
                             </td>
@@ -583,35 +563,14 @@ export function BookingForm({ room, onSubmit, onClose }: BookingFormProps) {
                           </div>
                           <div>
                             <span className="block text-[8px] uppercase tracking-wider text-accent mb-1">Cancel Policies</span>
-                            <span>Non-refundable</span>
+                            <span>Free cancellation</span>
                           </div>
                         </div>
 
-                        {/* Bed Pref on Mobile */}
+                        {/* Beds on Mobile */}
                         <div className="border-t border-border/20 pt-3">
-                          <span className="block text-[8px] uppercase tracking-wider text-accent mb-2">Bed preference</span>
-                          <div className="flex gap-4">
-                            <label className="flex items-center gap-1.5 text-xs text-foreground/80 cursor-pointer">
-                              <input
-                                type="radio"
-                                name={`mob_bedPref_${pkg.id}`}
-                                checked={bedPreference === '1 King-size bed'}
-                                onChange={() => setBedPreference('1 King-size bed')}
-                                className="w-3.5 h-3.5 text-accent"
-                              />
-                              1 King-size
-                            </label>
-                            <label className="flex items-center gap-1.5 text-xs text-foreground/80 cursor-pointer">
-                              <input
-                                type="radio"
-                                name={`mob_bedPref_${pkg.id}`}
-                                checked={bedPreference === '2 Single beds'}
-                                onChange={() => setBedPreference('2 Single beds')}
-                                className="w-3.5 h-3.5 text-accent"
-                              />
-                              2 Singles
-                            </label>
-                          </div>
+                          <span className="block text-[8px] uppercase tracking-wider text-accent mb-1">Beds</span>
+                          <span className="text-xs font-bold text-foreground/80">Twin beds</span>
                         </div>
 
                         <div className="border-t border-border/20 pt-3 flex items-center justify-between gap-3">
@@ -680,8 +639,8 @@ export function BookingForm({ room, onSubmit, onClose }: BookingFormProps) {
                   </div>
                   <div className="grid grid-cols-2 gap-3 text-xs font-semibold">
                     <div>
-                      <span className="text-muted-foreground block text-[10px]">Room Suite:</span>
-                      <span className="text-foreground">Room {room.roomNumber} ({room.type})</span>
+                      <span className="text-muted-foreground block text-[10px]">Room Type:</span>
+                      <span className="text-foreground">{room.type}</span>
                     </div>
                     <div>
                       <span className="text-muted-foreground block text-[10px]">Meal Package:</span>
@@ -694,8 +653,8 @@ export function BookingForm({ room, onSubmit, onClose }: BookingFormProps) {
                       </span>
                     </div>
                     <div>
-                      <span className="text-muted-foreground block text-[10px]">Bed Choice:</span>
-                      <span className="text-foreground">{bedPreference}</span>
+                      <span className="text-muted-foreground block text-[10px]">Beds:</span>
+                      <span className="text-foreground">Twin beds</span>
                     </div>
                   </div>
                 </div>

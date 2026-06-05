@@ -38,7 +38,7 @@ export const RoomDetailsView: React.FC<RoomDetailsViewProps> = ({
           <ChevronRight className="w-3.5 h-3.5" />
           <a href="#rooms-catalog" onClick={(e) => { e.preventDefault(); setBookingFlowState('landing'); }} className="hover:text-accent transition-colors">Accommodations</a>
           <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-foreground">Room {selectedRoomForBooking.roomNumber} Details</span>
+          <span className="text-foreground">{selectedRoomForBooking.type} Details</span>
         </div>
       </div>
 
@@ -56,7 +56,7 @@ export const RoomDetailsView: React.FC<RoomDetailsViewProps> = ({
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
               <div className="absolute bottom-4 left-4">
                 <span className="px-3 py-1 bg-black/60 border border-white/10 text-white rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-md">
-                  Floor {selectedRoomForBooking.floor} • Suite {selectedRoomForBooking.roomNumber}
+                  Floor {selectedRoomForBooking.floor}
                 </span>
               </div>
             </div>
@@ -80,8 +80,8 @@ export const RoomDetailsView: React.FC<RoomDetailsViewProps> = ({
           {/* Right Column: Spec Sheet & Workspace Features (col-span-5) */}
           <div className="lg:col-span-5 bg-card/30 backdrop-blur-md rounded-2xl border border-border/50 p-6 sm:p-8 space-y-6 shadow-xl">
             <div>
-              <span className="text-xs uppercase font-bold tracking-widest text-accent font-sans">{selectedRoomForBooking.type} Suite</span>
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mt-1">Room {selectedRoomForBooking.roomNumber}</h2>
+              <span className="text-xs uppercase font-bold tracking-widest text-accent font-sans">{selectedRoomForBooking.type}</span>
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mt-1">{selectedRoomForBooking.type}</h2>
               <div className="flex items-center gap-2 mt-3 font-sans">
                 <span className="bg-success/15 border border-success/30 text-success text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                   ★ 9.3 Perfect
@@ -117,7 +117,7 @@ export const RoomDetailsView: React.FC<RoomDetailsViewProps> = ({
                 <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center"><Key className="w-4 h-4 text-accent" /></div>
                 <div>
                   <span className="text-[10px] text-muted-foreground uppercase font-bold block leading-none mb-0.5">Bed Setup</span>
-                  <span className="text-foreground">King / Single Config</span>
+                  <span className="text-foreground">Twin beds</span>
                 </div>
               </div>
             </div>
@@ -163,12 +163,8 @@ export const RoomDetailsView: React.FC<RoomDetailsViewProps> = ({
                   'Room with Breakfast, Lunch & Dinner'
                 ].map((plan, idx) => {
                   const priceDetails = getPriceDetails(selectedRoomForBooking.type, guestCount, plan, false);
-                  let policy = "Non-refundable Rate";
-                  let policyColor = "text-muted-foreground/75";
-                  if (plan !== 'Room without Breakfast') {
-                    policy = "Free cancellation 24h before check-in";
-                    policyColor = "text-success font-semibold flex items-center gap-1";
-                  }
+                  let policy = "Free cancellation 24h before check-in";
+                  let policyColor = "text-success font-semibold flex items-center gap-1";
                   
                   return (
                     <tr key={idx} className="border-b border-border/10 last:border-0 hover:bg-secondary/10 transition-colors">
@@ -178,7 +174,7 @@ export const RoomDetailsView: React.FC<RoomDetailsViewProps> = ({
                       </td>
                       <td className="p-4">
                         <span className={policyColor}>
-                          {plan !== 'Room without Breakfast' && <Check className="w-3.5 h-3.5 inline text-success" />}
+                          <Check className="w-3.5 h-3.5 inline text-success" />
                           {policy}
                         </span>
                       </td>

@@ -21,32 +21,15 @@ export const LandingRooms: React.FC<LandingRoomsProps> = ({
     <section id="rooms-catalog" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <div className="text-center mb-16">
         <span className="text-xs uppercase font-bold tracking-widest text-accent">Accommodations</span>
-        <h2 className="font-serif text-3xl sm:text-5xl font-semibold mt-2 text-foreground">Rooms & Suites</h2>
+        <h2 className="font-serif text-3xl sm:text-5xl font-semibold mt-2 text-foreground">Rooms</h2>
         <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent mx-auto mt-4"></div>
         <p className="text-muted-foreground text-sm sm:text-base max-w-2xl mx-auto mt-4">
-          Immerse yourself in our catalog of exquisitely designed suites, featuring high-fidelity finishes, private balconies, and premier comfort amenities.
+          Immerse yourself in our catalog of exquisitely designed rooms, featuring high-fidelity finishes, private balconies, and premier comfort amenities.
         </p>
-
-        {/* Filtering tabs */}
-        <div className="flex justify-center gap-3 mt-10">
-          {(['ALL', 'Deluxe Room', 'Super Deluxe Room'] as const).map((type) => (
-            <button
-              key={type}
-              onClick={() => setRoomTypeFilter(type)}
-              className={`px-6 py-2 rounded-full text-xs font-semibold uppercase tracking-wider border transition-all duration-300 cursor-pointer ${
-                roomTypeFilter === type 
-                  ? 'bg-accent/15 text-accent border-accent/30 shadow-lg shadow-accent/5' 
-                  : 'bg-secondary text-muted-foreground border-border hover:bg-border/30 hover:text-foreground'
-              }`}
-            >
-              {type === 'ALL' ? 'All Rooms' : type}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Rooms Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto justify-center">
         {filteredRooms.map((room) => {
           const imageSrc = room.imageUrl || ROOM_IMAGE_MAP[room.roomNumber] || '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg';
           return (
@@ -86,10 +69,7 @@ export const LandingRooms: React.FC<LandingRoomsProps> = ({
 
                 {/* Room Title */}
                 <div className="absolute bottom-4 left-4">
-                  <h3 className="font-serif text-2xl font-semibold text-white">Room {room.roomNumber}</h3>
-                  <p className="text-xs text-accent flex items-center gap-1.5 uppercase font-bold tracking-widest mt-0.5">
-                    <Sparkles className="w-3.5 h-3.5" /> {room.type} Suite
-                  </p>
+                  <h3 className="font-serif text-2xl font-semibold text-white">{room.type}</h3>
                 </div>
               </div>
 

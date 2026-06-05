@@ -65,7 +65,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
         >
           <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6 backdrop-blur-sm">
             <Sparkles className="w-4 h-4 text-amber-400" />
-            <span className="text-xs uppercase font-semibold tracking-wider text-amber-300">Ultra Pro Guest Suites</span>
+            <span className="text-xs uppercase font-semibold tracking-wider text-amber-300">Ultra Pro Guest Rooms</span>
           </div>
           
           <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-4 leading-none">

@@ -141,7 +141,7 @@ export const HERO_SLIDES = [
   {
     image: '/images/WhatsApp Image 2026-06-04 at 3.41.09 PM.jpeg',
     title: 'Saveetha GuestHouse',
-    subtitle: 'Luxury Guest House & Serviced Suites',
+    subtitle: 'Luxury Guest House & Serviced Rooms',
     description: 'Experience unmatched sophistication, premium comfort, and exemplary hospitality in the heart of Chennai.'
   },
   {

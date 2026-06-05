@@ -38,7 +38,7 @@ export function LandingFooter({ onOpenLogin, setBookingFlowState }: LandingFoote
             </div>
           </div>
           <p className="text-white/70 text-xs leading-relaxed">
-            Saveetha University's premier academic residency and luxury guest suites. Experience the perfect blend of modern comfort and classic academic prestige.
+            Saveetha University's premier academic residency and luxury guest rooms. Experience the perfect blend of modern comfort and classic academic prestige.
           </p>
         </div>
 

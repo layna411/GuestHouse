@@ -46,18 +46,32 @@ export function LandingMap() {
               </p>
             </div>
 
-            <div className="border-t border-border/20 pt-3.5 space-y-2 text-[11px] font-medium text-muted-foreground">
-              <div className="flex justify-between">
-                <span>Status:</span>
-                <span className="text-foreground font-bold">Open for Bookings</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Contact:</span>
-                <span className="text-foreground font-bold">+91 98765 00000</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Shuttles:</span>
-                <span className="text-foreground font-bold">Every 15 mins</span>
+            <div className="border-t border-border/20 pt-3.5 space-y-2.5">
+              <span className="text-[10px] uppercase font-bold text-accent tracking-wider block">
+                Nearby Famous Places
+              </span>
+              <div className="space-y-2 text-[11px] font-semibold text-muted-foreground">
+                <div className="flex justify-between items-center">
+                  <span className="flex items-center gap-1.5 text-foreground">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
+                    Chennai Central Station
+                  </span>
+                  <span className="text-[10px] text-muted-foreground/75 font-sans font-bold">~20 km</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="flex items-center gap-1.5 text-foreground">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
+                    Koyambedu (CMBT)
+                  </span>
+                  <span className="text-[10px] text-muted-foreground/75 font-sans font-bold">~9 km</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="flex items-center gap-1.5 text-foreground">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
+                    Egmore Station
+                  </span>
+                  <span className="text-[10px] text-muted-foreground/75 font-sans font-bold">~18 km</span>
+                </div>
               </div>
             </div>
 
