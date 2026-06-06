@@ -120,20 +120,7 @@ export function LoginScreen({ onLogin, onBackToLanding }: LoginScreenProps) {
             </button>
           </form>
 
-          {/* Demo credentials hint */}
-          <div className="mt-6 pt-6 border-t border-border/40 text-center text-xs text-muted-foreground">
-            <span className="font-semibold text-muted-foreground uppercase tracking-wider block mb-2">Demo Logins</span>
-            <div className="bg-muted/40 border border-border rounded-xl p-3 space-y-1.5 text-left font-mono text-foreground">
-              <div className="flex justify-between">
-                <span>Admin:</span>
-                <span className="text-accent font-semibold select-all">admin@simats.edu</span>
-              </div>
-              <div className="flex justify-between border-t border-border/40 pt-1.5 text-[10px] text-muted-foreground">
-                <span>Password:</span>
-                <span>password123</span>
-              </div>
-            </div>
-          </div>
+
 
         </div>
       </div>

@@ -37,7 +37,8 @@ export function useBookingsViewModel(
     try {
       const newBooking = await bookingApi.create({
         ...bookingData,
-        bookedBy: userId
+        bookedBy: userId,
+        status: 'pending'
       });
       
       setBookings(prev => [newBooking, ...prev]);

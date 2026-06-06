@@ -91,7 +91,13 @@ export function MyBookings({ bookings, rooms, currentUserId }: MyBookingsProps) 
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center gap-2 text-sm">
                         <span className="text-muted-foreground">Room:</span>
-                        <span className="font-medium">{room?.roomNumber} ({room?.type})</span>
+                        <span className="font-medium">
+                          {booking.status === 'pending' ? (
+                            <span className="text-amber-500 italic">Unallocated ({room?.type})</span>
+                          ) : (
+                            `${room?.roomNumber} (${room?.type})`
+                          )}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <span className="text-muted-foreground">Guests:</span>
@@ -169,7 +175,13 @@ export function MyBookings({ bookings, rooms, currentUserId }: MyBookingsProps) 
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Room</p>
-                    <p className="font-medium">{rooms.find(r => r.id === selectedBooking.roomId)?.roomNumber}</p>
+                    <p className="font-medium">
+                      {selectedBooking.status === 'pending' ? (
+                        <span className="text-amber-500 italic">Unallocated (Assigned at Approval)</span>
+                      ) : (
+                        rooms.find(r => r.id === selectedBooking.roomId)?.roomNumber || 'N/A'
+                      )}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Check-in</p>

@@ -65,7 +65,7 @@ export function RoomManagement({ rooms }: RoomManagementProps) {
         <Card glass className="overflow-hidden flex flex-col h-full border border-border/40 hover:border-primary/30 transition-all duration-300">
           <div className="relative h-64 overflow-hidden bg-slate-950">
             <img
-              src="/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg"
+              src="/images/deluxe_room.jpeg"
               alt="Deluxe Rooms"
               className="w-full h-full object-cover opacity-85 hover:scale-105 transition-transform duration-700"
             />
@@ -168,7 +168,7 @@ export function RoomManagement({ rooms }: RoomManagementProps) {
         <Card glass className="overflow-hidden flex flex-col h-full border border-border/40 hover:border-primary/30 transition-all duration-300">
           <div className="relative h-64 overflow-hidden bg-slate-950">
             <img
-              src="/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg"
+              src="/images/super_deluxe_room.jpeg"
               alt="Super Deluxe Rooms"
               className="w-full h-full object-cover opacity-85 hover:scale-105 transition-transform duration-700"
             />

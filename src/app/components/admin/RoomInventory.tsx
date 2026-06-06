@@ -6,11 +6,14 @@ import { format, addDays, subDays } from 'date-fns';
 import { availabilityApi } from '../../services/api';
 import { toast } from 'sonner';
 
+import { Booking } from '../../types';
+
 interface RoomInventoryProps {
   role: 'admin' | 'staff';
+  bookings?: Booking[];
 }
 
-export function RoomInventory({ role }: RoomInventoryProps) {
+export function RoomInventory({ role, bookings }: RoomInventoryProps) {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [dates, setDates] = useState<string[]>([]);
   const [grid, setGrid] = useState<Record<string, Record<string, number>>>({});
@@ -37,7 +40,7 @@ export function RoomInventory({ role }: RoomInventoryProps) {
 
   useEffect(() => {
     fetchGrid();
-  }, [startDate]);
+  }, [startDate, bookings]);
 
   const handleCellChange = (roomType: string, dateStr: string, value: string) => {
     const intVal = parseInt(value, 10);

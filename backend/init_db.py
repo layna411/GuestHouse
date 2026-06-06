@@ -116,13 +116,13 @@ def seed_all_tables(reset=False):
             
             # 12 Deluxe Rooms (101 to 112)
             deluxe_images = [
-                "/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg",
-                "/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg",
-                "/images/WhatsApp Image 2026-06-04 at 3.41.03 PM.jpeg",
-                "/images/WhatsApp Image 2026-06-04 at 3.41.04 PM.jpeg",
-                "/images/WhatsApp Image 2026-06-04 at 3.41.04 PM (1).jpeg",
-                "/images/WhatsApp Image 2026-06-04 at 3.41.05 PM.jpeg",
-                "/images/WhatsApp Image 2026-06-04 at 3.41.05 PM (1).jpeg"
+                "/images/deluxe_room.jpeg",
+                "/images/lobby_view.jpeg",
+                "/images/dining_hall.jpeg",
+                "/images/bed_detail.jpeg",
+                "/images/room_suite.jpeg",
+                "/images/facade.jpeg",
+                "/images/bathroom.jpeg"
             ]
             for i in range(1, 13):
                 room_number = f"1{str(i).zfill(2)}"
@@ -140,13 +140,13 @@ def seed_all_tables(reset=False):
 
             # 6 Super Deluxe Rooms (G01 to G06)
             super_images = [
-                "/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg",
-                "/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg",
-                "/images/WhatsApp Image 2026-06-04 at 3.41.07 PM.jpeg",
-                "/images/WhatsApp Image 2026-06-04 at 3.41.07 PM (1).jpeg",
-                "/images/WhatsApp Image 2026-06-04 at 3.41.08 PM.jpeg",
-                "/images/WhatsApp Image 2026-06-04 at 3.41.09 PM.jpeg",
-                "/images/WhatsApp Image 2026-06-04 at 3.41.09 PM (1).jpeg"
+                "/images/super_deluxe_room.jpeg",
+                "/images/deluxe_room.jpeg",
+                "/images/exterior_night.jpeg",
+                "/images/room_corner.jpeg",
+                "/images/conference_room.jpeg",
+                "/images/lobby_entrance.jpeg",
+                "/images/gym.jpeg"
             ]
             for i in range(1, 7):
                 room_number = f"G0{i}"
@@ -238,23 +238,23 @@ def seed_all_tables(reset=False):
         if GalleryModel.query.count() == 0:
             print("Seeding gallery...")
             default_gallery = [
-                '/images/WhatsApp Image 2026-06-04 at 3.41.09 PM.jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.11 PM.jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.05 PM.jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.07 PM.jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.12 PM.jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.03 PM.jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.04 PM (1).jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.04 PM.jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.05 PM (1).jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.07 PM (1).jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.08 PM.jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.09 PM (1).jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM.jpeg',
-                '/images/WhatsApp Image 2026-06-04 at 3.41.12 PM (1).jpeg'
+                '/images/lobby_entrance.jpeg',
+                '/images/premium_lounge.jpeg',
+                '/images/facade.jpeg',
+                '/images/exterior_night.jpeg',
+                '/images/swimming_pool.jpeg',
+                '/images/lobby_view.jpeg',
+                '/images/dining_hall.jpeg',
+                '/images/room_suite.jpeg',
+                '/images/bed_detail.jpeg',
+                '/images/bathroom.jpeg',
+                '/images/deluxe_room.jpeg',
+                '/images/room_corner.jpeg',
+                '/images/conference_room.jpeg',
+                '/images/gym.jpeg',
+                '/images/super_deluxe_room.jpeg',
+                '/images/lounge_sitting.jpeg',
+                '/images/suite_balcony.jpeg'
             ]
             for img in default_gallery:
                 g = GalleryModel(image_url=img, caption="Saveetha Showcase Photo")
@@ -268,17 +268,14 @@ def seed_all_tables(reset=False):
         if RoomAvailabilityModel.query.count() == 0:
             print("Seeding room availabilityOverrides...")
             
-            # Excel columns matching dates from 07-06-2026 to 18-06-2026
+            # Seed only blocked/unavailable dates (capacity 0) as overrides
+            # All other dates will default to 12 for Deluxe and 6 for Super Deluxe
             excel_data = {
                 "Deluxe Room": {
-                    "2026-06-07": 8, "2026-06-08": 10, "2026-06-09": 10, "2026-06-10": 10,
-                    "2026-06-11": 10, "2026-06-12": 10, "2026-06-13": 10, "2026-06-14": 10,
-                    "2026-06-15": 10, "2026-06-16": 0, "2026-06-17": 0, "2026-06-18": 10
+                    "2026-06-16": 0, "2026-06-17": 0
                 },
                 "Super Deluxe Room": {
-                    "2026-06-07": 4, "2026-06-08": 6, "2026-06-09": 6, "2026-06-10": 6,
-                    "2026-06-11": 6, "2026-06-12": 6, "2026-06-13": 6, "2026-06-14": 6,
-                    "2026-06-15": 6, "2026-06-16": 0, "2026-06-17": 0, "2026-06-18": 6
+                    "2026-06-16": 0, "2026-06-17": 0
                 }
             }
             for room_type, dates in excel_data.items():

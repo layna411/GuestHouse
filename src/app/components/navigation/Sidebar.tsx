@@ -55,15 +55,15 @@ export function Sidebar({ role, activeTab, onTabChange, onLogout }: SidebarProps
               key={item.id}
               onClick={() => onTabChange(item.id)}
               className={`
-                w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
+                w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-left
                 ${isActive
                   ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-lg'
                   : 'hover:bg-sidebar-accent/50 text-sidebar-foreground/80 hover:text-sidebar-foreground'
                 }
               `}
             >
-              <Icon className="w-5 h-5" />
-              <span className="font-medium">{item.label}</span>
+              <Icon className="w-5 h-5 flex-shrink-0" />
+              <span className="font-medium text-left leading-tight">{item.label}</span>
             </button>
           );
         })}
@@ -72,18 +72,18 @@ export function Sidebar({ role, activeTab, onTabChange, onLogout }: SidebarProps
       <div className="p-4 border-t border-sidebar-border space-y-2">
         <button
           onClick={() => onTabChange('settings')}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-accent/50 transition-colors text-sidebar-foreground/80 hover:text-sidebar-foreground"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-sidebar-accent/50 transition-colors text-sidebar-foreground/80 hover:text-sidebar-foreground text-left"
         >
-          <Settings className="w-5 h-5" />
-          <span className="font-medium">Settings</span>
+          <Settings className="w-5 h-5 flex-shrink-0" />
+          <span className="font-medium text-left leading-tight">Settings</span>
         </button>
 
         <button
           onClick={onLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-destructive/10 transition-colors text-sidebar-foreground/80 hover:text-destructive"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-destructive/10 transition-colors text-sidebar-foreground/80 hover:text-destructive text-left"
         >
-          <LogOut className="w-5 h-5" />
-          <span className="font-medium">Logout</span>
+          <LogOut className="w-5 h-5 flex-shrink-0" />
+          <span className="font-medium text-left leading-tight">Logout</span>
         </button>
       </div>
     </div>

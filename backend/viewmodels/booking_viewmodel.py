@@ -122,6 +122,7 @@ class BookingViewModel:
             current_date = cin_date + timedelta(days=n)
             date_str = current_date.strftime("%Y-%m-%d")
             dt = datetime.combine(current_date, datetime.min.time())
+            next_day_start = dt + timedelta(days=1)
 
             override = RoomAvailabilityModel.query.filter_by(room_type=room.type, date=date_str).first()
             cap = override.available_count if override else get_default_capacity(room.type)
@@ -131,8 +132,8 @@ class BookingViewModel:
                 occupied = BookingModel.query.filter(
                     BookingModel.room_id.in_(room_ids),
                     BookingModel.status.in_(["confirmed", "pending"]),
-                    BookingModel.check_in <= dt,
-                    BookingModel.check_out > dt
+                    BookingModel.check_in < next_day_start,
+                    BookingModel.check_out >= next_day_start
                 ).count()
 
             if cap - occupied <= 0:
@@ -156,14 +157,15 @@ class BookingViewModel:
             )
 
         # Determine initial booking status
-        # If the user placing it is an admin or staff, confirm immediately. Otherwise, set to pending.
-        from models.user import UserModel
-        user = UserModel.query.get(booked_by)
-        initial_status = "confirmed"
-        if user and user.role in ["staff", "customer"]:
-            initial_status = "confirmed"
-        elif not user:
-            initial_status = "pending"
+        initial_status = data.get("status")
+        if not initial_status:
+            # Fallback logic if status is not explicitly provided in the payload
+            from models.user import UserModel
+            user = UserModel.query.get(booked_by)
+            if user and user.role == "admin":
+                initial_status = "confirmed"
+            else:
+                initial_status = "pending"
 
         # Create reservation
         booking_id = cls._generate_booking_id()
@@ -270,13 +272,33 @@ class BookingViewModel:
             raise ValueError(f"Only pending bookings can be confirmed. Current status is {booking.status}.")
 
         if room_id:
-            # Check room exists and set it
-            room = RoomModel.query.get(room_id)
+            room = RoomModel.query.get(int(room_id))
             if not room:
                 raise ValueError("Selected room does not exist.")
-            booking.room_id = room.id
         else:
             room = RoomModel.query.get(booking.room_id)
+
+        if room:
+            if room.status == "maintenance":
+                raise ValueError("This room is currently under maintenance and cannot be booked.")
+            
+            # Check for scheduling overlap conflicts
+            conflicting_booking = BookingModel.query.filter(
+                BookingModel.room_id == room.id,
+                BookingModel.status == "confirmed",
+                BookingModel.id != booking.id,
+                BookingModel.check_in < booking.check_out,
+                BookingModel.check_out > booking.check_in
+            ).first()
+
+            if conflicting_booking:
+                raise ValueError(
+                    f"Booking conflict: Room {room.room_number} is already reserved "
+                    f"between {conflicting_booking.check_in.strftime('%Y-%m-%d %H:%M')} "
+                    f"and {conflicting_booking.check_out.strftime('%Y-%m-%d %H:%M')}."
+                )
+
+            booking.room_id = room.id
 
         booking.status = "confirmed"
         

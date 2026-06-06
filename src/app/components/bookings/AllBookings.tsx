@@ -14,9 +14,10 @@ interface AllBookingsProps {
   onCancelBooking: (id: string) => void;
   onCompleteBooking: (id: string) => void;
   onConfirmBooking?: (id: string, roomId?: string) => void;
+  role?: string;
 }
 
-export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBooking, onConfirmBooking }: AllBookingsProps) {
+export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBooking, onConfirmBooking, role }: AllBookingsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'confirmed' | 'pending' | 'cancelled' | 'completed'>('all');
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
@@ -145,7 +146,13 @@ export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBookin
                           <p className="text-xs text-muted-foreground">{booking.guestPhone}</p>
                         </div>
                       </td>
-                      <td className="py-3 px-4 text-sm">{room?.roomNumber}</td>
+                      <td className="py-3 px-4 text-sm font-medium">
+                        {booking.status === 'pending' ? (
+                          <span className="text-amber-500 font-medium italic">Unallocated</span>
+                        ) : (
+                          room?.roomNumber || 'N/A'
+                        )}
+                      </td>
                       <td className="py-3 px-4 text-sm">{format(booking.checkIn, 'MMM dd, yyyy')}</td>
                       <td className="py-3 px-4 text-sm">{format(booking.checkOut, 'MMM dd, yyyy')}</td>
                       <td className="py-3 px-4 text-xs font-medium max-w-[120px] truncate">{booking.mealPlan || 'Room without Breakfast'}</td>
@@ -162,7 +169,7 @@ export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBookin
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
-                          {booking.status === 'pending' && onConfirmBooking && (
+                          {booking.status === 'pending' && onConfirmBooking && role === 'staff' && (
                             <>
                               <Button
                                 variant="ghost"
@@ -260,7 +267,13 @@ export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBookin
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Room</p>
-                    <p className="font-medium">{rooms.find(r => r.id === selectedBooking.roomId)?.roomNumber}</p>
+                    <p className="font-medium">
+                      {selectedBooking.status === 'pending' ? (
+                        <span className="text-amber-500 italic">Unallocated (Assigned at Approval)</span>
+                      ) : (
+                        rooms.find(r => r.id === selectedBooking.roomId)?.roomNumber || 'N/A'
+                      )}
+                    </p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Check-in</p>
@@ -305,7 +318,7 @@ export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBookin
                 <Button variant="outline" onClick={() => setSelectedBooking(null)} className="flex-1">
                   Close
                 </Button>
-                 {selectedBooking.status === 'pending' && onConfirmBooking && (
+                 {selectedBooking.status === 'pending' && onConfirmBooking && role === 'staff' && (
                   <>
                     <Button
                       variant="success"

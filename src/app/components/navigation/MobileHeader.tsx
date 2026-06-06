@@ -61,15 +61,15 @@ export function MobileHeader({
                   key={item.id}
                   onClick={() => handleTabChange(item.id)}
                   className={`
-                    w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
+                    w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-left
                     ${isActive
                       ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                       : 'hover:bg-sidebar-accent/50 text-sidebar-foreground/80'
                     }
                   `}
                 >
-                  <Icon className="w-5 h-5" />
-                  <span className="font-medium">{item.label}</span>
+                  <Icon className="w-5 h-5 flex-shrink-0" />
+                  <span className="font-medium text-left leading-tight">{item.label}</span>
                 </button>
               );
             })}
@@ -78,15 +78,15 @@ export function MobileHeader({
               <button
                 onClick={() => handleTabChange('settings')}
                 className={`
-                  w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
+                  w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-left
                   ${activeTab === 'settings'
                     ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                     : 'hover:bg-sidebar-accent/50 text-sidebar-foreground/80'
                   }
                 `}
               >
-                <Settings className="w-5 h-5" />
-                <span className="font-medium">Settings</span>
+                <Settings className="w-5 h-5 flex-shrink-0" />
+                <span className="font-medium text-left leading-tight">Settings</span>
               </button>
 
               <button
@@ -94,10 +94,10 @@ export function MobileHeader({
                   onLogout();
                   setIsMenuOpen(false);
                 }}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-destructive/10 transition-colors text-sidebar-foreground/80 hover:text-destructive"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-destructive/10 transition-colors text-sidebar-foreground/80 hover:text-destructive text-left"
               >
-                <LogOut className="w-5 h-5" />
-                <span className="font-medium">Logout</span>
+                <LogOut className="w-5 h-5 flex-shrink-0" />
+                <span className="font-medium text-left leading-tight">Logout</span>
               </button>
             </div>
           </div>

@@ -222,5 +222,34 @@ class TestGuestHouseBackend(unittest.TestCase):
         self.assertIsNotNone(db_user)
         self.assertEqual(db_user.role, "staff")
 
+    def test_confirm_booking_conflict(self):
+        """Test confirming a pending booking on a room that has an overlapping confirmed booking fails."""
+        # Create a pending booking for overlapping dates
+        from models.booking import BookingModel
+        pending_b = BookingModel(
+            id="B002",
+            room_id=self.room.id,
+            guest_name="Pending Guest",
+            guest_phone="+91 98765 00002",
+            guest_email="pending@email.com",
+            check_in=self.booking.check_in,
+            check_out=self.booking.check_out,
+            number_of_guests=1,
+            purpose="Test pending",
+            status="pending",
+            booked_by="emp001"
+        )
+        db.session.add(pending_b)
+        db.session.commit()
+
+        # Try to confirm this booking for same room via API
+        response = self.client.post(f"/api/bookings/{pending_b.id}/confirm", json={
+            "roomId": str(self.room.id)
+        })
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertIn("error", data)
+        self.assertIn("Booking conflict", data["error"])
+
 if __name__ == "__main__":
     unittest.main()

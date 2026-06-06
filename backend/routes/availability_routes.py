@@ -47,8 +47,9 @@ def get_daily_grid():
             cap = override.available_count if override else default_cap
             
             # Count bookings overlapping this date
-            # stay date d is active if check_in <= d < check_out
+            # stay date d is active if check_in < next_day_start and check_out >= next_day_start
             dt = datetime.strptime(d, "%Y-%m-%d")
+            next_day_start = dt + timedelta(days=1)
             # Query active bookings for rooms of this type
             rooms = RoomModel.query.filter_by(type=rt).all()
             room_ids = [r.id for r in rooms]
@@ -58,8 +59,8 @@ def get_daily_grid():
                 occupied = BookingModel.query.filter(
                     BookingModel.room_id.in_(room_ids),
                     BookingModel.status.in_(["confirmed", "pending"]),
-                    BookingModel.check_in <= dt,
-                    BookingModel.check_out > dt
+                    BookingModel.check_in < next_day_start,
+                    BookingModel.check_out >= next_day_start
                 ).count()
                 
             grid_data[rt][d] = max(0, cap - occupied)
@@ -160,11 +161,12 @@ def check_stay_availability():
         # Bookings overlapping this date
         occupied = 0
         if room_ids:
+            next_day_start = dt + timedelta(days=1)
             occupied = BookingModel.query.filter(
                 BookingModel.room_id.in_(room_ids),
                 BookingModel.status.in_(["confirmed", "pending"]),
-                BookingModel.check_in <= dt,
-                BookingModel.check_out > dt
+                BookingModel.check_in < next_day_start,
+                BookingModel.check_out >= next_day_start
             ).count()
 
         remaining = max(0, cap - occupied)

@@ -117,7 +117,7 @@ export const bookingApi = {
     }));
   },
 
-  async create(bookingData: Omit<Booking, 'id' | 'createdAt' | 'status'>): Promise<Booking> {
+  async create(bookingData: Omit<Booking, 'id' | 'createdAt'>): Promise<Booking> {
     const payload = {
       roomId: bookingData.roomId,
       guestName: bookingData.guestName,
@@ -127,7 +127,8 @@ export const bookingApi = {
       checkOut: bookingData.checkOut.toISOString(),
       numberOfGuests: bookingData.numberOfGuests,
       purpose: bookingData.purpose,
-      bookedBy: bookingData.bookedBy
+      bookedBy: bookingData.bookedBy,
+      status: bookingData.status
     };
 
     const res = await apiFetch('/api/bookings', {

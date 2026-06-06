@@ -93,12 +93,20 @@ export function PaymentView({
   };
 
   return (
-    <div className="pt-24 pb-16 bg-[#0f1f42] min-h-screen text-white font-sans">
+    <div 
+      className="pt-12 pb-16 min-h-screen text-foreground font-sans"
+      style={{
+        backgroundImage: 'linear-gradient(to bottom, var(--background-overlay-start), var(--background-overlay-end)), url("/images/image.png")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
       <div className="max-w-4xl mx-auto px-4">
         {/* Header Back Button */}
         <button
           onClick={() => setBookingFlowState('checkout')}
-          className="flex items-center gap-2 text-xs font-bold text-slate-300 hover:text-white uppercase tracking-wider mb-6 cursor-pointer"
+          className="flex items-center gap-2 text-xs font-bold text-muted-foreground hover:text-foreground uppercase tracking-wider mb-6 cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Details
@@ -107,19 +115,19 @@ export function PaymentView({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Main Payment Section */}
           <div className="lg:col-span-7 space-y-6">
-            <h2 className="text-2xl font-bold font-serif tracking-wide border-b border-white/10 pb-4">
+            <h2 className="text-2xl font-bold font-serif tracking-wide border-b border-border/40 pb-4 text-foreground">
               Secure Payment Gateway
             </h2>
 
             {/* Payment Method Selector Tab */}
-            <div className="grid grid-cols-3 gap-2 bg-slate-950/40 p-1.5 rounded-xl border border-white/10">
+            <div className="grid grid-cols-3 gap-2 bg-secondary/40 p-1.5 rounded-xl border border-border/30">
               <button
                 type="button"
                 onClick={() => setPaymentMethod('upi')}
                 className={`py-3 rounded-lg text-xs font-bold flex flex-col items-center gap-1.5 transition-all cursor-pointer ${
                   paymentMethod === 'upi' 
-                    ? 'bg-teal-600 text-white shadow-md' 
-                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                    ? 'bg-primary text-primary-foreground shadow-md font-bold' 
+                    : 'text-muted-foreground hover:bg-black/5 hover:text-foreground'
                 }`}
               >
                 <Smartphone className="w-4 h-4" />
@@ -130,8 +138,8 @@ export function PaymentView({
                 onClick={() => setPaymentMethod('card')}
                 className={`py-3 rounded-lg text-xs font-bold flex flex-col items-center gap-1.5 transition-all cursor-pointer ${
                   paymentMethod === 'card' 
-                    ? 'bg-teal-600 text-white shadow-md' 
-                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                    ? 'bg-primary text-primary-foreground shadow-md font-bold' 
+                    : 'text-muted-foreground hover:bg-black/5 hover:text-foreground'
                 }`}
               >
                 <CreditCard className="w-4 h-4" />
@@ -142,8 +150,8 @@ export function PaymentView({
                 onClick={() => setPaymentMethod('netbanking')}
                 className={`py-3 rounded-lg text-xs font-bold flex flex-col items-center gap-1.5 transition-all cursor-pointer ${
                   paymentMethod === 'netbanking' 
-                    ? 'bg-teal-600 text-white shadow-md' 
-                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                    ? 'bg-primary text-primary-foreground shadow-md font-bold' 
+                    : 'text-muted-foreground hover:bg-black/5 hover:text-foreground'
                 }`}
               >
                 <Landmark className="w-4 h-4" />
@@ -152,18 +160,18 @@ export function PaymentView({
             </div>
 
             {/* Payment Forms */}
-            <div className="backdrop-blur-md bg-slate-900/60 shadow-lg rounded-xl border border-white/10 p-6 rounded-2xl">
+            <div className="backdrop-blur-md bg-card/40 shadow-xl rounded-2xl border border-border/50 p-6">
               <form onSubmit={handlePaymentSubmit} className="space-y-6">
                 
                 {/* Method 1: UPI/QR Scan */}
                 {paymentMethod === 'upi' && (
                   <div className="text-center space-y-6 py-4 flex flex-col items-center">
-                    <p className="text-xs text-slate-300">
+                    <p className="text-xs text-muted-foreground">
                       Scan the secure QR Code below using GPay, PhonePe, Paytm or any BHIM UPI App to pay instantly.
                     </p>
                     
                     {/* Simulated QR Code */}
-                    <div className="bg-white p-4 rounded-2xl shadow-2xl relative w-48 h-48 flex items-center justify-center">
+                    <div className="bg-white p-4 rounded-2xl shadow-xl relative w-48 h-48 flex items-center justify-center border border-border/30">
                       <svg className="w-40 h-40 text-slate-900" viewBox="0 0 100 100">
                         {/* Simulated QR Matrix */}
                         <path fill="currentColor" d="M0 0h30v30H0zm40 0h20v20H40zm30 0h30v30H70zM0 40h20v20H0zm60 40h10v20H60zm10-40h30v30H70zM0 70h30v30H0zm40 40h20v10H40zm40 0h20v10H80z" />
@@ -172,17 +180,17 @@ export function PaymentView({
                         <circle cx="50" cy="50" r="4" fill="white" />
                       </svg>
                       {processing && (
-                        <div className="absolute inset-0 bg-slate-900/80 rounded-2xl flex items-center justify-center">
-                          <div className="w-8 h-8 rounded-full border-4 border-teal-500 border-t-transparent animate-spin" />
+                        <div className="absolute inset-0 bg-background/80 rounded-2xl flex items-center justify-center">
+                          <div className="w-8 h-8 rounded-full border-4 border-primary border-t-transparent animate-spin" />
                         </div>
                       )}
                     </div>
                     
                     <div className="space-y-1.5">
-                      <span className="text-[10px] uppercase font-bold tracking-widest text-teal-400 bg-teal-500/10 px-3 py-1 rounded-full border border-teal-500/20">
+                      <span className="text-[10px] uppercase font-bold tracking-widest text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
                         Secure Sandbox UPI ID
                       </span>
-                      <p className="font-mono text-sm font-bold text-slate-200 mt-2">saveethaguesthouse@upi</p>
+                      <p className="font-mono text-sm font-bold text-foreground mt-2">saveethaguesthouse@upi</p>
                     </div>
                   </div>
                 )}
@@ -191,7 +199,7 @@ export function PaymentView({
                 {paymentMethod === 'card' && (
                   <div className="space-y-4">
                     {/* Interactive Mock Card Display */}
-                    <div className="w-full h-40 rounded-xl bg-gradient-to-r from-teal-700 to-emerald-800 p-5 flex flex-col justify-between shadow-2xl relative overflow-hidden border border-teal-500/20">
+                    <div className="w-full h-40 rounded-xl bg-gradient-to-r from-teal-700 to-emerald-800 p-5 flex flex-col justify-between shadow-2xl relative overflow-hidden border border-teal-600/20">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold uppercase tracking-widest text-teal-100">Saveetha Resident Card</span>
                         <CreditCard className="w-6 h-6 text-teal-200" />
@@ -217,53 +225,53 @@ export function PaymentView({
 
                     <div className="space-y-3">
                       <div>
-                        <label className="block mb-1.5 text-xs text-slate-300 font-bold uppercase tracking-wider">Cardholder Name</label>
+                        <label className="block mb-1.5 text-xs text-muted-foreground font-bold uppercase tracking-wider">Cardholder Name</label>
                         <input
                           type="text"
                           value={cardName}
                           onChange={(e) => setCardName(e.target.value.toUpperCase())}
                           placeholder="AS APPEARS ON CREDIT CARD"
-                          className="glass-input w-full px-4 py-2.5 text-xs text-white uppercase bg-slate-950/40 border border-white/10 rounded-xl"
+                          className="glass-input w-full px-4 py-2.5 text-xs"
                           required
                           disabled={processing}
                         />
                       </div>
                       <div>
-                        <label className="block mb-1.5 text-xs text-slate-300 font-bold uppercase tracking-wider">Card Number</label>
+                        <label className="block mb-1.5 text-xs text-muted-foreground font-bold uppercase tracking-wider">Card Number</label>
                         <input
                           type="text"
                           value={cardNumber}
                           onChange={handleCardNumberChange}
                           placeholder="4111 2222 3333 4444"
                           maxLength={19}
-                          className="glass-input w-full px-4 py-2.5 text-xs text-white bg-slate-950/40 border border-white/10 rounded-xl font-mono"
+                          className="glass-input w-full px-4 py-2.5 text-xs font-mono"
                           required
                           disabled={processing}
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block mb-1.5 text-xs text-slate-300 font-bold uppercase tracking-wider">Expiration Date</label>
+                          <label className="block mb-1.5 text-xs text-muted-foreground font-bold uppercase tracking-wider">Expiration Date</label>
                           <input
                             type="text"
                             value={cardExpiry}
                             onChange={handleExpiryChange}
                             placeholder="MM/YY"
                             maxLength={5}
-                            className="glass-input w-full px-4 py-2.5 text-xs text-white bg-slate-950/40 border border-white/10 rounded-xl font-mono text-center"
+                            className="glass-input w-full px-4 py-2.5 text-xs font-mono text-center"
                             required
                             disabled={processing}
                           />
                         </div>
                         <div>
-                          <label className="block mb-1.5 text-xs text-slate-300 font-bold uppercase tracking-wider">CVV Code</label>
+                          <label className="block mb-1.5 text-xs text-muted-foreground font-bold uppercase tracking-wider">CVV Code</label>
                           <input
                             type="password"
                             value={cardCvv}
                             onChange={handleCvvChange}
                             placeholder="•••"
                             maxLength={3}
-                            className="glass-input w-full px-4 py-2.5 text-xs text-white bg-slate-950/40 border border-white/10 rounded-xl font-mono text-center"
+                            className="glass-input w-full px-4 py-2.5 text-xs font-mono text-center"
                             required
                             disabled={processing}
                           />
@@ -276,7 +284,7 @@ export function PaymentView({
                 {/* Method 3: Net Banking */}
                 {paymentMethod === 'netbanking' && (
                   <div className="space-y-4">
-                    <p className="text-xs text-slate-300">
+                    <p className="text-xs text-muted-foreground">
                       Select your respective retail bank from the popular options below:
                     </p>
                     <div className="grid grid-cols-2 gap-3">
@@ -287,8 +295,8 @@ export function PaymentView({
                           onClick={() => setSelectedBank(bank)}
                           className={`px-4 py-3 rounded-xl border text-xs font-bold text-left transition-all cursor-pointer ${
                             selectedBank === bank
-                              ? 'bg-teal-500/10 border-teal-500 text-teal-400 shadow-md shadow-teal-500/10'
-                              : 'bg-slate-950/20 border-white/10 text-slate-300 hover:border-white/20'
+                              ? 'bg-primary/10 border-primary text-primary shadow-md shadow-primary/10 font-bold'
+                              : 'bg-background border-border text-foreground hover:border-primary/50'
                           }`}
                           disabled={processing}
                         >
@@ -300,10 +308,10 @@ export function PaymentView({
                 )}
 
                 {/* Submit Action */}
-                <div className="pt-4 border-t border-white/10 space-y-4">
-                  <div className="flex items-center justify-between text-xs text-slate-400">
+                <div className="pt-4 border-t border-border/30 space-y-4">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span className="flex items-center gap-1.5">
-                      <Lock className="w-3.5 h-3.5 text-emerald-500" /> Secure 256-bit SSL Transaction
+                      <Lock className="w-3.5 h-3.5 text-emerald-600" /> Secure 256-bit SSL Transaction
                     </span>
                     <span>Merchant: SIMATS Guest House</span>
                   </div>
@@ -311,11 +319,11 @@ export function PaymentView({
                   <button
                     type="submit"
                     disabled={processing}
-                    className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg hover:shadow-teal-500/10 cursor-pointer flex items-center justify-center gap-2"
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-4 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg hover:shadow-primary/20 cursor-pointer flex items-center justify-center gap-2"
                   >
                     {processing ? (
                       <>
-                        <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                        <div className="w-4 h-4 rounded-full border-2 border-primary-foreground border-t-transparent animate-spin" />
                         Verifying Transaction...
                       </>
                     ) : (
@@ -333,43 +341,43 @@ export function PaymentView({
 
           {/* Pricing Summary Sidebar */}
           <div className="lg:col-span-5 space-y-6">
-            <h2 className="text-2xl font-bold font-serif tracking-wide border-b border-white/10 pb-4">
+            <h2 className="text-2xl font-bold font-serif tracking-wide border-b border-border/40 pb-4 text-foreground">
               Booking Ledger
             </h2>
 
-            <div className="backdrop-blur-md bg-slate-900/60 shadow-lg rounded-xl border border-white/10 p-5 rounded-2xl space-y-4">
+            <div className="backdrop-blur-md bg-card/40 shadow-xl rounded-2xl border border-border/50 p-5 space-y-4 text-foreground">
               <div className="space-y-1">
-                <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Resident Details</p>
-                <p className="text-sm font-bold">{pendingBookingPayload.guestName}</p>
-                <p className="text-xs text-slate-300">{pendingBookingPayload.guestEmail}</p>
-                <p className="text-xs text-slate-300">{pendingBookingPayload.guestPhone}</p>
+                <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Resident Details</p>
+                <p className="text-sm font-bold text-foreground">{pendingBookingPayload.guestName}</p>
+                <p className="text-xs text-muted-foreground">{pendingBookingPayload.guestEmail}</p>
+                <p className="text-xs text-muted-foreground">{pendingBookingPayload.guestPhone}</p>
               </div>
 
-              <div className="border-t border-white/10 pt-3 space-y-2 text-xs">
+              <div className="border-t border-border/30 pt-3 space-y-2 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Accommodations:</span>
-                  <span className="font-semibold text-slate-200">
+                  <span className="text-muted-foreground">Accommodations:</span>
+                  <span className="font-semibold text-foreground">
                     {pendingBookingPayload.roomId ? "Deluxe Room" : "Super Deluxe Room"}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Meal Plan:</span>
-                  <span className="font-semibold text-slate-200 truncate max-w-[150px]">
+                  <span className="text-muted-foreground">Meal Plan:</span>
+                  <span className="font-semibold text-foreground truncate max-w-[150px]">
                     {pendingBookingPayload.mealPlan}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Total Guests:</span>
-                  <span className="font-semibold text-slate-200">{pendingBookingPayload.numberOfGuests} Persons</span>
+                  <span className="text-muted-foreground">Total Guests:</span>
+                  <span className="font-semibold text-foreground">{pendingBookingPayload.numberOfGuests} Persons</span>
                 </div>
               </div>
 
-              <div className="border-t border-white/10 pt-4 space-y-2 text-xs font-bold">
-                <div className="flex justify-between text-lg text-white">
+              <div className="border-t border-border/30 pt-4 space-y-2 text-xs font-bold">
+                <div className="flex justify-between text-lg text-foreground">
                   <span>Total Charges</span>
-                  <span className="text-accent">₹{pendingBookingPayload.totalPrice}</span>
+                  <span className="text-primary text-xl">₹{pendingBookingPayload.totalPrice}</span>
                 </div>
-                <p className="text-[10px] text-slate-400 font-normal leading-relaxed">
+                <p className="text-[10px] text-muted-foreground font-normal leading-relaxed">
                   * Inclusive of all central CGST (2.5%) and state SGST (2.5%) taxes. Payment receipt will be dispatched upon booking validation.
                 </p>
               </div>

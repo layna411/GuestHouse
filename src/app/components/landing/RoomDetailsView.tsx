@@ -30,7 +30,15 @@ export const RoomDetailsView: React.FC<RoomDetailsViewProps> = ({
   };
 
   return (
-    <div className="pt-24 pb-16 text-left bg-background min-h-screen">
+    <div 
+      className="pt-12 pb-16 text-left min-h-screen"
+      style={{
+        backgroundImage: 'linear-gradient(to bottom, var(--background-overlay-start), var(--background-overlay-end)), url("/images/image.png")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
       {/* Breadcrumbs Navigation */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 border-b border-border/10 mb-8 font-sans">
         <div className="flex items-center gap-2 text-xs text-muted-foreground font-semibold uppercase tracking-wider">
@@ -76,9 +84,8 @@ export const RoomDetailsView: React.FC<RoomDetailsViewProps> = ({
               ))}
             </div>
           </div>
-
           {/* Right Column: Spec Sheet & Workspace Features (col-span-5) */}
-          <div className="lg:col-span-5 bg-card/30 backdrop-blur-md rounded-2xl border border-border/50 p-6 sm:p-8 space-y-6 shadow-xl">
+          <div className="lg:col-span-5 bg-card/40 backdrop-blur-md rounded-2xl border border-border/50 p-6 sm:p-8 space-y-6 shadow-xl">
             <div>
               <span className="text-xs uppercase font-bold tracking-widest text-accent font-sans">{selectedRoomForBooking.type}</span>
               <h2 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mt-1">{selectedRoomForBooking.type}</h2>
@@ -139,7 +146,7 @@ export const RoomDetailsView: React.FC<RoomDetailsViewProps> = ({
         </div>
 
         {/* Rates Table Section (Full Width) */}
-        <div className="mt-12 bg-card/30 backdrop-blur-md rounded-2xl border border-border/50 p-6 sm:p-8 shadow-xl space-y-6">
+        <div className="mt-12 bg-card/40 backdrop-blur-md rounded-2xl border border-border/50 p-6 sm:p-8 shadow-xl space-y-6">
           <div>
             <h3 className="font-serif text-2xl font-bold text-foreground">Room Rates & Reservation Packages</h3>
             <p className="text-xs text-muted-foreground mt-1 font-sans">Select your preferred check-in rate. Rates dynamically calculate for {guestCount} guest{guestCount > 1 ? 's' : ''}.</p>

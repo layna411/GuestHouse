@@ -93,23 +93,23 @@ export const INITIAL_REVIEWS: GuestReview[] = [
 ];
 
 export const GALLERY_IMAGES = [
-  '/images/WhatsApp Image 2026-06-04 at 3.41.09 PM.jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.11 PM.jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.05 PM.jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.07 PM.jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.12 PM.jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.03 PM.jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.04 PM (1).jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.04 PM.jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.05 PM (1).jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.07 PM (1).jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.08 PM.jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.09 PM (1).jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM.jpeg',
-  '/images/WhatsApp Image 2026-06-04 at 3.41.12 PM (1).jpeg',
+  '/images/lobby_entrance.jpeg',
+  '/images/premium_lounge.jpeg',
+  '/images/facade.jpeg',
+  '/images/exterior_night.jpeg',
+  '/images/swimming_pool.jpeg',
+  '/images/lobby_view.jpeg',
+  '/images/dining_hall.jpeg',
+  '/images/room_suite.jpeg',
+  '/images/bed_detail.jpeg',
+  '/images/bathroom.jpeg',
+  '/images/deluxe_room.jpeg',
+  '/images/room_corner.jpeg',
+  '/images/conference_room.jpeg',
+  '/images/gym.jpeg',
+  '/images/super_deluxe_room.jpeg',
+  '/images/lounge_sitting.jpeg',
+  '/images/suite_balcony.jpeg',
 ];
 
 export const ALL_FACILITIES = [
@@ -139,19 +139,19 @@ export const ALL_FACILITIES = [
 
 export const HERO_SLIDES = [
   {
-    image: '/images/WhatsApp Image 2026-06-04 at 3.41.09 PM.jpeg',
+    image: '/images/lobby_entrance.jpeg',
     title: 'Saveetha GuestHouse',
     subtitle: 'Luxury Guest House & Serviced Rooms',
     description: 'Experience unmatched sophistication, premium comfort, and exemplary hospitality in the heart of Chennai.'
   },
   {
-    image: '/images/WhatsApp Image 2026-06-04 at 3.41.11 PM.jpeg',
+    image: '/images/premium_lounge.jpeg',
     title: 'Exquisite Lounges',
     subtitle: 'Relax and Connect in Elegance',
     description: 'Indulge in our beautifully designed social spaces, perfect for hosting distinguished guests and colleagues.'
   },
   {
-    image: '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg',
+    image: '/images/swimming_pool.jpeg',
     title: 'Infinite Leisure',
     subtitle: 'A Sanctuary Above the City',
     description: 'Refresh your senses at our state-of-the-art rooftop infinity pool, offering panoramic views of Chennai.'
@@ -202,20 +202,20 @@ export const FAQS = [
 
 export const getRoomImage = (roomType: string): string => {
   if (roomType.toLowerCase().includes('super')) {
-    return '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg';
+    return '/images/super_deluxe_room.jpeg';
   }
-  return '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg';
+  return '/images/deluxe_room.jpeg';
 };
 
 export const ROOM_IMAGE_MAP: Record<string, string> = {
-  '101': '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
-  '102': '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
-  '103': '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
-  '201': '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
-  '202': '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
-  '203': '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg',
-  '301': '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg',
-  '302': '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg',
+  '101': '/images/deluxe_room.jpeg',
+  '102': '/images/deluxe_room.jpeg',
+  '103': '/images/deluxe_room.jpeg',
+  '201': '/images/deluxe_room.jpeg',
+  '202': '/images/deluxe_room.jpeg',
+  '203': '/images/deluxe_room.jpeg',
+  '301': '/images/super_deluxe_room.jpeg',
+  '302': '/images/super_deluxe_room.jpeg',
 };
 
 export const getPriceDetails = (roomType: string, guests: number, mealPlan: string, extraBed: boolean) => {

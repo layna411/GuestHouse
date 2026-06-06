@@ -80,7 +80,15 @@ export function CheckoutView({
   );
 
   return (
-    <div className="pt-24 pb-16 text-left bg-background min-h-screen">
+    <div 
+      className="pt-12 pb-16 text-left min-h-screen"
+      style={{
+        backgroundImage: 'linear-gradient(to bottom, var(--background-overlay-start), var(--background-overlay-end)), url("/images/image.png")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Step progress tracker */}

@@ -144,7 +144,8 @@ export function RoomStatusGrid({
         paymentType: bookingForm.paymentType,
         mealPlan: 'Room without Breakfast',
         pricePerNight: bookingRoom.price,
-        totalPrice: bookingRoom.price * Math.ceil((new Date(bookingForm.checkOut).getTime() - new Date(bookingForm.checkIn).getTime()) / (1000 * 60 * 60 * 24))
+        totalPrice: bookingRoom.price * Math.ceil((new Date(bookingForm.checkOut).getTime() - new Date(bookingForm.checkIn).getTime()) / (1000 * 60 * 60 * 24)),
+        status: 'confirmed'
       };
 
       await bookingApi.create(payload as any);

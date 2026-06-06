@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../Card';
 import { Room, Booking } from '../../types';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
+import { StatusChip } from '../StatusChip';
 
 interface AdminDashboardProps {
   rooms: Room[];
@@ -229,13 +230,17 @@ export function AdminDashboard({ rooms, bookings, role }: AdminDashboardProps) {
                     <tr key={booking.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
                       <td className="py-3 px-4 text-sm">{booking.id}</td>
                       <td className="py-3 px-4 text-sm font-medium">{booking.guestName}</td>
-                      <td className="py-3 px-4 text-sm">{room?.roomNumber}</td>
+                      <td className="py-3 px-4 text-sm font-medium">
+                        {booking.status === 'pending' ? (
+                          <span className="text-amber-500 italic">Unallocated</span>
+                        ) : (
+                          room?.roomNumber || 'N/A'
+                        )}
+                      </td>
                       <td className="py-3 px-4 text-sm">{format(booking.checkIn, 'MMM dd, yyyy')}</td>
                       <td className="py-3 px-4 text-sm">{format(booking.checkOut, 'MMM dd, yyyy')}</td>
                       <td className="py-3 px-4 text-sm">
-                        <span className="inline-flex px-2 py-1 rounded-full text-xs bg-success/10 text-success">
-                          {booking.status}
-                        </span>
+                        <StatusChip status={booking.status as any} size="sm" />
                       </td>
                     </tr>
                   );

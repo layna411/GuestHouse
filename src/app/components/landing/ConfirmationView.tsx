@@ -251,32 +251,15 @@ export function ConfirmationView({
   };
 
   return (
-    <div className="min-h-screen bg-[#0f1f42] flex flex-col font-sans text-white">
-      {/* Premium White Navigation Header (matching MGM logo & links layout) */}
-      <header className="w-full bg-white text-slate-800 py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between border-b border-slate-200 shadow-md">
-        <div className="flex items-center gap-3 mb-4 md:mb-0">
-          {/* Logo Arch/Sun */}
-          <div className="relative w-10 h-10 flex items-center justify-center">
-            <div className="absolute w-full h-full rounded-full border-4 border-t-orange-500 border-r-teal-500 border-b-slate-100 border-l-slate-100 animate-spin-slow" />
-            <div className="w-6 h-6 rounded-full bg-teal-600 flex items-center justify-center text-white text-xs font-bold font-serif">
-              S
-            </div>
-          </div>
-          <div>
-            <h1 className="text-lg font-black tracking-wider text-slate-900 leading-none">SAVEETHA</h1>
-            <p className="text-[10px] font-bold text-slate-500 tracking-widest mt-0.5">GUESTHOUSE</p>
-          </div>
-        </div>
-        <nav className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-xs font-bold text-slate-600 uppercase tracking-wider">
-          <span className="hover:text-teal-600 cursor-pointer transition-colors" onClick={handleReturnToHome}>Home</span>
-          <span className="hover:text-teal-600 cursor-pointer transition-colors">Special Packages</span>
-          <span className="hover:text-teal-600 cursor-pointer transition-colors">Our Gallery</span>
-          <span className="hover:text-teal-600 cursor-pointer transition-colors">Guest Portal</span>
-          <span className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors cursor-pointer text-[10px] tracking-widest shadow-md">
-            BOOK A STAY
-          </span>
-        </nav>
-      </header>
+    <div 
+      className="min-h-screen flex flex-col font-sans text-foreground"
+      style={{
+        backgroundImage: 'linear-gradient(to bottom, var(--background-overlay-start), var(--background-overlay-end)), url("/images/image.png")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
 
       {/* Main Thank You Banner */}
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-12 md:py-20 text-center max-w-5xl mx-auto w-full">
@@ -286,12 +269,12 @@ export function ConfirmationView({
           transition={{ duration: 0.8, ease: 'easeOut' }}
           className="space-y-12"
         >
-          {/* Text Statement (matching the user's screenshot layout exactly) */}
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight max-w-4xl tracking-wide font-sans">
+          {/* Text Statement */}
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight max-w-4xl tracking-wide font-sans">
             Thank you for submitting your query. We will get in touch with you soon
           </h2>
 
-          {/* Accreditation Badges / Seals (matching JCI, LEED, and Gold awards from image) */}
+          {/* Accreditation Badges / Seals */}
           <div className="flex items-center justify-center gap-6 md:gap-8 pt-4">
             {/* 1. Gold Circle Seal */}
             <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-r from-amber-400 to-yellow-600 flex items-center justify-center shadow-2xl relative border border-amber-300">
@@ -319,20 +302,20 @@ export function ConfirmationView({
           </div>
 
           {/* Booking Summary Box */}
-          <div className="max-w-md mx-auto bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 space-y-4 text-left">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className="max-w-md mx-auto bg-card/40 backdrop-blur-md border border-border/50 rounded-2xl p-6 space-y-4 text-left shadow-xl">
+            <div className="flex items-center justify-between border-b border-border/30 pb-3">
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-teal-400" />
-                <span className="text-xs text-slate-300 uppercase tracking-wider font-semibold">Booking ID</span>
+                <FileText className="w-4 h-4 text-primary" />
+                <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Booking ID</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-sm font-bold text-white">{referenceId}</span>
+                <span className="font-mono text-sm font-bold text-foreground">{referenceId}</span>
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(referenceId);
                     toast.success("Booking ID copied!");
                   }}
-                  className="p-1 text-slate-400 hover:text-white rounded hover:bg-white/10 transition-colors"
+                  className="p-1 text-muted-foreground hover:text-foreground rounded hover:bg-black/5 transition-colors"
                 >
                   <Copy className="w-3.5 h-3.5" />
                 </button>
@@ -341,28 +324,28 @@ export function ConfirmationView({
 
             <div className="space-y-2 text-xs">
               <div className="flex justify-between">
-                <span className="text-slate-400">Room Category:</span>
-                <span className="font-semibold">{selectedRoomForBooking.type}</span>
+                <span className="text-muted-foreground">Room Category:</span>
+                <span className="font-semibold text-foreground">{selectedRoomForBooking.type}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Guest Name:</span>
-                <span className="font-semibold">{bookingFormDetails.guestName}</span>
+                <span className="text-muted-foreground">Guest Name:</span>
+                <span className="font-semibold text-foreground">{bookingFormDetails.guestName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Stay Dates:</span>
-                <span className="font-semibold text-teal-300">
+                <span className="text-muted-foreground">Stay Dates:</span>
+                <span className="font-semibold text-primary font-bold">
                   {format(new Date(checkIn), 'MMM d')} - {format(new Date(checkOut), 'MMM d, yyyy')} ({nights} {nights === 1 ? 'night' : 'nights'})
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Total Price:</span>
-                <span className="font-bold text-amber-400 text-sm">₹{(pricing.totalPerNight * nights).toFixed(0)}</span>
+                <span className="text-muted-foreground">Total Price:</span>
+                <span className="font-bold text-primary text-sm">₹{(pricing.totalPerNight * nights).toFixed(0)}</span>
               </div>
             </div>
 
             <button
               onClick={() => setShowDetails(!showDetails)}
-              className="w-full mt-2 text-center text-[10px] uppercase font-bold text-teal-400 hover:text-teal-300 flex items-center justify-center gap-1.5"
+              className="w-full mt-2 text-center text-[10px] uppercase font-bold text-primary hover:text-primary/80 flex items-center justify-center gap-1.5"
             >
               <ClipboardList className="w-3 h-3" />
               {showDetails ? "Hide full ledger details" : "Show full ledger details"}
@@ -372,7 +355,7 @@ export function ConfirmationView({
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="mt-3 pt-3 border-t border-white/10 text-[11px] text-slate-300 space-y-1.5"
+                className="mt-3 pt-3 border-t border-border/30 text-[11px] text-muted-foreground space-y-1.5"
               >
                 <div className="flex justify-between">
                   <span>Base Rate:</span>
@@ -392,7 +375,7 @@ export function ConfirmationView({
                   <span>Taxes (CGST 2.5% & SGST 2.5%):</span>
                   <span>₹{(pricing.taxPerNight * nights).toFixed(0)}</span>
                 </div>
-                <div className="flex justify-between font-bold text-white pt-1.5 border-t border-white/5">
+                <div className="flex justify-between font-bold text-foreground pt-1.5 border-t border-border/30">
                   <span>Total Amount:</span>
                   <span>₹{(pricing.totalPerNight * nights).toFixed(0)}</span>
                 </div>
@@ -404,14 +387,14 @@ export function ConfirmationView({
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-sm mx-auto">
             <button
               onClick={handleReturnToHome}
-              className="w-full flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 px-6 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg hover:shadow-teal-500/20"
+              className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3.5 px-6 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg hover:shadow-primary/20 cursor-pointer"
             >
               <Home className="w-4 h-4" />
               Return Home
             </button>
             <button
               onClick={handleDownloadReceipt}
-              className="w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold py-3.5 px-6 rounded-xl text-xs uppercase tracking-widest border border-white/20 transition-all cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 bg-secondary/80 hover:bg-secondary text-primary font-bold py-3.5 px-6 rounded-xl text-xs uppercase tracking-widest border border-border/80 transition-all cursor-pointer font-bold"
             >
               Print Receipt
             </button>
@@ -420,7 +403,7 @@ export function ConfirmationView({
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t border-white/5 py-6 text-center text-xs text-slate-500 bg-black/10">
+      <footer className="w-full border-t border-border/40 py-6 text-center text-xs text-muted-foreground bg-secondary/10">
         <p>© 2026 Saveetha GuestHouse. All rights reserved.</p>
       </footer>
     </div>

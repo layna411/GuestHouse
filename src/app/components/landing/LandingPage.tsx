@@ -253,18 +253,22 @@ export function LandingPage({
     setBookingFlowState('payment');
   };
 
+  const showHeaderFooter = bookingFlowState !== 'room-details' && bookingFlowState !== 'checkout' && bookingFlowState !== 'payment' && bookingFlowState !== 'confirmation';
+
   return (
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden font-sans">
-      <LandingHeader 
-        currentUser={currentUser}
-        onLogout={onLogout}
-        onNavigateToDashboard={onNavigateToDashboard}
-        bookingFlowState={bookingFlowState}
-        setBookingFlowState={setBookingFlowState}
-        setSelectedRoomForBooking={setSelectedRoomForBooking}
-        setBookingFormDetails={setBookingFormDetails}
-        setBookingErrors={setBookingErrors}
-      />
+      {showHeaderFooter && (
+        <LandingHeader 
+          currentUser={currentUser}
+          onLogout={onLogout}
+          onNavigateToDashboard={onNavigateToDashboard}
+          bookingFlowState={bookingFlowState}
+          setBookingFlowState={setBookingFlowState}
+          setSelectedRoomForBooking={setSelectedRoomForBooking}
+          setBookingFormDetails={setBookingFormDetails}
+          setBookingErrors={setBookingErrors}
+        />
+      )}
 
       {bookingFlowState === 'landing' && (
         <>
@@ -381,10 +385,12 @@ export function LandingPage({
         />
       )}
 
-      <LandingFooter 
-        onOpenLogin={onOpenLogin}
-        setBookingFlowState={setBookingFlowState}
-      />
+      {showHeaderFooter && (
+        <LandingFooter 
+          onOpenLogin={onOpenLogin}
+          setBookingFlowState={setBookingFlowState}
+        />
+      )}
     </div>
   );
 }
