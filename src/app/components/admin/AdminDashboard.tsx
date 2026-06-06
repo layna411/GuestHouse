@@ -8,9 +8,10 @@ import { format, startOfMonth, endOfMonth } from 'date-fns';
 interface AdminDashboardProps {
   rooms: Room[];
   bookings: Booking[];
+  role?: string;
 }
 
-export function AdminDashboard({ rooms, bookings }: AdminDashboardProps) {
+export function AdminDashboard({ rooms, bookings, role }: AdminDashboardProps) {
   const stats = {
     totalRooms: rooms.length,
     vacantRooms: rooms.filter(r => r.status === 'vacant').length,
@@ -23,11 +24,11 @@ export function AdminDashboard({ rooms, bookings }: AdminDashboardProps) {
     ).length,
   };
 
-  const occupancyRate = ((stats.bookedRooms / stats.totalRooms) * 100).toFixed(0);
+  const occupancyRate = stats.totalRooms > 0 ? ((stats.bookedRooms / stats.totalRooms) * 100).toFixed(0) : '0';
 
   const roomTypeData = [
-    { name: 'AC Rooms', value: rooms.filter(r => r.type === 'AC').length, color: '#0f766e' },
-    { name: 'Non-AC Rooms', value: rooms.filter(r => r.type === 'Non-AC').length, color: '#00ccc4' },
+    { name: 'Deluxe Rooms', value: rooms.filter(r => r.type === 'Deluxe Room').length, color: '#0f766e' },
+    { name: 'Super Deluxe Rooms', value: rooms.filter(r => r.type === 'Super Deluxe Room').length, color: '#00ccc4' },
   ];
 
   const statusData = [
@@ -47,8 +48,10 @@ export function AdminDashboard({ rooms, bookings }: AdminDashboardProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-foreground mb-2">Admin Dashboard</h1>
-        <p className="text-muted-foreground">Welcome back! Here's what's happening today.</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">
+          {role === 'admin' ? 'Admin Dashboard' : 'Staff Dashboard'}
+        </h1>
+        <p className="text-muted-foreground font-medium">Welcome back! Here's what's happening today.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

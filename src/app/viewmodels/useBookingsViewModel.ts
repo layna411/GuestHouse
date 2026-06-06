@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 
 export function useBookingsViewModel(
   currentUserId?: string,
-  currentUserRole?: 'admin' | 'customer',
+  currentUserRole?: 'admin' | 'staff' | 'customer',
   onRoomsRefresh?: () => void
 ) {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -15,7 +15,7 @@ export function useBookingsViewModel(
     if (!currentUserId || !currentUserRole) return;
     setLoading(true);
     try {
-      // If customer, only get their bookings. If admin, get all bookings.
+      // If customer, only get their bookings. If admin/staff, get all bookings.
       const customerId = currentUserRole === 'customer' ? currentUserId : undefined;
       const data = await bookingApi.getAll(customerId);
       setBookings(data);
@@ -85,11 +85,13 @@ export function useBookingsViewModel(
     }
   };
 
-  const handleConfirmBooking = async (id: string) => {
+  const handleConfirmBooking = async (id: string, roomId?: string) => {
     try {
-      const updated = await bookingApi.confirm(id);
+      const updated = await bookingApi.confirm(id, roomId);
       setBookings(prev => prev.map(b => b.id === id ? updated : b));
-      toast.success('Booking confirmed successfully!');
+      toast.success('Booking approved and confirmed successfully!', {
+        description: `📩 Confirmation email sent to ${updated.guestEmail} and 💬 SMS notification sent to ${updated.guestPhone}`
+      });
       
       if (onRoomsRefresh) {
         onRoomsRefresh();

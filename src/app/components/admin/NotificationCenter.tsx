@@ -55,11 +55,11 @@ export function NotificationCenter({
 
       {/* Popover Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-80 md:w-96 rounded-2xl glass-panel border border-border shadow-2xl z-50 overflow-hidden">
+        <div className="absolute right-0 mt-3 w-80 md:w-96 rounded-2xl bg-slate-900 border-2 border-slate-700 shadow-2xl z-[9999] overflow-hidden text-white animate-in fade-in slide-in-from-top-2 duration-250">
           {/* Header */}
-          <div className="p-4 border-b border-border flex items-center justify-between bg-muted/40">
+          <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/60">
             <div className="flex items-center gap-2">
-              <h3 className="font-serif text-sm font-bold text-foreground">Notifications</h3>
+              <h3 className="font-serif text-sm font-bold text-slate-100">Notifications</h3>
               {unreadCount > 0 && (
                 <span className="px-2 py-0.5 rounded-full bg-accent/20 text-accent text-[10px] font-bold">
                   {unreadCount} new
@@ -78,37 +78,37 @@ export function NotificationCenter({
           </div>
 
           {/* List */}
-          <div className="max-h-80 overflow-y-auto divide-y divide-border/40">
+          <div className="max-h-80 overflow-y-auto divide-y divide-slate-800">
             {notifications.length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground flex flex-col items-center gap-2">
-                <BellOff className="w-8 h-8 text-muted-foreground/60" />
+              <div className="p-8 text-center text-slate-400 flex flex-col items-center gap-2 bg-slate-900">
+                <BellOff className="w-8 h-8 text-slate-500" />
                 <p className="text-xs">No notifications yet</p>
               </div>
             ) : (
               notifications.map((n) => (
                 <div
                   key={n.id}
-                  className={`p-4 transition-all flex gap-3 text-left items-start hover:bg-muted/40 cursor-pointer ${
-                    !n.isRead ? 'bg-primary/5' : ''
+                  className={`p-4 transition-all flex gap-3 text-left items-start hover:bg-slate-800/50 cursor-pointer ${
+                    !n.isRead ? 'bg-slate-800/30' : 'bg-slate-900'
                   }`}
                   onClick={() => handleItemClick(n)}
                 >
                   {/* Status Indicator */}
-                  <div className="mt-1">
+                  <div className="mt-1 flex-shrink-0">
                     {!n.isRead ? (
                       <div className="w-2.5 h-2.5 rounded-full bg-accent animate-pulse"></div>
                     ) : (
-                      <div className="w-2.5 h-2.5 rounded-full bg-muted-foreground/30"></div>
+                      <div className="w-2.5 h-2.5 rounded-full bg-slate-700"></div>
                     )}
                   </div>
 
                   {/* Message body */}
                   <div className="flex-1 space-y-1">
-                    <p className={`text-xs leading-relaxed ${!n.isRead ? 'text-foreground font-semibold' : 'text-muted-foreground'}`}>
+                    <p className={`text-xs leading-relaxed ${!n.isRead ? 'text-slate-100 font-semibold' : 'text-slate-400'}`}>
                       {n.message}
                     </p>
                     <div className="flex items-center justify-between pt-1">
-                      <span className="text-[10px] text-muted-foreground">
+                      <span className="text-[10px] text-slate-500 font-mono">
                         {format(new Date(n.createdAt), 'MMM dd, hh:mm a')}
                       </span>
                       {!n.isRead && (
@@ -117,7 +117,7 @@ export function NotificationCenter({
                             e.stopPropagation();
                             onMarkAsRead(n.id);
                           }}
-                          className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground cursor-pointer"
+                          className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer"
                           title="Mark as read"
                         >
                           <Check className="w-3 h-3" />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, BedDouble, Calendar, Users, Settings, LogOut, Building2, Image } from 'lucide-react';
+import { LayoutDashboard, BedDouble, Calendar, Settings, LogOut, Building2, Users, CalendarDays, Image, BarChart3, Layers } from 'lucide-react';
 import { UserRole } from '../../types';
 
 interface SidebarProps {
@@ -10,21 +10,26 @@ interface SidebarProps {
 }
 
 export function Sidebar({ role, activeTab, onTabChange, onLogout }: SidebarProps) {
-  const adminMenuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'rooms', label: 'Room Management', icon: BedDouble },
-    { id: 'bookings', label: 'All Bookings', icon: Calendar },
-    { id: 'customers', label: 'Customers', icon: Users },
-    { id: 'gallery', label: 'Gallery', icon: Image },
-  ];
+  const menuItems = role === 'admin' 
+    ? [
+        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { id: 'rooms', label: 'Room Management', icon: BedDouble },
+        { id: 'bookings', label: 'All Bookings', icon: Calendar },
+        { id: 'staff', label: 'Staff Management', icon: Users },
+        { id: 'inventory', label: 'Room Inventory', icon: CalendarDays },
+        { id: 'room-status', label: 'Room Booking & Status', icon: Layers },
+        { id: 'revenue', label: 'Revenue Tab', icon: BarChart3 },
+      ]
+    : [
+        { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+        { id: 'rooms', label: 'Room Management', icon: BedDouble },
+        { id: 'bookings', label: 'All Bookings', icon: Calendar },
+        { id: 'inventory', label: 'Room Inventory', icon: CalendarDays },
+        { id: 'room-status', label: 'Room Booking & Status', icon: Layers },
+        { id: 'gallery', label: 'Gallery Management', icon: Image },
+        { id: 'revenue', label: 'Revenue Tab', icon: BarChart3 },
+      ];
 
-  const customerMenuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'availability', label: 'Room Availability', icon: BedDouble },
-    { id: 'bookings', label: 'My Bookings', icon: Calendar },
-  ];
-
-  const menuItems = role === 'admin' ? adminMenuItems : customerMenuItems;
 
   return (
     <div className="h-screen w-64 bg-sidebar text-sidebar-foreground flex flex-col border-r border-sidebar-border">

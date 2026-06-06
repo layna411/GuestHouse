@@ -1,11 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { GALLERY_IMAGES } from './constants';
+import { GALLERY_IMAGES as FALLBACK_IMAGES } from './constants';
+import { galleryApi } from '../../services/api';
 
 export function LandingGallery() {
+  const [images, setImages] = useState<string[]>(FALLBACK_IMAGES);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [showAllGallery, setShowAllGallery] = useState(false);
+
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      try {
+        const data = await galleryApi.getAll();
+        if (data.length > 0) {
+          setImages(data.map(p => p.imageUrl));
+        }
+      } catch (err) {
+        console.error("Failed to load database gallery, using defaults.", err);
+      }
+    };
+    fetchPhotos();
+  }, []);
 
   // Keyboard navigation for lightbox
   useEffect(() => {
@@ -14,18 +30,18 @@ export function LandingGallery() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setLightboxIndex(null);
       if (e.key === 'ArrowRight') {
-        setLightboxIndex((prev) => (prev !== null ? (prev + 1) % GALLERY_IMAGES.length : 0));
+        setLightboxIndex((prev) => (prev !== null ? (prev + 1) % images.length : 0));
       }
       if (e.key === 'ArrowLeft') {
         setLightboxIndex((prev) =>
-          prev !== null ? (prev - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length : 0
+          prev !== null ? (prev - 1 + images.length) % images.length : 0
         );
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxIndex]);
+  }, [lightboxIndex, images]);
 
   return (
     <>
@@ -40,15 +56,15 @@ export function LandingGallery() {
           <div className="space-y-6">
             {/* Row 1: 2 Landscape Columns */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {GALLERY_IMAGES.slice(0, 2).map((imgUrl, index) => (
+              {images.slice(0, 2).map((imgUrl, index) => (
                 <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.6 }}
-                  className="relative h-64 sm:h-80 md:h-[450px] rounded-xl overflow-hidden cursor-pointer group border border-border/40 hover:border-accent bg-card shadow-md hover:shadow-xl transition-all"
-                  onClick={() => setLightboxIndex(index)}
+                   key={index}
+                   initial={{ opacity: 0, y: 20 }}
+                   whileInView={{ opacity: 1, y: 0 }}
+                   viewport={{ once: true }}
+                   transition={{ delay: index * 0.1, duration: 0.6 }}
+                   className="relative h-64 sm:h-80 md:h-[450px] rounded-xl overflow-hidden cursor-pointer group border border-border/40 hover:border-accent bg-card shadow-md hover:shadow-xl transition-all"
+                   onClick={() => setLightboxIndex(index)}
                 >
                   <img
                     src={imgUrl}
@@ -66,7 +82,7 @@ export function LandingGallery() {
 
             {/* Row 2: 3 Columns */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {GALLERY_IMAGES.slice(2, 5).map((imgUrl, index) => {
+              {images.slice(2, 5).map((imgUrl, index) => {
                 const actualIndex = index + 2;
                 return (
                   <motion.div
@@ -93,7 +109,7 @@ export function LandingGallery() {
               })}
             </div>
 
-            {/* Expanded section: displays the remaining images (images index 5 onwards) */}
+            {/* Expanded section: displays the remaining images */}
             <AnimatePresence>
               {showAllGallery && (
                 <motion.div
@@ -104,7 +120,7 @@ export function LandingGallery() {
                   className="overflow-hidden"
                 >
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-6">
-                    {GALLERY_IMAGES.slice(5).map((imgUrl, index) => {
+                    {images.slice(5).map((imgUrl, index) => {
                       const actualIndex = index + 5;
                       return (
                         <motion.div
@@ -157,7 +173,7 @@ export function LandingGallery() {
           <div className="flex items-center justify-between text-white border-b border-white/10 pb-4 w-full" onClick={(e) => e.stopPropagation()}>
             <div>
               <h3 className="font-serif text-lg font-bold">Saveetha Gallery Showcase</h3>
-              <p className="text-xs text-slate-400">Photo {lightboxIndex + 1} of {GALLERY_IMAGES.length}</p>
+              <p className="text-xs text-slate-400">Photo {lightboxIndex + 1} of {images.length}</p>
             </div>
             <button
               onClick={() => setLightboxIndex(null)}
@@ -172,7 +188,7 @@ export function LandingGallery() {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setLightboxIndex((prev) => (prev !== null ? (prev - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length : 0));
+                setLightboxIndex((prev) => (prev !== null ? (prev - 1 + images.length) % images.length : 0));
               }}
               className="absolute left-2 md:left-4 z-10 p-3 bg-white/5 hover:bg-white/10 text-white rounded-full border border-white/10 backdrop-blur-sm transition-all"
             >
@@ -181,7 +197,7 @@ export function LandingGallery() {
 
             <div className="w-full h-full flex items-center justify-center p-4" onClick={(e) => e.stopPropagation()}>
               <img
-                src={GALLERY_IMAGES[lightboxIndex]}
+                src={images[lightboxIndex]}
                 alt={`Zoomed Photo ${lightboxIndex + 1}`}
                 className="max-w-full max-h-[75vh] object-contain rounded-lg shadow-2xl border border-white/5"
               />
@@ -190,7 +206,7 @@ export function LandingGallery() {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setLightboxIndex((prev) => (prev !== null ? (prev + 1) % GALLERY_IMAGES.length : 0));
+                setLightboxIndex((prev) => (prev !== null ? (prev + 1) % images.length : 0));
               }}
               className="absolute right-2 md:right-4 z-10 p-3 bg-white/5 hover:bg-white/10 text-white rounded-full border border-white/10 backdrop-blur-sm transition-all"
             >

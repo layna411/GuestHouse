@@ -6,19 +6,21 @@ import { Input } from '../Input';
 import { StatusChip } from '../StatusChip';
 import { Room, Booking } from '../../types';
 import { format } from 'date-fns';
+import { RoomAllocationModal } from '../admin/RoomAllocationModal';
 
 interface AllBookingsProps {
   bookings: Booking[];
   rooms: Room[];
   onCancelBooking: (id: string) => void;
   onCompleteBooking: (id: string) => void;
-  onConfirmBooking?: (id: string) => void;
+  onConfirmBooking?: (id: string, roomId?: string) => void;
 }
 
 export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBooking, onConfirmBooking }: AllBookingsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'confirmed' | 'pending' | 'cancelled' | 'completed'>('all');
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [allocatingBooking, setAllocatingBooking] = useState<Booking | null>(null);
 
   const filteredBookings = bookings.filter(booking => {
     const matchesSearch =
@@ -165,12 +167,8 @@ export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBookin
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => {
-                                  if (confirm('Approve and confirm this booking request?')) {
-                                    onConfirmBooking(booking.id);
-                                  }
-                                }}
-                                title="Approve Booking"
+                                onClick={() => setAllocatingBooking(booking)}
+                                title="Approve & Allocate Room"
                               >
                                 <CheckCircle className="w-4 h-4 text-success" />
                               </Button>
@@ -311,13 +309,10 @@ export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBookin
                   <>
                     <Button
                       variant="success"
-                      onClick={() => {
-                        onConfirmBooking(selectedBooking.id);
-                        setSelectedBooking(null);
-                      }}
+                      onClick={() => setAllocatingBooking(selectedBooking)}
                       className="flex-1"
                     >
-                      Approve Booking
+                      Approve & Allocate Room
                     </Button>
                     <Button
                       variant="destructive"
@@ -363,6 +358,20 @@ export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBookin
             </CardContent>
           </Card>
         </div>
+      )}
+      {allocatingBooking && (
+        <RoomAllocationModal
+          booking={allocatingBooking}
+          rooms={rooms}
+          onClose={() => setAllocatingBooking(null)}
+          onConfirm={(roomId) => {
+            if (onConfirmBooking) {
+              onConfirmBooking(allocatingBooking.id, roomId);
+            }
+            setAllocatingBooking(null);
+            setSelectedBooking(null);
+          }}
+        />
       )}
     </div>
   );

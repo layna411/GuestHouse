@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Room, User } from '../../types';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { availabilityApi } from '../../services/api';
 
 // Constants and Helpers
 import { 
@@ -24,6 +25,7 @@ import { LandingFooter } from './LandingFooter';
 import { RoomDetailsView } from './RoomDetailsView';
 import { CheckoutView } from './CheckoutView';
 import { ConfirmationView } from './ConfirmationView';
+import { PaymentView } from './PaymentView';
 
 interface LandingPageProps {
   rooms: Room[];
@@ -66,7 +68,8 @@ export function LandingPage({
   });
 
   // Booking Flow States
-  const [bookingFlowState, setBookingFlowState] = useState<'landing' | 'room-details' | 'checkout' | 'confirmation'>('landing');
+  const [bookingFlowState, setBookingFlowState] = useState<'landing' | 'room-details' | 'checkout' | 'payment' | 'confirmation'>('landing');
+  const [pendingBookingPayload, setPendingBookingPayload] = useState<any>(null);
   const [selectedRoomForBooking, setSelectedRoomForBooking] = useState<Room | null>(null);
   const [activeDetailImage, setActiveDetailImage] = useState<string>('');
   const [selectedMealPlan, setSelectedMealPlan] = useState('Room without Breakfast');
@@ -85,26 +88,44 @@ export function LandingPage({
   const [confirmedBookingId, setConfirmedBookingId] = useState<string | null>(null);
   const [showSpecialRequest, setShowSpecialRequest] = useState(false);
   const [activeNotificationTab, setActiveNotificationTab] = useState<'email' | 'sms'>('email');
+  const [availabilityMap, setAvailabilityMap] = useState<Record<string, { available: boolean; remaining: number }>>({});
 
-  // Trigger simulated email/SMS delivery notifications upon booking completion
+  // Verify date range capacity limits on search parameters change
+  useEffect(() => {
+    const verifyAvailability = async () => {
+      try {
+        const deluxeRes = await availabilityApi.checkStayAvailability('Deluxe Room', checkIn, checkOut);
+        const superRes = await availabilityApi.checkStayAvailability('Super Deluxe Room', checkIn, checkOut);
+        setAvailabilityMap({
+          'Deluxe Room': { available: deluxeRes.available, remaining: deluxeRes.remaining },
+          'Super Deluxe Room': { available: superRes.available, remaining: superRes.remaining }
+        });
+      } catch (err) {
+        console.error("Failed to check date stay availability overrides.", err);
+      }
+    };
+    verifyAvailability();
+  }, [checkIn, checkOut, rooms]);
+
+  // Trigger notifications upon booking registration
   useEffect(() => {
     if (bookingFlowState === 'confirmation') {
-      const emailTimer = setTimeout(() => {
-        toast.success(`📩 Confirmation email successfully delivered to ${bookingFormDetails.guestEmail}!`, {
+      const pendingTimer = setTimeout(() => {
+        toast.success(`📝 Booking request successfully registered!`, {
           duration: 7000,
-          description: "Formatted based on MailFormat.pdf (Ascott/Citadines style receipt).",
+          description: "Your reservation request is pending staff confirmation. An email receipt will be sent upon approval.",
         });
       }, 1000);
 
       const smsTimer = setTimeout(() => {
-        toast.info(`💬 Booking notification SMS sent to ${bookingFormDetails.guestPhone}!`, {
+        toast.info(`💬 Notification SMS sent to ${bookingFormDetails.guestPhone}!`, {
           duration: 7000,
-          description: "Simulating mobile network message dispatch.",
+          description: "Simulating pending request SMS alert.",
         });
-      }, 3000);
+      }, 3500);
 
       return () => {
-        clearTimeout(emailTimer);
+        clearTimeout(pendingTimer);
         clearTimeout(smsTimer);
       };
     }
@@ -118,7 +139,9 @@ export function LandingPage({
   // Set active detail image on room selection
   useEffect(() => {
     if (selectedRoomForBooking) {
-      const defaultImg = selectedRoomForBooking.imageUrl || ROOM_IMAGE_MAP[selectedRoomForBooking.roomNumber] || '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg';
+      const defaultImg = selectedRoomForBooking.type === 'Super Deluxe Room'
+        ? '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg'
+        : '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg';
       setActiveDetailImage(defaultImg);
     }
   }, [selectedRoomForBooking]);
@@ -227,19 +250,8 @@ export function LandingPage({
       totalPrice: pricing.totalPerNight * nights
     };
 
-    try {
-      if (onBookingSubmit) {
-        await onBookingSubmit(bookingPayload);
-        // Set confirmed state
-        const generatedId = "RES" + Math.floor(Math.random() * 900000 + 100000);
-        setConfirmedBookingId(generatedId);
-        setBookingFlowState('confirmation');
-      } else {
-        toast.error("Booking submit handler is not configured.");
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Failed to complete reservation.");
-    }
+    setPendingBookingPayload(bookingPayload);
+    setBookingFlowState('payment');
   };
 
   return (
@@ -275,6 +287,7 @@ export function LandingPage({
               setSelectedRoomForBooking(room);
               setBookingFlowState('room-details');
             }}
+            availabilityMap={availabilityMap}
           />
           <LandingGallery />
           <LandingAmenities />
@@ -325,6 +338,27 @@ export function LandingPage({
           ROOM_IMAGE_MAP={ROOM_IMAGE_MAP}
           activeTaxInfoRow={activeTaxInfoRow}
           setActiveTaxInfoRow={setActiveTaxInfoRow}
+        />
+      )}
+
+      {bookingFlowState === 'payment' && selectedRoomForBooking && pendingBookingPayload && (
+        <PaymentView
+          pendingBookingPayload={pendingBookingPayload}
+          setBookingFlowState={setBookingFlowState}
+          onPaymentSuccess={async () => {
+            try {
+              if (onBookingSubmit) {
+                await onBookingSubmit(pendingBookingPayload);
+                const generatedId = "RES" + Math.floor(Math.random() * 900000 + 100000);
+                setConfirmedBookingId(generatedId);
+                setBookingFlowState('confirmation');
+              } else {
+                toast.error("Booking submit handler is not configured.");
+              }
+            } catch (err: any) {
+              toast.error(err.message || "Failed to complete reservation.");
+            }
+          }}
         />
       )}
 

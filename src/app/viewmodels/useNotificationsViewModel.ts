@@ -9,7 +9,7 @@ export function useNotificationsViewModel(currentUserRole?: string) {
   const [loading, setLoading] = useState(false);
 
   const fetchNotifications = async () => {
-    if (currentUserRole !== 'admin') return;
+    if (currentUserRole !== 'admin' && currentUserRole !== 'staff') return;
     try {
       const data = await notificationApi.getAll();
       setNotifications(data);
@@ -20,7 +20,7 @@ export function useNotificationsViewModel(currentUserRole?: string) {
   };
 
   useEffect(() => {
-    if (currentUserRole === 'admin') {
+    if (currentUserRole === 'admin' || currentUserRole === 'staff') {
       fetchNotifications();
       // Set up simple polling for real-time updates (every 10 seconds)
       const interval = setInterval(fetchNotifications, 10000);

@@ -2,12 +2,18 @@ export interface Room {
   id: string;
   roomNumber: string;
   floor: number;
-  type: 'AC' | 'Non-AC';
+  type: string;
   capacity: number;
   price: number;
-  status: 'vacant' | 'booked' | 'maintenance';
+  status: 'vacant' | 'booked' | 'maintenance' | 'dirty';
   amenities: string[];
   imageUrl?: string;
+  currentBooking?: {
+    guestName: string;
+    checkIn: string;
+    checkOut: string;
+    paymentType: string;
+  } | null;
 }
 
 export interface Booking {
@@ -26,18 +32,20 @@ export interface Booking {
   mealPlan?: string;
   pricePerNight?: number;
   totalPrice?: number;
+  paymentType?: string;
 }
 
 export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'customer';
+  role: 'admin' | 'staff';
   department?: string;
   phone?: string;
+  is_active?: boolean;
 }
 
-export type UserRole = 'admin' | 'customer';
+export type UserRole = 'admin' | 'staff';
 
 export interface Notification {
   id: number;
@@ -45,5 +53,18 @@ export interface Notification {
   message: string;
   isRead: boolean;
   createdAt: string;
+}
+
+export interface RoomAvailability {
+  id?: number;
+  roomType: string;
+  date: string;
+  availableCount: number;
+}
+
+export interface GalleryImage {
+  id: number;
+  imageUrl: string;
+  caption?: string;
 }
 

@@ -1,4 +1,4 @@
-import { Room, Booking, User, Notification } from '../types';
+import { Room, Booking, User, Notification, RoomAvailability, GalleryImage } from '../types';
 
 const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_URL || '');
 
@@ -173,9 +173,11 @@ export const bookingApi = {
     };
   },
 
-  async confirm(bookingId: string): Promise<Booking> {
+  async confirm(bookingId: string, roomId?: string): Promise<Booking> {
     const res = await apiFetch(`/api/bookings/${bookingId}/confirm`, {
-      method: 'POST'
+      method: 'POST',
+      headers: roomId ? { 'Content-Type': 'application/json' } : undefined,
+      body: roomId ? JSON.stringify({ roomId }) : undefined
     });
     const data = await handleResponse<{ message: string; booking: any }>(res);
     
@@ -219,6 +221,14 @@ export const customerApi = {
       method: 'DELETE'
     });
     await handleResponse<{ message: string }>(res);
+  },
+
+  async toggleActive(customerId: string): Promise<User> {
+    const res = await apiFetch(`/api/customers/${customerId}/toggle-active`, {
+      method: 'PUT'
+    });
+    const data = await handleResponse<{ message: string; customer: User }>(res);
+    return data.customer;
   }
 };
 
@@ -241,6 +251,69 @@ export const notificationApi = {
       method: 'PUT'
     });
     await handleResponse<{ message: string }>(res);
+  }
+};
+
+export const availabilityApi = {
+  async getDailyGrid(startDate?: string): Promise<{ dates: string[]; defaultCapacities: Record<string, number>; grid: Record<string, Record<string, number>> }> {
+    const url = startDate ? `/api/availability?startDate=${startDate}` : '/api/availability';
+    const res = await apiFetch(url);
+    return handleResponse(res);
+  },
+
+  async updateOverride(roomType: string, date: string, count: number): Promise<any> {
+    const res = await apiFetch('/api/availability/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ roomType, date, count })
+    });
+    return handleResponse(res);
+  },
+
+  async checkStayAvailability(roomType: string, checkIn: string, checkOut: string): Promise<{ roomType: string; available: boolean; remaining: number }> {
+    const res = await apiFetch(`/api/availability/check?roomType=${encodeURIComponent(roomType)}&checkIn=${encodeURIComponent(checkIn)}&checkOut=${encodeURIComponent(checkOut)}`);
+    return handleResponse(res);
+  }
+};
+
+export const galleryApi = {
+  async getAll(): Promise<GalleryImage[]> {
+    const res = await apiFetch('/api/gallery');
+    return handleResponse<GalleryImage[]>(res);
+  },
+
+  async add(imageUrl: string, caption?: string): Promise<GalleryImage> {
+    const res = await apiFetch('/api/gallery', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageUrl, caption })
+    });
+    const data = await handleResponse<{ message: string; photo: GalleryImage }>(res);
+    return data.photo;
+  },
+
+  async upload(file: File): Promise<{ imageUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await apiFetch('/api/gallery/upload', {
+      method: 'POST',
+      body: formData
+    });
+    return handleResponse<{ imageUrl: string }>(res);
+  },
+
+  async delete(photoId: number): Promise<void> {
+    const res = await apiFetch(`/api/gallery/${photoId}`, {
+      method: 'DELETE'
+    });
+    await handleResponse<{ message: string }>(res);
+  }
+};
+
+export const revenueApi = {
+  async getStats(): Promise<{ totalRevenue: number; monthlyRevenue: { month: string; revenue: number }[] }> {
+    const res = await apiFetch('/api/bookings/revenue');
+    return handleResponse(res);
   }
 };
 

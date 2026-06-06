@@ -66,7 +66,9 @@ export function CheckoutView({
   setActiveTaxInfoRow
 }: CheckoutViewProps) {
   const timer = formatTime(timeLeft);
-  const imageSrc = selectedRoomForBooking.imageUrl || ROOM_IMAGE_MAP[selectedRoomForBooking.roomNumber] || '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg';
+  const imageSrc = selectedRoomForBooking.type === 'Super Deluxe Room'
+    ? '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg'
+    : '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg';
 
   const inDate = new Date(checkIn);
   const outDate = new Date(checkOut);

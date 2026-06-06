@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Check, Copy } from 'lucide-react';
+import { Check, Copy, ArrowRight, ClipboardList, Home, FileText } from 'lucide-react';
 import { Room } from '../../types';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
@@ -48,8 +48,9 @@ export function ConfirmationView({
   guestCount,
   selectedMealPlan,
   getPriceDetails,
-  ROOM_IMAGE_MAP
 }: ConfirmationViewProps) {
+  const [showDetails, setShowDetails] = useState(false);
+
   const checkInDate = new Date(`${checkIn}T14:00`);
   const checkOutDate = new Date(`${checkOut}T11:00`);
   const diffTime = Math.abs(checkOutDate.getTime() - checkInDate.getTime());
@@ -61,113 +62,367 @@ export function ConfirmationView({
     bookingFormDetails.extraBed
   );
 
+  const referenceId = confirmedBookingId || 'RES' + Math.floor(Math.random() * 900000 + 100000);
+
+  const handleDownloadReceipt = () => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      toast.error("Popup blocker prevented invoice download. Please allow popups.");
+      return;
+    }
+
+    const receiptHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Saveetha GuestHouse - Invoice ${referenceId}</title>
+        <style>
+          body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; margin: 40px; line-height: 1.6; }
+          .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f766e; padding-bottom: 20px; margin-bottom: 30px; }
+          .logo { display: flex; align-items: center; gap: 10px; }
+          .logo-circle { width: 32px; height: 32px; border-radius: 50%; background: #0f766e; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+          .logo-text h1 { font-size: 18px; margin: 0; font-weight: 900; letter-spacing: 1px; color: #111827; }
+          .logo-text p { font-size: 8px; margin: 2px 0 0; font-weight: bold; letter-spacing: 2px; color: #6b7280; }
+          .invoice-title { text-align: right; }
+          .invoice-title h2 { margin: 0; font-size: 24px; color: #0f766e; font-family: serif; }
+          .invoice-title p { margin: 5px 0 0; font-size: 12px; color: #6b7280; }
+          .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 30px; }
+          .details-box h3 { margin: 0 0 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px; }
+          .details-box p { margin: 4px 0; font-size: 13px; }
+          .details-box strong { color: #111827; }
+          .table-invoice { width: 100%; border-collapse: collapse; margin: 30px 0; }
+          .table-invoice th { background: #f3f4f6; color: #374151; font-size: 12px; text-transform: uppercase; font-weight: bold; padding: 10px 12px; border-bottom: 2px solid #e5e7eb; text-align: left; }
+          .table-invoice td { padding: 12px; border-bottom: 1px solid #e5e7eb; font-size: 13px; }
+          .table-invoice tr.totals td { border-bottom: none; font-weight: bold; text-align: right; padding: 8px 12px; }
+          .table-invoice tr.grand-total td { font-size: 16px; color: #0f766e; padding-top: 15px; border-top: 2px solid #0f766e; }
+          .stamp-container { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 60px; }
+          .stamp-box { border: 2px dashed #0f766e; border-radius: 10px; padding: 15px; text-align: center; width: 150px; transform: rotate(-3deg); opacity: 0.85; }
+          .stamp-box p { margin: 2px 0; font-size: 10px; font-weight: bold; }
+          .stamp-box .stamp-title { color: #0f766e; font-size: 13px; text-transform: uppercase; font-weight: 900; }
+          .footer-invoice { text-align: center; margin-top: 80px; font-size: 11px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 20px; }
+          @media print {
+            body { margin: 20px; }
+            .no-print { display: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="logo">
+            <div class="logo-circle">S</div>
+            <div class="logo-text">
+              <h1>SAVEETHA</h1>
+              <p>GUESTHOUSE</p>
+            </div>
+          </div>
+          <div class="invoice-title">
+            <h2>GUEST INVOICE</h2>
+            <p>Invoice #: INV-${referenceId.substring(3)}</p>
+            <p>Date: ${format(new Date(), 'MMMM dd, yyyy')}</p>
+          </div>
+        </div>
+
+        <div class="details-grid">
+          <div class="details-box">
+            <h3>Resident / Guest</h3>
+            <p><strong>Name:</strong> ${bookingFormDetails.guestName}</p>
+            <p><strong>Email:</strong> ${bookingFormDetails.guestEmail}</p>
+            <p><strong>Mobile:</strong> ${bookingFormDetails.guestPhone}</p>
+          </div>
+          <div class="details-box">
+            <h3>Reservation Details</h3>
+            <p><strong>Reference ID:</strong> ${referenceId}</p>
+            <p><strong>Check-in Date:</strong> ${format(new Date(checkIn), 'MMM d, yyyy')} (14:00)</p>
+            <p><strong>Check-out Date:</strong> ${format(new Date(checkOut), 'MMM d, yyyy')} (11:00)</p>
+            <p><strong>Nights Count:</strong> ${nights} ${nights === 1 ? 'Night' : 'Nights'}</p>
+          </div>
+        </div>
+
+        <table class="table-invoice">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th style="text-align: right;">Rate / Night</th>
+              <th style="text-align: center;">Nights</th>
+              <th style="text-align: right;">Total Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <strong>Room Accommodation</strong><br/>
+                Category: ${selectedRoomForBooking.type} - Max capacity 3 guests.
+              </td>
+              <td style="text-align: right;">₹${pricing.ratePerNight.toFixed(2)}</td>
+              <td style="text-align: center;">${nights}</td>
+              <td style="text-align: right;">₹${(pricing.ratePerNight * nights).toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Meal Package Selection</strong><br/>
+                Option: ${selectedMealPlan}
+              </td>
+              <td style="text-align: right;">₹${pricing.mealPlanPrice.toFixed(2)}</td>
+              <td style="text-align: center;">${nights}</td>
+              <td style="text-align: right;">₹${(pricing.mealPlanPrice * nights).toFixed(2)}</td>
+            </tr>
+            ${bookingFormDetails.extraBed ? `
+            <tr>
+              <td>
+                <strong>Additional Service</strong><br/>
+                Rollaway Extra Bed
+              </td>
+              <td style="text-align: right;">₹${pricing.extraBedPrice.toFixed(2)}</td>
+              <td style="text-align: center;">${nights}</td>
+              <td style="text-align: right;">₹${(pricing.extraBedPrice * nights).toFixed(2)}</td>
+            </tr>
+            ` : ''}
+            
+            <!-- Totals Rows -->
+            <tr class="totals" style="border-top: 2px solid #e5e7eb;">
+              <td colspan="2"></td>
+              <td>Subtotal:</td>
+              <td>₹${((pricing.ratePerNight + pricing.mealPlanPrice + (bookingFormDetails.extraBed ? pricing.extraBedPrice : 0)) * nights).toFixed(2)}</td>
+            </tr>
+            <tr class="totals">
+              <td colspan="2"></td>
+              <td>Taxes (CGST 2.5%):</td>
+              <td>₹${(pricing.taxPerNight * nights / 2).toFixed(2)}</td>
+            </tr>
+            <tr class="totals">
+              <td colspan="2"></td>
+              <td>Taxes (SGST 2.5%):</td>
+              <td>₹${(pricing.taxPerNight * nights / 2).toFixed(2)}</td>
+            </tr>
+            <tr class="totals grand-total">
+              <td colspan="2"></td>
+              <td>Total Paid:</td>
+              <td>₹${(pricing.totalPerNight * nights).toFixed(2)}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="stamp-container">
+          <div style="font-size: 12px; color: #6b7280;">
+            <p><strong>Payment Status:</strong> PAID (Secure Sandbox Authorization)</p>
+            <p><strong>Invoice Mode:</strong> Electronic Automated Voucher</p>
+          </div>
+          
+          <div class="stamp-box">
+            <p class="stamp-title">SAVEETHA</p>
+            <p>GUEST HOUSE</p>
+            <p style="color: #0f766e; font-size: 8px;">★ VERIFIED STAMP ★</p>
+            <p style="font-size: 7px; color: #6b7280; font-family: monospace;">TXN-${Math.floor(Math.random() * 90000000 + 10000000)}</p>
+          </div>
+        </div>
+
+        <div class="footer-invoice">
+          <p>Thank you for choosing Saveetha Guest House. We look forward to welcoming you.</p>
+          <p>SIMATS Campus, Chennai, Tamil Nadu - 602105 | Support: support@simats.edu</p>
+        </div>
+
+        <script>
+          window.onload = function() {
+            window.print();
+            setTimeout(function() { window.close(); }, 500);
+          }
+        </script>
+      </body>
+      </html>
+    `;
+    
+    printWindow.document.open();
+    printWindow.document.write(receiptHtml);
+    printWindow.document.close();
+  };
+
+  const handleReturnToHome = () => {
+    setBookingFlowState('landing');
+    setSelectedRoomForBooking(null);
+    setBookingFormDetails({
+      guestName: '',
+      guestPhone: '',
+      guestEmail: '',
+      purpose: '',
+      extraBed: false,
+      offers: true,
+    });
+    setBookingErrors({});
+  };
+
   return (
-    <div className="pt-24 pb-16 bg-background min-h-screen">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0f1f42] flex flex-col font-sans text-white">
+      {/* Premium White Navigation Header (matching MGM logo & links layout) */}
+      <header className="w-full bg-white text-slate-800 py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between border-b border-slate-200 shadow-md">
+        <div className="flex items-center gap-3 mb-4 md:mb-0">
+          {/* Logo Arch/Sun */}
+          <div className="relative w-10 h-10 flex items-center justify-center">
+            <div className="absolute w-full h-full rounded-full border-4 border-t-orange-500 border-r-teal-500 border-b-slate-100 border-l-slate-100 animate-spin-slow" />
+            <div className="w-6 h-6 rounded-full bg-teal-600 flex items-center justify-center text-white text-xs font-bold font-serif">
+              S
+            </div>
+          </div>
+          <div>
+            <h1 className="text-lg font-black tracking-wider text-slate-900 leading-none">SAVEETHA</h1>
+            <p className="text-[10px] font-bold text-slate-500 tracking-widest mt-0.5">GUESTHOUSE</p>
+          </div>
+        </div>
+        <nav className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-xs font-bold text-slate-600 uppercase tracking-wider">
+          <span className="hover:text-teal-600 cursor-pointer transition-colors" onClick={handleReturnToHome}>Home</span>
+          <span className="hover:text-teal-600 cursor-pointer transition-colors">Special Packages</span>
+          <span className="hover:text-teal-600 cursor-pointer transition-colors">Our Gallery</span>
+          <span className="hover:text-teal-600 cursor-pointer transition-colors">Guest Portal</span>
+          <span className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors cursor-pointer text-[10px] tracking-widest shadow-md">
+            BOOK A STAY
+          </span>
+        </nav>
+      </header>
+
+      {/* Main Thank You Banner */}
+      <main className="flex-1 flex flex-col items-center justify-center px-6 py-12 md:py-20 text-center max-w-5xl mx-auto w-full">
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-card/40 backdrop-blur-md rounded-2xl border border-border/60 p-8 space-y-6 shadow-2xl"
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          className="space-y-12"
         >
-          {/* Glowing Success Ring */}
-          <div className="mx-auto w-20 h-20 rounded-full bg-success/10 border border-success/30 flex items-center justify-center shadow-lg shadow-success/10 mb-2">
-            <Check className="w-10 h-10 text-success" />
+          {/* Text Statement (matching the user's screenshot layout exactly) */}
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight max-w-4xl tracking-wide font-sans">
+            Thank you for submitting your query. We will get in touch with you soon
+          </h2>
+
+          {/* Accreditation Badges / Seals (matching JCI, LEED, and Gold awards from image) */}
+          <div className="flex items-center justify-center gap-6 md:gap-8 pt-4">
+            {/* 1. Gold Circle Seal */}
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-r from-amber-400 to-yellow-600 flex items-center justify-center shadow-2xl relative border border-amber-300">
+              <div className="absolute inset-1 rounded-full border border-dashed border-amber-200" />
+              <span className="text-[9px] md:text-[11px] font-black text-white uppercase tracking-wider text-center leading-tight">
+                GOLD<br />STAR
+              </span>
+            </div>
+
+            {/* 2. Red & Blue Circular Seal */}
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white border-[4px] border-rose-500/90 flex items-center justify-center shadow-2xl relative">
+              <div className="absolute inset-0 rounded-full border border-sky-600/80 m-0.5" />
+              <span className="text-[8px] md:text-[10px] font-extrabold text-blue-900 uppercase tracking-widest text-center leading-tight">
+                NABH<br />SAFE
+              </span>
+            </div>
+
+            {/* 3. LEED Platinum light blue badge */}
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#90cdf4]/90 flex flex-col items-center justify-center shadow-2xl border border-sky-300">
+              <span className="text-[10px] md:text-[13px] font-black text-slate-800 tracking-wider leading-none">LEED</span>
+              <span className="text-[7px] md:text-[9px] font-extrabold text-slate-700 uppercase tracking-widest leading-none mt-1">
+                PLATINUM
+              </span>
+            </div>
           </div>
 
-          <div className="space-y-2 text-center">
-            <span className="text-xs uppercase font-bold tracking-widest text-success bg-success/10 px-3 py-1 rounded-full border border-success/20 inline-block font-sans">
-              Reservation Pending Approval
-            </span>
-            <h3 className="font-serif text-2xl font-bold text-foreground">Your booking is secured!</h3>
-            <p className="text-xs text-muted-foreground max-w-sm mx-auto mt-1 leading-relaxed">
-              Your guest reservation request has been registered in our system. The Saveetha Guest House administrator has been notified.
-            </p>
-          </div>
-
-          {/* Receipt Overview Card */}
-          <div className="border border-border/40 rounded-xl p-5 bg-secondary/15 text-left text-xs space-y-3.5">
-            <div className="flex justify-between border-b border-border/10 pb-2.5">
-              <span className="text-muted-foreground">Reference ID:</span>
-              <span className="font-mono font-bold text-foreground flex items-center gap-1.5">
-                {confirmedBookingId || 'RES982103'}
+          {/* Booking Summary Box */}
+          <div className="max-w-md mx-auto bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 space-y-4 text-left">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-teal-400" />
+                <span className="text-xs text-slate-300 uppercase tracking-wider font-semibold">Booking ID</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-sm font-bold text-white">{referenceId}</span>
                 <button
                   onClick={() => {
-                    navigator.clipboard.writeText(confirmedBookingId || 'RES982103');
-                    toast.success("Reference ID copied to clipboard!");
+                    navigator.clipboard.writeText(referenceId);
+                    toast.success("Booking ID copied!");
                   }}
-                  className="text-muted-foreground hover:text-accent focus:outline-none cursor-pointer p-0.5"
-                  title="Copy Reference ID"
+                  className="p-1 text-slate-400 hover:text-white rounded hover:bg-white/10 transition-colors"
                 >
                   <Copy className="w-3.5 h-3.5" />
                 </button>
-              </span>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Stay Option</span>
-                <p className="font-semibold text-foreground mt-0.5">{selectedRoomForBooking.type}</p>
-              </div>
-              <div>
-                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">Dates</span>
-                <p className="font-semibold text-foreground mt-0.5">
-                  {format(new Date(checkIn), 'MMM d')} - {format(new Date(checkOut), 'MMM d, yyyy')}
-                </p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">Check-in at 2:00 PM</p>
-              </div>
-            </div>
-            
-            <div className="border-t border-border/10 pt-2.5 space-y-2">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Guest Name:</span>
-                <span className="font-semibold text-foreground">{bookingFormDetails.guestName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Guest Email:</span>
-                <span className="font-semibold text-foreground">{bookingFormDetails.guestEmail}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Guest Phone:</span>
-                <span className="font-semibold text-foreground">{bookingFormDetails.guestPhone}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Rate Plan:</span>
-                <span className="font-semibold text-accent">{selectedMealPlan}</span>
-              </div>
-              <div className="flex justify-between pt-1 border-t border-border/15 font-bold">
-                <span className="text-foreground">Total Price (incl. GST):</span>
-                <span className="text-accent text-sm">₹{(pricing.totalPerNight * nights).toFixed(0)}</span>
               </div>
             </div>
 
-            <div className="border-t border-border/15 pt-2 flex justify-between">
-              <span className="text-muted-foreground">Payment Details:</span>
-              <span className="font-bold text-success">Pay on Checkout (GPay/PhonePe)</span>
+            <div className="space-y-2 text-xs">
+              <div className="flex justify-between">
+                <span className="text-slate-400">Room Category:</span>
+                <span className="font-semibold">{selectedRoomForBooking.type}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-400">Guest Name:</span>
+                <span className="font-semibold">{bookingFormDetails.guestName}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-400">Stay Dates:</span>
+                <span className="font-semibold text-teal-300">
+                  {format(new Date(checkIn), 'MMM d')} - {format(new Date(checkOut), 'MMM d, yyyy')} ({nights} {nights === 1 ? 'night' : 'nights'})
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-400">Total Price:</span>
+                <span className="font-bold text-amber-400 text-sm">₹{(pricing.totalPerNight * nights).toFixed(0)}</span>
+              </div>
             </div>
+
+            <button
+              onClick={() => setShowDetails(!showDetails)}
+              className="w-full mt-2 text-center text-[10px] uppercase font-bold text-teal-400 hover:text-teal-300 flex items-center justify-center gap-1.5"
+            >
+              <ClipboardList className="w-3 h-3" />
+              {showDetails ? "Hide full ledger details" : "Show full ledger details"}
+            </button>
+
+            {showDetails && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="mt-3 pt-3 border-t border-white/10 text-[11px] text-slate-300 space-y-1.5"
+              >
+                <div className="flex justify-between">
+                  <span>Base Rate:</span>
+                  <span>₹{pricing.ratePerNight}/night</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Meal Plan ({selectedMealPlan}):</span>
+                  <span>₹{pricing.mealPlanPrice}/night</span>
+                </div>
+                {bookingFormDetails.extraBed && (
+                  <div className="flex justify-between">
+                    <span>Extra Bed charges:</span>
+                    <span>₹{pricing.extraBedPrice}/night</span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span>Taxes (CGST 2.5% & SGST 2.5%):</span>
+                  <span>₹{(pricing.taxPerNight * nights).toFixed(0)}</span>
+                </div>
+                <div className="flex justify-between font-bold text-white pt-1.5 border-t border-white/5">
+                  <span>Total Amount:</span>
+                  <span>₹{(pricing.totalPerNight * nights).toFixed(0)}</span>
+                </div>
+              </motion.div>
+            )}
           </div>
 
-          {/* Reset/Return Buttons */}
-          <div className="pt-2 flex flex-col gap-3">
+          {/* Action buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-sm mx-auto">
             <button
-              onClick={() => {
-                setBookingFlowState('landing');
-                setSelectedRoomForBooking(null);
-                setBookingFormDetails({
-                  guestName: '',
-                  guestPhone: '',
-                  guestEmail: '',
-                  purpose: '',
-                  extraBed: false,
-                  offers: true,
-                });
-                setBookingErrors({});
-              }}
-              className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold py-3.5 rounded-xl text-xs uppercase tracking-widest transition-all cursor-pointer shadow-md text-center"
+              onClick={handleReturnToHome}
+              className="w-full flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 px-6 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg hover:shadow-teal-500/20"
             >
-              Return to Room Overview
+              <Home className="w-4 h-4" />
+              Return Home
+            </button>
+            <button
+              onClick={handleDownloadReceipt}
+              className="w-full flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold py-3.5 px-6 rounded-xl text-xs uppercase tracking-widest border border-white/20 transition-all cursor-pointer"
+            >
+              Print Receipt
             </button>
           </div>
         </motion.div>
-      </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="w-full border-t border-white/5 py-6 text-center text-xs text-slate-500 bg-black/10">
+        <p>© 2026 Saveetha GuestHouse. All rights reserved.</p>
+      </footer>
     </div>
   );
 }

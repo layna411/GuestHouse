@@ -48,9 +48,19 @@ export function useCustomersViewModel(currentUserRole?: string) {
     try {
       await customerApi.delete(id);
       setCustomers(prev => prev.filter(c => c.id !== id));
-      toast.success('Customer removed successfully!');
+      toast.success('Staff member removed successfully!');
     } catch (err: any) {
-      toast.error(err.message || 'Failed to remove customer.');
+      toast.error(err.message || 'Failed to remove staff.');
+    }
+  };
+
+  const handleToggleActive = async (id: string) => {
+    try {
+      const updated = await customerApi.toggleActive(id);
+      setCustomers(prev => prev.map(c => c.id === id ? updated : c));
+      toast.success(`Staff member status changed successfully.`);
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to toggle staff status.');
     }
   };
 
@@ -60,6 +70,7 @@ export function useCustomersViewModel(currentUserRole?: string) {
     refreshCustomers: fetchCustomers,
     handleAddCustomer,
     handleEditCustomer,
-    handleDeleteCustomer
+    handleDeleteCustomer,
+    handleToggleActive
   };
 }

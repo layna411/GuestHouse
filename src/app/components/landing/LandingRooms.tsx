@@ -9,6 +9,7 @@ interface LandingRoomsProps {
   roomTypeFilter: 'ALL' | 'Deluxe Room' | 'Super Deluxe Room';
   setRoomTypeFilter: (val: 'ALL' | 'Deluxe Room' | 'Super Deluxe Room') => void;
   onViewDetails: (room: Room) => void;
+  availabilityMap: Record<string, { available: boolean; remaining: number }>;
 }
 
 export const LandingRooms: React.FC<LandingRoomsProps> = ({
@@ -16,6 +17,7 @@ export const LandingRooms: React.FC<LandingRoomsProps> = ({
   roomTypeFilter,
   setRoomTypeFilter,
   onViewDetails,
+  availabilityMap,
 }) => {
   return (
     <section id="rooms-catalog" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -31,7 +33,9 @@ export const LandingRooms: React.FC<LandingRoomsProps> = ({
       {/* Rooms Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto justify-center">
         {filteredRooms.map((room) => {
-          const imageSrc = room.imageUrl || ROOM_IMAGE_MAP[room.roomNumber] || '/images/WhatsApp Image 2026-06-04 at 3.41.02 PM.jpeg';
+          const imageSrc = room.type === 'Super Deluxe Room'
+            ? '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg'
+            : '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg';
           return (
             <motion.div
               key={room.id}
@@ -53,15 +57,18 @@ export const LandingRooms: React.FC<LandingRoomsProps> = ({
                 
                 {/* Room Status/Badge */}
                 <div className="absolute top-4 right-4 flex gap-2">
-                  <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border backdrop-blur-md ${
-                    room.status === 'vacant' 
-                      ? 'bg-success/20 border-success/30 text-success' 
-                      : room.status === 'booked'
-                      ? 'bg-amber-500/20 border-amber-500/30 text-amber-300'
-                      : 'bg-red-500/20 border-red-500/30 text-red-300'
-                  }`}>
-                    {room.status}
-                  </span>
+                  {availabilityMap[room.type] && !availabilityMap[room.type].available ? (
+                    <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border bg-red-600 border-red-700 text-white shadow-lg shadow-red-600/10">
+                      Sold Out
+                    </span>
+                  ) : (
+                    <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border backdrop-blur-md bg-success/20 border-success/30 text-success">
+                      {availabilityMap[room.type]?.remaining !== undefined 
+                        ? `${availabilityMap[room.type].remaining} Available`
+                        : room.type === 'Deluxe Room' ? '12 Available' : '6 Available'
+                      }
+                    </span>
+                  )}
                   <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border bg-black/60 border-white/10 text-white backdrop-blur-md">
                     Floor {room.floor}
                   </span>
@@ -104,13 +111,22 @@ export const LandingRooms: React.FC<LandingRoomsProps> = ({
                 </div>
 
                 {/* View Details & Rates Action */}
-                <button
-                  onClick={() => onViewDetails(room)}
-                  className="glass-button-gold w-full py-3 rounded text-sm font-semibold uppercase tracking-wider flex items-center justify-center gap-2 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 cursor-pointer"
-                >
-                  View Details & Rates
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                {availabilityMap[room.type] && !availabilityMap[room.type].available ? (
+                  <button
+                    disabled
+                    className="w-full py-3 rounded text-sm font-semibold uppercase tracking-wider bg-muted text-muted-foreground border border-border flex items-center justify-center gap-2 cursor-not-allowed"
+                  >
+                    Sold Out for Selected Dates
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => onViewDetails(room)}
+                    className="glass-button-gold w-full py-3 rounded text-sm font-semibold uppercase tracking-wider flex items-center justify-center gap-2 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 cursor-pointer"
+                  >
+                    View Details & Rates
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             </motion.div>
           );
