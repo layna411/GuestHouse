@@ -84,12 +84,29 @@ export function RoomManagement({ rooms }: RoomManagementProps) {
             </div>
           </div>
 
+<<<<<<< HEAD
           <CardContent className="p-6 flex-1 flex flex-col justify-between space-y-6">
             {/* Room Specs & Details */}
             <div className="grid grid-cols-2 gap-4 bg-muted/20 p-4 rounded-xl border border-border/30">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-primary/10 text-primary">
                   <BedDouble className="w-5 h-5" />
+=======
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredRooms.map((room) => (
+              <Card key={room.id} glass hoverable className="overflow-hidden flex flex-col h-full">
+                <div className="relative aspect-video overflow-hidden bg-slate-950">
+                  <img
+                    src={room.type.toLowerCase().includes('super')
+                      ? '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg'
+                      : '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg'}
+                    alt={`Room ${room.roomNumber}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-3 right-3">
+                    <StatusChip status={room.status} size="sm" />
+                  </div>
+>>>>>>> b359275e90c7beefa44d6f4c194ab00b7f58433a
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Total Inventory</p>

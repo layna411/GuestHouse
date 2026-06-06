@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { Room } from '../../types';
 import { format } from 'date-fns';
+import { getRoomImage } from './constants';
 
 interface CheckoutViewProps {
   selectedRoomForBooking: Room;
@@ -38,7 +39,6 @@ interface CheckoutViewProps {
   guestCount: number;
   selectedMealPlan: string;
   getPriceDetails: (roomType: string, guests: number, mealPlan: string, extraBed: boolean) => any;
-  ROOM_IMAGE_MAP: Record<string, string>;
   activeTaxInfoRow: string | null;
   setActiveTaxInfoRow: (row: string | null) => void;
 }
@@ -61,14 +61,17 @@ export function CheckoutView({
   guestCount,
   selectedMealPlan,
   getPriceDetails,
-  ROOM_IMAGE_MAP,
   activeTaxInfoRow,
   setActiveTaxInfoRow
 }: CheckoutViewProps) {
   const timer = formatTime(timeLeft);
+<<<<<<< HEAD
   const imageSrc = selectedRoomForBooking.type === 'Super Deluxe Room'
     ? '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg'
     : '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg';
+=======
+  const imageSrc = getRoomImage(selectedRoomForBooking.type);
+>>>>>>> b359275e90c7beefa44d6f4c194ab00b7f58433a
 
   const inDate = new Date(checkIn);
   const outDate = new Date(checkOut);

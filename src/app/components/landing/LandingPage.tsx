@@ -9,6 +9,7 @@ import {
   INITIAL_REVIEWS, 
   ROOM_IMAGE_MAP, 
   getPriceDetails,
+  getRoomImage,
   GuestReview
 } from './constants';
 
@@ -139,9 +140,13 @@ export function LandingPage({
   // Set active detail image on room selection
   useEffect(() => {
     if (selectedRoomForBooking) {
+<<<<<<< HEAD
       const defaultImg = selectedRoomForBooking.type === 'Super Deluxe Room'
         ? '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg'
         : '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg';
+=======
+      const defaultImg = getRoomImage(selectedRoomForBooking.type);
+>>>>>>> b359275e90c7beefa44d6f4c194ab00b7f58433a
       setActiveDetailImage(defaultImg);
     }
   }, [selectedRoomForBooking]);
