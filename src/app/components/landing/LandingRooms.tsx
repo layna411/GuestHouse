@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Users, Sparkles, ArrowRight } from 'lucide-react';
 import { Room } from '../../types';
-import { getRoomImage } from './constants';
+import { ROOM_IMAGE_MAP, getRoomImage } from './constants';
 
 interface LandingRoomsProps {
   filteredRooms: Room[];
@@ -33,13 +33,7 @@ export const LandingRooms: React.FC<LandingRoomsProps> = ({
       {/* Rooms Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto justify-center">
         {filteredRooms.map((room) => {
-<<<<<<< HEAD
-          const imageSrc = room.type === 'Super Deluxe Room'
-            ? '/images/WhatsApp Image 2026-06-04 at 3.41.10 PM (1).jpeg'
-            : '/images/WhatsApp Image 2026-06-04 at 3.41.06 PM.jpeg';
-=======
           const imageSrc = getRoomImage(room.type);
->>>>>>> b359275e90c7beefa44d6f4c194ab00b7f58433a
           return (
             <motion.div
               key={room.id}
