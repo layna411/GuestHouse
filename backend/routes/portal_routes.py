@@ -28,7 +28,7 @@ def db_status():
         total_bookings = BookingModel.query.count()
         active_bookings = BookingModel.query.filter_by(status="confirmed").count()
         
-        total_employees = UserModel.query.filter_by(role="employee").count()
+        total_employees = UserModel.query.filter_by(role="staff").count()
         total_admins = UserModel.query.filter_by(role="admin").count()
         
         return jsonify({

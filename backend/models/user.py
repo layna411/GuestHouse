@@ -8,9 +8,10 @@ class UserModel(db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(20), nullable=False)  # 'admin' or 'employee'
+    role = db.Column(db.String(20), nullable=False)  # 'admin' or 'staff'
     department = db.Column(db.String(100), nullable=True)
     phone = db.Column(db.String(20), nullable=True)
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
 
     # Relationships
     # Backref for bookings made by this user

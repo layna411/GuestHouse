@@ -49,12 +49,12 @@ class TestGuestHouseBackend(unittest.TestCase):
             id="emp001",
             name="Priya Menon",
             email="priya.menon@simats.edu",
-            role="customer",
+            role="staff",
             department="Guest Relations",
             phone="+91 98765 11111"
         )
         self.emp.set_password("password123")
-
+ 
         db.session.add_all([self.admin, self.emp])
         db.session.commit()
 
@@ -206,7 +206,7 @@ class TestGuestHouseBackend(unittest.TestCase):
         self.assertEqual(customers[0]["name"], "Priya Menon")
 
     def test_add_customer(self):
-        """Test registering a new customer member."""
+        """Test registering a new staff member."""
         response = self.client.post("/api/customers", json={
             "name": "Karan Johar",
             "email": "karan@simats.edu",
@@ -220,7 +220,7 @@ class TestGuestHouseBackend(unittest.TestCase):
         # Verify in database
         db_user = UserModel.query.filter_by(email="karan@simats.edu").first()
         self.assertIsNotNone(db_user)
-        self.assertEqual(db_user.role, "customer")
+        self.assertEqual(db_user.role, "staff")
 
 if __name__ == "__main__":
     unittest.main()

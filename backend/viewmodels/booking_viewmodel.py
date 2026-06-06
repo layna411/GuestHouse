@@ -22,6 +22,7 @@ class BookingViewModel:
             "purpose": booking.purpose,
             "status": booking.status,
             "bookedBy": booking.booked_by,
+            "paymentType": booking.payment_type or "Direct",
             "createdAt": booking.created_at.isoformat(),
             "mealPlan": booking.meal_plan or "Room without Breakfast",
             "pricePerNight": float(booking.price_per_night) if booking.price_per_night is not None else 0,
@@ -68,6 +69,7 @@ class BookingViewModel:
         meal_plan = data.get("mealPlan", "Room without Breakfast")
         price_per_night = data.get("pricePerNight")
         total_price = data.get("totalPrice")
+        payment_type = data.get("paymentType", "Direct")
 
         if not room_id_str or not guest_name or not guest_phone or not guest_email or not check_in_str or not check_out_str or number_of_guests is None:
             raise ValueError("Room ID, guest name, contact info, and check-in/out dates are required.")
@@ -101,6 +103,41 @@ class BookingViewModel:
         if check_in >= check_out:
             raise ValueError("Check-in date/time must be strictly before check-out date/time.")
 
+        # Daily calendar availability verification (to avoid overflowing of bookings)
+        from datetime import timedelta
+        from models.room_availability import RoomAvailabilityModel
+        cin_date = check_in.date()
+        cout_date = check_out.date()
+        nights = (cout_date - cin_date).days
+        
+        def get_default_capacity(room_type):
+            if "super" in room_type.lower():
+                return 6
+            return 12
+
+        rooms_of_type = RoomModel.query.filter_by(type=room.type).all()
+        room_ids = [r.id for r in rooms_of_type]
+
+        for n in range(nights):
+            current_date = cin_date + timedelta(days=n)
+            date_str = current_date.strftime("%Y-%m-%d")
+            dt = datetime.combine(current_date, datetime.min.time())
+
+            override = RoomAvailabilityModel.query.filter_by(room_type=room.type, date=date_str).first()
+            cap = override.available_count if override else get_default_capacity(room.type)
+
+            occupied = 0
+            if room_ids:
+                occupied = BookingModel.query.filter(
+                    BookingModel.room_id.in_(room_ids),
+                    BookingModel.status.in_(["confirmed", "pending"]),
+                    BookingModel.check_in <= dt,
+                    BookingModel.check_out > dt
+                ).count()
+
+            if cap - occupied <= 0:
+                raise ValueError(f"Daily capacity limit reached: No availability for {room.type} on {date_str}.")
+
         # Date conflict verification:
         # A conflict occurs if there is another confirmed booking for the same room where:
         # other.check_in < check_out AND other.check_out > check_in
@@ -119,12 +156,12 @@ class BookingViewModel:
             )
 
         # Determine initial booking status
-        # If the user placing it is an admin, confirm immediately. Otherwise, set to pending.
+        # If the user placing it is an admin or staff, confirm immediately. Otherwise, set to pending.
         from models.user import UserModel
         user = UserModel.query.get(booked_by)
         initial_status = "confirmed"
-        if user and user.role == "customer":
-            initial_status = "pending"
+        if user and user.role in ["staff", "customer"]:
+            initial_status = "confirmed"
         elif not user:
             initial_status = "pending"
 
@@ -142,6 +179,7 @@ class BookingViewModel:
             purpose=purpose,
             status=initial_status,
             booked_by=booked_by,
+            payment_type=payment_type,
             meal_plan=meal_plan,
             price_per_night=float(price_per_night) if price_per_night is not None else None,
             total_price=float(total_price) if total_price is not None else None
@@ -156,9 +194,10 @@ class BookingViewModel:
 
         # Create notification for admin
         from models.notification import NotificationModel
-        notif_msg = f"New pending booking {booking_id} request from {guest_name} for Room {room.room_number}."
+        food_status = "Without Food" if "without" in meal_plan.lower() else "With Food"
+        notif_msg = f"New pending booking {booking_id} request from {guest_name} for Room {room.room_number} [{food_status} - {meal_plan}]."
         if initial_status == "confirmed":
-            notif_msg = f"New booking {booking_id} confirmed by Admin for Room {room.room_number}."
+            notif_msg = f"New booking {booking_id} confirmed by Admin for Room {room.room_number} [{food_status} - {meal_plan}]."
             
         notification = NotificationModel(
             booking_id=booking_id,
@@ -221,8 +260,8 @@ class BookingViewModel:
         return cls.to_dict(booking)
 
     @classmethod
-    def confirm_booking(cls, booking_id):
-        """Confirms a pending booking and sets the room to booked."""
+    def confirm_booking(cls, booking_id, room_id=None):
+        """Confirms a pending booking, allocates the room if provided, and sets room status to booked."""
         booking = BookingModel.query.get(booking_id)
         if not booking:
             raise ValueError("Reservation not found.")
@@ -230,9 +269,17 @@ class BookingViewModel:
         if booking.status != "pending":
             raise ValueError(f"Only pending bookings can be confirmed. Current status is {booking.status}.")
 
+        if room_id:
+            # Check room exists and set it
+            room = RoomModel.query.get(room_id)
+            if not room:
+                raise ValueError("Selected room does not exist.")
+            booking.room_id = room.id
+        else:
+            room = RoomModel.query.get(booking.room_id)
+
         booking.status = "confirmed"
         
-        room = RoomModel.query.get(booking.room_id)
         if room:
             room.status = "booked"
 

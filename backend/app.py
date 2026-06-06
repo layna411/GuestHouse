@@ -2,7 +2,6 @@ from flask import Flask
 from flask_cors import CORS
 from config import Config
 from database import db
-from routes import auth_bp, room_bp, booking_bp, customer_bp, notification_bp, portal_bp
 import os
 
 def create_app(config_class=Config):
@@ -11,20 +10,21 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     # Initialize CORS
-    # React frontend usually runs on http://localhost:5173 or pnpm dev.
-    # Allowing all origins in development mode for maximum user-friendliness.
     CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     # Initialize database
     db.init_app(app)
 
     # Register blueprints
+    from routes import auth_bp, room_bp, booking_bp, customer_bp, notification_bp, portal_bp, gallery_bp, availability_bp
     app.register_blueprint(portal_bp)   # Serves developer dashboard and DB status
     app.register_blueprint(auth_bp)     # Serves login / session profile updates
     app.register_blueprint(room_bp)     # Serves rooms CRUD APIs
     app.register_blueprint(booking_bp)  # Serves reservation placements & status transitions
     app.register_blueprint(customer_bp) # Serves customer listings & CRUD
     app.register_blueprint(notification_bp) # Serves notifications API
+    app.register_blueprint(gallery_bp)
+    app.register_blueprint(availability_bp)
 
     return app
 

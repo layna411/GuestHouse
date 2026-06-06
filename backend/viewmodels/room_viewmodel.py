@@ -7,6 +7,31 @@ class RoomViewModel:
         """Maps a RoomModel schema to the exact field naming expected by the frontend UI."""
         if not room:
             return None
+
+        current_booking = None
+        if room.status == 'booked':
+            from models.booking import BookingModel
+            from datetime import datetime
+            now = datetime.utcnow()
+            active_b = BookingModel.query.filter(
+                BookingModel.room_id == room.id,
+                BookingModel.status == 'confirmed',
+                BookingModel.check_in <= now,
+                BookingModel.check_out >= now
+            ).first()
+            if not active_b:
+                active_b = BookingModel.query.filter(
+                    BookingModel.room_id == room.id,
+                    BookingModel.status == 'confirmed'
+                ).order_by(BookingModel.check_in.desc()).first()
+            if active_b:
+                current_booking = {
+                    "guestName": active_b.guest_name,
+                    "checkIn": active_b.check_in.isoformat(),
+                    "checkOut": active_b.check_out.isoformat(),
+                    "paymentType": active_b.payment_type or "Direct"
+                }
+
         return {
             "id": str(room.id),
             "roomNumber": room.room_number,
@@ -16,7 +41,8 @@ class RoomViewModel:
             "price": float(room.price),
             "status": room.status,
             "amenities": room.amenities,
-            "imageUrl": room.image_url or ""
+            "imageUrl": room.image_url or "",
+            "currentBooking": current_booking
         }
 
     @classmethod

@@ -13,25 +13,35 @@ class UserViewModel:
             "email": user.email,
             "role": user.role,
             "department": user.department or "",
-            "phone": user.phone or ""
+            "phone": user.phone or "",
+            "is_active": user.is_active
         }
 
     @classmethod
     def authenticate(cls, email, password, role=None):
         """Authenticates a user based on email, password, and optional expected role."""
-        if role:
-            user = UserModel.query.filter_by(email=email, role=role).first()
+        target_role = role
+        if role == "customer" or role == "employee":
+            target_role = "staff"
+
+        if target_role:
+            user = UserModel.query.filter_by(email=email, role=target_role).first()
         else:
             user = UserModel.query.filter_by(email=email).first()
 
-        if user and user.check_password(password):
-            return cls.to_dict(user)
+        if user:
+            # Block disabled staff logins
+            if not user.is_active:
+                return None
+            if user.check_password(password):
+                return cls.to_dict(user)
+            return None
         
         # Supporting a fallback standard password check for '@simats.edu' standard logins
         # as described in App.tsx: email.includes('@simats.edu') && password === 'password123'
         if not user and email.endswith("@simats.edu") and password == "password123":
             # If role is not provided, determine it from the email
-            determined_role = role if role else ("admin" if "admin" in email.lower() else "customer")
+            determined_role = target_role if target_role else ("admin" if "admin" in email.lower() else "staff")
             
             # Auto-create the user in database if it doesn't exist for seamless user-friendliness
             username = email.split("@")[0].replace(".", " ").title()
@@ -42,7 +52,7 @@ class UserViewModel:
                 email=email,
                 password=password,
                 role=determined_role,
-                department="Guest Relations" if determined_role == "customer" else "Administration",
+                department="Guest Relations" if determined_role == "staff" else "Administration",
                 phone=""
             )
             return new_user
@@ -107,17 +117,18 @@ class UserViewModel:
 
     @classmethod
     def get_all_customers(cls):
-        """Returns a list of all customers in the system."""
-        customers = UserModel.query.filter_by(role="customer").all()
+        """Returns a list of all staff/customers in the system."""
+        customers = UserModel.query.filter_by(role="staff").all()
         return [cls.to_dict(cust) for cust in customers]
 
     @classmethod
     def delete_customer(cls, cust_id):
-        """Deletes a customer from the system."""
-        user = UserModel.query.filter_by(id=cust_id, role="customer").first()
+        """Deletes a staff member from the system."""
+        user = UserModel.query.filter_by(id=cust_id, role="staff").first()
         if not user:
-            raise ValueError("Customer not found.")
+            raise ValueError("Staff member not found.")
         
         db.session.delete(user)
         db.session.commit()
         return True
+

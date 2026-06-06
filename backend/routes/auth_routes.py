@@ -63,8 +63,8 @@ def register():
             name=name,
             email=email,
             password=password,
-            role="customer",
-            department="Customer",
+            role="staff",
+            department="Guest Relations",
             phone=phone
         )
         return jsonify({
