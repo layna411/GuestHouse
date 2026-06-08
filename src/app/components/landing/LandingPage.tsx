@@ -3,6 +3,7 @@ import { Room, User } from '../../types';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { availabilityApi } from '../../services/api';
+import { ChevronUp, ChevronDown } from 'lucide-react';
 
 // Constants and Helpers
 import { 
@@ -90,6 +91,33 @@ export function LandingPage({
   const [showSpecialRequest, setShowSpecialRequest] = useState(false);
   const [activeNotificationTab, setActiveNotificationTab] = useState<'email' | 'sms'>('email');
   const [availabilityMap, setAvailabilityMap] = useState<Record<string, { available: boolean; remaining: number }>>({});
+
+  // Floating Scroll Buttons for Landing Page
+  const [showScrollButtons, setShowScrollButtons] = useState(false);
+
+  useEffect(() => {
+    if (bookingFlowState !== 'landing') {
+      setShowScrollButtons(false);
+      return;
+    }
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollButtons(true);
+      } else {
+        setShowScrollButtons(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [bookingFlowState]);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const scrollToBottom = () => {
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+  };
 
   // Verify date range capacity limits on search parameters change
   useEffect(() => {
@@ -390,6 +418,29 @@ export function LandingPage({
           onOpenLogin={onOpenLogin}
           setBookingFlowState={setBookingFlowState}
         />
+      )}
+
+      {/* Floating Scroll Buttons */}
+      {bookingFlowState === 'landing' && showScrollButtons && (
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2">
+          {/* Scroll to Top */}
+          <button
+            onClick={scrollToTop}
+            className="w-10 h-10 rounded-full bg-primary/80 backdrop-blur-md border border-primary-foreground/10 text-primary-foreground flex items-center justify-center shadow-lg hover:bg-primary transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+            title="Scroll to Top"
+          >
+            <ChevronUp className="w-5 h-5 font-bold" />
+          </button>
+          
+          {/* Scroll to Bottom */}
+          <button
+            onClick={scrollToBottom}
+            className="w-10 h-10 rounded-full bg-primary/80 backdrop-blur-md border border-primary-foreground/10 text-primary-foreground flex items-center justify-center shadow-lg hover:bg-primary transition-all duration-300 hover:translate-y-1 cursor-pointer"
+            title="Scroll to Bottom"
+          >
+            <ChevronDown className="w-5 h-5 font-bold" />
+          </button>
+        </div>
       )}
     </div>
   );

@@ -202,8 +202,10 @@ class TestGuestHouseBackend(unittest.TestCase):
         response = self.client.get("/api/customers")
         self.assertEqual(response.status_code, 200)
         customers = json.loads(response.data)
-        self.assertEqual(len(customers), 1)
-        self.assertEqual(customers[0]["name"], "Priya Menon")
+        self.assertEqual(len(customers), 2)
+        names = [c["name"] for c in customers]
+        self.assertIn("Priya Menon", names)
+        self.assertIn("Admin User", names)
 
     def test_add_customer(self):
         """Test registering a new staff member."""
@@ -250,6 +252,45 @@ class TestGuestHouseBackend(unittest.TestCase):
         data = json.loads(response.data)
         self.assertIn("error", data)
         self.assertIn("Booking conflict", data["error"])
+
+    def test_delete_staff_with_bookings(self):
+        """Test deleting a staff member who has placed bookings does not fail and preserves the bookings."""
+        # emp001 has booking B001
+        response = self.client.delete("/api/customers/emp001")
+        self.assertEqual(response.status_code, 200)
+        
+        # Verify user is deleted from DB
+        db_user = UserModel.query.get("emp001")
+        self.assertIsNone(db_user)
+        
+        # Verify booking still exists but booked_by is set to None
+        db_booking = BookingModel.query.get("B001")
+        self.assertIsNotNone(db_booking)
+        self.assertIsNone(db_booking.booked_by)
+
+    def test_edit_customer_role_update(self):
+        """Test that updating a staff member's role persists correctly to the database."""
+        response = self.client.put("/api/customers/emp001", json={
+            "name": "Priya Menon Updated",
+            "email": "priya.menon@simats.edu",
+            "role": "admin"
+        })
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        self.assertEqual(data["customer"]["role"], "admin")
+        
+        # Verify in DB
+        db_user = UserModel.query.get("emp001")
+        self.assertIsNotNone(db_user)
+        self.assertEqual(db_user.role, "admin")
+
+    def test_delete_primary_admin_fails(self):
+        """Test that deleting the primary administrator is blocked."""
+        response = self.client.delete("/api/customers/admin001")
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)
+        self.assertIn("error", data)
+        self.assertIn("primary administrator", data["error"].lower())
 
 if __name__ == "__main__":
     unittest.main()

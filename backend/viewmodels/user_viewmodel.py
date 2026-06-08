@@ -109,6 +109,9 @@ class UserViewModel:
         if "phone" in data:
             user.phone = data["phone"]
 
+        if "role" in data and data["role"]:
+            user.role = data["role"]
+
         if "password" in data and data["password"]:
             user.set_password(data["password"])
 
@@ -118,15 +121,17 @@ class UserViewModel:
     @classmethod
     def get_all_customers(cls):
         """Returns a list of all staff/customers in the system."""
-        customers = UserModel.query.filter_by(role="staff").all()
+        customers = UserModel.query.all()
         return [cls.to_dict(cust) for cust in customers]
 
     @classmethod
     def delete_customer(cls, cust_id):
         """Deletes a staff member from the system."""
-        user = UserModel.query.filter_by(id=cust_id, role="staff").first()
+        user = UserModel.query.get(cust_id)
         if not user:
             raise ValueError("Staff member not found.")
+        if cust_id == "admin001":
+            raise ValueError("The primary administrator account cannot be deleted.")
         
         db.session.delete(user)
         db.session.commit()
