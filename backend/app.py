@@ -16,7 +16,7 @@ def create_app(config_class=Config):
     db.init_app(app)
 
     # Register blueprints
-    from routes import auth_bp, room_bp, booking_bp, customer_bp, notification_bp, portal_bp, gallery_bp, availability_bp
+    from routes import auth_bp, room_bp, booking_bp, customer_bp, notification_bp, portal_bp, gallery_bp, availability_bp, review_bp
     app.register_blueprint(portal_bp)   # Serves developer dashboard and DB status
     app.register_blueprint(auth_bp)     # Serves login / session profile updates
     app.register_blueprint(room_bp)     # Serves rooms CRUD APIs
@@ -25,6 +25,7 @@ def create_app(config_class=Config):
     app.register_blueprint(notification_bp) # Serves notifications API
     app.register_blueprint(gallery_bp)
     app.register_blueprint(availability_bp)
+    app.register_blueprint(review_bp)
 
     return app
 

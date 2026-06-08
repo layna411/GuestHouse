@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Room, User } from '../../types';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { availabilityApi } from '../../services/api';
+import { availabilityApi, reviewApi } from '../../services/api';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 
 // Constants and Helpers
@@ -56,11 +56,10 @@ export function LandingPage({
   const [filteredRooms, setFilteredRooms] = useState<Room[]>(rooms);
   
   // Reviews List and Form
-  const [reviewsList, setReviewsList] = useState<GuestReview[]>(INITIAL_REVIEWS);
+  const [reviewsList, setReviewsList] = useState<GuestReview[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [reviewForm, setReviewForm] = useState({
-    advantages: '',
-    disadvantages: '',
+    comments: '',
     month: 'Month',
     year: 'Year',
     rating: 10,
@@ -68,6 +67,21 @@ export function LandingPage({
     email: '',
     country: '',
   });
+
+  // Fetch reviews on mount
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const dbReviews = await reviewApi.getAll();
+        setReviewsList(dbReviews);
+      } catch (err) {
+        console.error("Failed to load reviews from database.", err);
+        // fallback to INITIAL_REVIEWS if backend is unavailable/errored
+        setReviewsList(INITIAL_REVIEWS);
+      }
+    };
+    fetchReviews();
+  }, []);
 
   // Booking Flow States
   const [bookingFlowState, setBookingFlowState] = useState<'landing' | 'room-details' | 'checkout' | 'payment' | 'confirmation'>('landing');

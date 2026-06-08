@@ -8,8 +8,7 @@ export interface GuestReview {
   reviewerName: string;
   reviewerCountry: string;
   date: string;
-  advantages: string;
-  disadvantages: string;
+  comments: string;
 }
 
 export const INITIAL_REVIEWS: GuestReview[] = [
@@ -21,8 +20,7 @@ export const INITIAL_REVIEWS: GuestReview[] = [
     reviewerName: 'Ayadural',
     reviewerCountry: '🇸🇬',
     date: '4 June 2026',
-    advantages: 'Peaceful',
-    disadvantages: ''
+    comments: 'Peaceful'
   },
   {
     id: 'rev2',
@@ -32,8 +30,7 @@ export const INITIAL_REVIEWS: GuestReview[] = [
     reviewerName: 'Vicent',
     reviewerCountry: '🇲🇾',
     date: '2 June 2026',
-    advantages: 'Good',
-    disadvantages: 'NA'
+    comments: 'Good'
   },
   {
     id: 'rev3',
@@ -43,8 +40,7 @@ export const INITIAL_REVIEWS: GuestReview[] = [
     reviewerName: 'Dr. James Anderson',
     reviewerCountry: '🇬🇧',
     date: '28 May 2026',
-    advantages: 'The hospitality of the guest house staff was incredible. The environment is perfect for academic work with completely silent zones and fast Wi-Fi.',
-    disadvantages: 'Breakfast options could be slightly more diverse.'
+    comments: 'The hospitality of the guest house staff was incredible. The environment is perfect for academic work with completely silent zones and fast Wi-Fi. (Disadvantages: Breakfast options could be slightly more diverse.)'
   },
   {
     id: 'rev4',
@@ -54,8 +50,7 @@ export const INITIAL_REVIEWS: GuestReview[] = [
     reviewerName: 'Sarah Jenkins',
     reviewerCountry: '🇺🇸',
     date: '25 May 2026',
-    advantages: 'Very close to Saveetha Dental College, which was ideal for my conference. Clean rooms and helpful concierge desk.',
-    disadvantages: 'The water pressure was a bit low on the third floor during peak hours.'
+    comments: 'Very close to Saveetha Dental College, which was ideal for my conference. Clean rooms and helpful concierge desk. (Disadvantages: The water pressure was a bit low on the third floor during peak hours.)'
   },
   {
     id: 'rev5',
@@ -65,8 +60,7 @@ export const INITIAL_REVIEWS: GuestReview[] = [
     reviewerName: 'Prof. Ramachandran',
     reviewerCountry: '🇮🇳',
     date: '22 May 2026',
-    advantages: 'Excellent campus residency! Having dynamic meal plan rates and check-in without registration hassle was a breeze.',
-    disadvantages: 'None'
+    comments: 'Excellent campus residency! Having dynamic meal plan rates and check-in without registration hassle was a breeze.'
   },
   {
     id: 'rev6',
@@ -76,8 +70,7 @@ export const INITIAL_REVIEWS: GuestReview[] = [
     reviewerName: 'Hiroshi Tanaka',
     reviewerCountry: '🇯🇵',
     date: '20 May 2026',
-    advantages: 'The stay was absolutely spectacular. The rooms have a premium aesthetic and excellent workspaces.',
-    disadvantages: 'None'
+    comments: 'The stay was absolutely spectacular. The rooms have a premium aesthetic and excellent workspaces.'
   },
   {
     id: 'rev7',
@@ -87,8 +80,7 @@ export const INITIAL_REVIEWS: GuestReview[] = [
     reviewerName: 'Prof. Anita Sharma',
     reviewerCountry: '🇮🇳',
     date: '19 May 2026',
-    advantages: 'Clean, quiet, and fully equipped workspaces. Exceeded expectations.',
-    disadvantages: 'No issues encountered.'
+    comments: 'Clean, quiet, and fully equipped workspaces. Exceeded expectations.'
   }
 ];
 

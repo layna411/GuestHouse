@@ -5,6 +5,7 @@ from models.booking import BookingModel
 from models.notification import NotificationModel
 from models.room_availability import RoomAvailabilityModel
 from models.gallery import GalleryModel
+from models.review import ReviewModel
 
 # Package exports for models
-__all__ = ['db', 'UserModel', 'RoomModel', 'BookingModel', 'NotificationModel', 'RoomAvailabilityModel', 'GalleryModel']
+__all__ = ['db', 'UserModel', 'RoomModel', 'BookingModel', 'NotificationModel', 'RoomAvailabilityModel', 'GalleryModel', 'ReviewModel']

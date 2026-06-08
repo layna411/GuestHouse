@@ -1,4 +1,5 @@
 import { Room, Booking, User, Notification, RoomAvailability, GalleryImage } from '../types';
+import { GuestReview } from '../components/landing/constants';
 
 const API_BASE = import.meta.env.DEV ? '' : (import.meta.env.VITE_API_URL || '');
 
@@ -315,6 +316,23 @@ export const revenueApi = {
   async getStats(): Promise<{ totalRevenue: number; monthlyRevenue: { month: string; revenue: number }[] }> {
     const res = await apiFetch('/api/bookings/revenue');
     return handleResponse(res);
+  }
+};
+
+export const reviewApi = {
+  async getAll(): Promise<GuestReview[]> {
+    const res = await apiFetch('/api/reviews');
+    return handleResponse<GuestReview[]>(res);
+  },
+
+  async create(reviewData: Omit<GuestReview, 'id' | 'source'>): Promise<GuestReview> {
+    const res = await apiFetch('/api/reviews', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(reviewData)
+    });
+    const data = await handleResponse<{ message: string; review: GuestReview }>(res);
+    return data.review;
   }
 };
 

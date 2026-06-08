@@ -3,6 +3,7 @@ import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { GuestReview } from './constants';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { reviewApi } from '../../services/api';
 
 interface LandingReviewsProps {
   reviewsList: GuestReview[];
@@ -10,8 +11,7 @@ interface LandingReviewsProps {
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   reviewForm: {
-    advantages: string;
-    disadvantages: string;
+    comments: string;
     month: string;
     year: string;
     rating: number;
@@ -20,8 +20,7 @@ interface LandingReviewsProps {
     country: string;
   };
   setReviewForm: React.Dispatch<React.SetStateAction<{
-    advantages: string;
-    disadvantages: string;
+    comments: string;
     month: string;
     year: string;
     rating: number;
@@ -39,38 +38,41 @@ export function LandingReviews({
   reviewForm,
   setReviewForm
 }: LandingReviewsProps) {
-  const handleSubmitReview = (e: React.FormEvent) => {
+  const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!reviewForm.name.trim() || !reviewForm.email.trim()) {
-      toast.error("Please enter your name and email address");
+    if (!reviewForm.name.trim() || !reviewForm.email.trim() || !reviewForm.comments.trim()) {
+      toast.error("Please enter your name, email address and comments.");
       return;
     }
 
-    const newRev: GuestReview = {
-      id: Date.now().toString(),
-      source: 'our',
-      rating: reviewForm.rating,
-      ratingText: reviewForm.rating >= 9 ? 'Exceptional' : reviewForm.rating >= 8 ? 'Wonderful' : reviewForm.rating >= 7 ? 'Good' : 'Satisfactory',
-      reviewerName: reviewForm.name,
-      reviewerCountry: reviewForm.country ? reviewForm.country.trim() : '🇮🇳',
-      date: format(new Date(), 'd MMMM yyyy'),
-      advantages: reviewForm.advantages.trim(),
-      disadvantages: reviewForm.disadvantages.trim(),
-    };
+    try {
+      const ratingText = reviewForm.rating >= 9 ? 'Exceptional' : reviewForm.rating >= 8 ? 'Wonderful' : reviewForm.rating >= 7 ? 'Good' : 'Satisfactory';
+      const newRev = await reviewApi.create({
+        rating: reviewForm.rating,
+        ratingText,
+        reviewerName: reviewForm.name.trim(),
+        reviewerEmail: reviewForm.email.trim(),
+        reviewerCountry: reviewForm.country ? reviewForm.country.trim() : '🇮🇳',
+        date: format(new Date(), 'd MMMM yyyy'),
+        comments: reviewForm.comments.trim()
+      });
 
-    setReviewsList(prev => [newRev, ...prev]);
-    setCurrentPage(1);
-    setReviewForm({
-      advantages: '',
-      disadvantages: '',
-      month: 'Month',
-      year: 'Year',
-      rating: 10,
-      name: '',
-      email: '',
-      country: '',
-    });
-    toast.success("Thank you for your feedback! Review posted successfully.");
+      setReviewsList(prev => [newRev, ...prev]);
+      setCurrentPage(1);
+      setReviewForm({
+        comments: '',
+        month: 'Month',
+        year: 'Year',
+        rating: 10,
+        name: '',
+        email: '',
+        country: '',
+      });
+      toast.success("Thank you for your feedback! Review posted successfully.");
+    } catch (err: any) {
+      console.error("Failed to post review:", err);
+      toast.error(err.message || "Failed to post review. Please try again.");
+    }
   };
 
   // Review calculations
@@ -161,18 +163,9 @@ export function LandingReviews({
                 </div>
 
                 <div className="space-y-2.5 pl-1">
-                  {/* Advantages */}
-                  {review.advantages && review.advantages.trim() && (
+                  {review.comments && review.comments.trim() && (
                     <div className="flex items-start gap-2.5 text-xs font-semibold text-foreground/80 leading-relaxed">
-                      <span className="w-4 h-4 rounded-full bg-accent text-accent-foreground flex items-center justify-center text-[10px] font-extrabold flex-shrink-0 mt-0.5">+</span>
-                      <p>{review.advantages}</p>
-                    </div>
-                  )}
-                  {/* Disadvantages */}
-                  {review.disadvantages && review.disadvantages.trim() && (
-                    <div className="flex items-start gap-2.5 text-xs font-semibold text-muted-foreground leading-relaxed">
-                      <span className="w-4 h-4 rounded-full bg-destructive text-white flex items-center justify-center text-[10px] font-extrabold flex-shrink-0 mt-0.5">-</span>
-                      <p>{review.disadvantages}</p>
+                      <p className="whitespace-pre-wrap">{review.comments}</p>
                     </div>
                   )}
                 </div>
@@ -244,27 +237,16 @@ export function LandingReviews({
                 Share your impressions
               </span>
 
-              {/* Advantages */}
+              {/* Comments */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-600 dark:text-slate-400">Advantages</label>
+                <label className="block text-xs font-bold text-slate-600 dark:text-slate-400">Comments</label>
                 <textarea
-                  rows={2}
-                  value={reviewForm.advantages}
-                  onChange={(e) => setReviewForm({ ...reviewForm, advantages: e.target.value })}
+                  rows={4}
+                  value={reviewForm.comments}
+                  onChange={(e) => setReviewForm({ ...reviewForm, comments: e.target.value })}
                   className="w-full px-3 py-2 rounded-lg border border-border bg-white dark:bg-secondary text-foreground text-xs focus:outline-none focus:ring-2 focus:ring-accent/40 resize-none font-medium"
-                  placeholder="Type your review here..."
-                />
-              </div>
-
-              {/* Disadvantages */}
-              <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-600 dark:text-slate-400">Disadvantages</label>
-                <textarea
-                  rows={2}
-                  value={reviewForm.disadvantages}
-                  onChange={(e) => setReviewForm({ ...reviewForm, disadvantages: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg border border-border bg-white dark:bg-secondary text-foreground text-xs focus:outline-none focus:ring-2 focus:ring-accent/40 resize-none font-medium"
-                  placeholder="Type your review here..."
+                  placeholder="Type your comments here..."
+                  required
                 />
               </div>
 

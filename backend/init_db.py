@@ -17,6 +17,7 @@ from models.booking import BookingModel
 from models.notification import NotificationModel
 from models.room_availability import RoomAvailabilityModel
 from models.gallery import GalleryModel
+from models.review import ReviewModel
 
 def bootstrap_database():
     """Connects to XAMPP MySQL server directly and creates database if missing."""
@@ -286,6 +287,90 @@ def seed_all_tables(reset=False):
             print("Room availabilities seeded.")
         else:
             print("Room availabilities table already populated.")
+
+        # 6. Seed Reviews
+        if ReviewModel.query.count() == 0:
+            print("Seeding reviews...")
+            reviews_data = [
+                {
+                    "reviewer_name": "Ayadural",
+                    "reviewer_email": "ayadural@email.com",
+                    "reviewer_country": "🇸🇬",
+                    "rating": 10,
+                    "rating_text": "Exceptional",
+                    "comments": "Peaceful",
+                    "date_str": "4 June 2026"
+                },
+                {
+                    "reviewer_name": "Vicent",
+                    "reviewer_email": "vicent@email.com",
+                    "reviewer_country": "🇲🇾",
+                    "rating": 10,
+                    "rating_text": "Exceptional",
+                    "comments": "Good",
+                    "date_str": "2 June 2026"
+                },
+                {
+                    "reviewer_name": "Dr. James Anderson",
+                    "reviewer_email": "james.anderson@email.com",
+                    "reviewer_country": "🇬🇧",
+                    "rating": 10,
+                    "rating_text": "Exceptional",
+                    "comments": "The hospitality of the guest house staff was incredible. The environment is perfect for academic work with completely silent zones and fast Wi-Fi. (Disadvantages: Breakfast options could be slightly more diverse.)",
+                    "date_str": "28 May 2026"
+                },
+                {
+                    "reviewer_name": "Sarah Jenkins",
+                    "reviewer_email": "sarah.jenkins@email.com",
+                    "reviewer_country": "🇺🇸",
+                    "rating": 9,
+                    "rating_text": "Wonderful",
+                    "comments": "Very close to Saveetha Dental College, which was ideal for my conference. Clean rooms and helpful concierge desk. (Disadvantages: The water pressure was a bit low on the third floor during peak hours.)",
+                    "date_str": "25 May 2026"
+                },
+                {
+                    "reviewer_name": "Prof. Ramachandran",
+                    "reviewer_email": "ramachandran@email.com",
+                    "reviewer_country": "🇮🇳",
+                    "rating": 10,
+                    "rating_text": "Exceptional",
+                    "comments": "Excellent campus residency! Having dynamic meal plan rates and check-in without registration hassle was a breeze.",
+                    "date_str": "22 May 2026"
+                },
+                {
+                    "reviewer_name": "Hiroshi Tanaka",
+                    "reviewer_email": "hiroshi.tanaka@email.com",
+                    "reviewer_country": "🇯🇵",
+                    "rating": 10,
+                    "rating_text": "Exceptional",
+                    "comments": "The stay was absolutely spectacular. The rooms have a premium aesthetic and excellent workspaces.",
+                    "date_str": "20 May 2026"
+                },
+                {
+                    "reviewer_name": "Prof. Anita Sharma",
+                    "reviewer_email": "anita.sharma@email.com",
+                    "reviewer_country": "🇮🇳",
+                    "rating": 10,
+                    "rating_text": "Exceptional",
+                    "comments": "Clean, quiet, and fully equipped workspaces. Exceeded expectations.",
+                    "date_str": "19 May 2026"
+                }
+            ]
+            for r_data in reviews_data:
+                r = ReviewModel(
+                    reviewer_name=r_data["reviewer_name"],
+                    reviewer_email=r_data["reviewer_email"],
+                    reviewer_country=r_data["reviewer_country"],
+                    rating=r_data["rating"],
+                    rating_text=r_data["rating_text"],
+                    comments=r_data["comments"],
+                    date_str=r_data["date_str"]
+                )
+                db.session.add(r)
+            db.session.commit()
+            print("Reviews seeded.")
+        else:
+            print("Reviews table already populated.")
 
         print("Initialization and seeding complete.")
 
