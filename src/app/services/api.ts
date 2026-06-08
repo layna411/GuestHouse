@@ -129,7 +129,11 @@ export const bookingApi = {
       numberOfGuests: bookingData.numberOfGuests,
       purpose: bookingData.purpose,
       bookedBy: bookingData.bookedBy,
-      status: bookingData.status
+      status: bookingData.status,
+      mealPlan: bookingData.mealPlan,
+      pricePerNight: bookingData.pricePerNight,
+      totalPrice: bookingData.totalPrice,
+      paymentType: bookingData.paymentType
     };
 
     const res = await apiFetch('/api/bookings', {

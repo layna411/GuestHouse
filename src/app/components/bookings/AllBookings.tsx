@@ -169,7 +169,7 @@ export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBookin
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
-                          {booking.status === 'pending' && onConfirmBooking && role === 'staff' && (
+                          {booking.status === 'pending' && onConfirmBooking && (role === 'staff' || role === 'admin') && (
                             <>
                               <Button
                                 variant="ghost"
@@ -318,7 +318,7 @@ export function AllBookings({ bookings, rooms, onCancelBooking, onCompleteBookin
                 <Button variant="outline" onClick={() => setSelectedBooking(null)} className="flex-1">
                   Close
                 </Button>
-                 {selectedBooking.status === 'pending' && onConfirmBooking && role === 'staff' && (
+                 {selectedBooking.status === 'pending' && onConfirmBooking && (role === 'staff' || role === 'admin') && (
                   <>
                     <Button
                       variant="success"

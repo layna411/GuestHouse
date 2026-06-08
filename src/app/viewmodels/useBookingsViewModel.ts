@@ -33,7 +33,7 @@ export function useBookingsViewModel(
   const handleBookingSubmit = async (
     bookingData: Omit<Booking, 'id' | 'createdAt' | 'status' | 'bookedBy'>
   ) => {
-    const userId = currentUserId || 'cust001';
+    const userId = currentUserId || undefined;
     try {
       const newBooking = await bookingApi.create({
         ...bookingData,

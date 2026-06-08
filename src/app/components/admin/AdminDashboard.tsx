@@ -62,7 +62,7 @@ export function AdminDashboard({ rooms, bookings, role }: AdminDashboardProps) {
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Total Rooms</p>
                 <h3 className="text-3xl font-bold text-foreground">{stats.totalRooms}</h3>
-                <p className="text-xs text-muted-foreground mt-2">Across 3 floors</p>
+                <p className="text-xs text-muted-foreground mt-2">Across 2 floors</p>
               </div>
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                 <Building2 className="w-6 h-6 text-primary" />

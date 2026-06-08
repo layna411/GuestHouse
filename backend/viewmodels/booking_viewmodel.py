@@ -65,7 +65,9 @@ class BookingViewModel:
         check_out_str = data.get("checkOut")
         number_of_guests = data.get("numberOfGuests")
         purpose = data.get("purpose", "")
-        booked_by = data.get("bookedBy", "demo")
+        booked_by = data.get("bookedBy")
+        if booked_by == "":
+            booked_by = None
         meal_plan = data.get("mealPlan", "Room without Breakfast")
         price_per_night = data.get("pricePerNight")
         total_price = data.get("totalPrice")
@@ -161,7 +163,7 @@ class BookingViewModel:
         if not initial_status:
             # Fallback logic if status is not explicitly provided in the payload
             from models.user import UserModel
-            user = UserModel.query.get(booked_by)
+            user = UserModel.query.get(booked_by) if booked_by else None
             if user and user.role == "admin":
                 initial_status = "confirmed"
             else:

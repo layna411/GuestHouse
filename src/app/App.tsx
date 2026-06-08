@@ -206,7 +206,7 @@ export default function App() {
           <main className="flex-1 overflow-y-auto">
             <div className="p-4 md:p-8">
               {bookingsVM.bookings.filter(b => b.status === 'pending').length > 0 && 
-                authVM.currentUser.role === 'staff' && (
+                (authVM.currentUser.role === 'staff' || authVM.currentUser.role === 'admin') && (
                 <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-center justify-between text-xs text-amber-300 backdrop-blur-sm shadow-md">
                   <div className="flex items-center gap-3">
                     <span className="flex h-3 w-3 relative">
