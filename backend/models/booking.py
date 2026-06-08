@@ -14,7 +14,7 @@ class BookingModel(db.Model):
     number_of_guests = db.Column(db.Integer, nullable=False)
     purpose = db.Column(db.String(255), nullable=False)
     status = db.Column(db.String(20), nullable=False, default='confirmed')  # 'confirmed', 'pending', 'cancelled', 'completed'
-    booked_by = db.Column(db.String(50), db.ForeignKey('users.id', ondelete='SET NULL'), nullable=True)
+    booked_by = db.Column(db.String(50), nullable=True)
     payment_type = db.Column(db.String(50), nullable=True, default='Direct')  # 'Direct' or 'Department'
     meal_plan = db.Column(db.String(100), nullable=True, default='Room without Breakfast')
     price_per_night = db.Column(db.Numeric(10, 2), nullable=True)

@@ -194,6 +194,34 @@ class BookingViewModel:
             room.status = "booked"
 
         db.session.add(booking)
+        
+        # Save customer details to separate customers table if email is not registered
+        try:
+            from models.customer import CustomerModel
+            import uuid
+            existing_cust = CustomerModel.query.filter_by(email=guest_email).first()
+            if not existing_cust:
+                cust_id = f"cust_{uuid.uuid4().hex[:8]}"
+                new_cust = CustomerModel(
+                    id=cust_id,
+                    name=guest_name,
+                    email=guest_email,
+                    phone=guest_phone
+                )
+                db.session.add(new_cust)
+                # Keep booked_by linked to customer id if booked directly by customer
+                if not booked_by:
+                    booking.booked_by = cust_id
+            else:
+                # If they already exist, we can update their details
+                existing_cust.name = guest_name
+                if guest_phone:
+                    existing_cust.phone = guest_phone
+                if not booked_by:
+                    booking.booked_by = existing_cust.id
+        except Exception as ce:
+            print(f"Error auto-saving guest details to customers table: {ce}")
+
         db.session.flush() # Flush to populate booking ID
 
         # Create notification for admin
@@ -210,6 +238,17 @@ class BookingViewModel:
         )
         db.session.add(notification)
         db.session.commit()
+
+        # Send Email notification via Resend
+        try:
+            from utils.email import send_booking_pending_email, send_booking_confirmed_email
+            if booking.status == "pending":
+                send_booking_pending_email(booking)
+            elif booking.status == "confirmed":
+                send_booking_confirmed_email(booking)
+        except Exception as e:
+            print(f"Error triggering email upon booking creation: {e}")
+
         return cls.to_dict(booking)
 
     @classmethod
@@ -308,5 +347,13 @@ class BookingViewModel:
             room.status = "booked"
 
         db.session.commit()
+
+        # Send Confirmation Email via Resend
+        try:
+            from utils.email import send_booking_confirmed_email
+            send_booking_confirmed_email(booking)
+        except Exception as e:
+            print(f"Error triggering confirmation email: {e}")
+
         return cls.to_dict(booking)
 

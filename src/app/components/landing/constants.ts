@@ -102,6 +102,9 @@ export const GALLERY_IMAGES = [
   '/images/super_deluxe_room.jpeg',
   '/images/lounge_sitting.jpeg',
   '/images/suite_balcony.jpeg',
+  '/images/dining_hall_2.jpeg',
+  '/images/main_entrance.jpeg',
+  '/images/elevator_lobby.jpeg',
 ];
 
 export const ALL_FACILITIES = [

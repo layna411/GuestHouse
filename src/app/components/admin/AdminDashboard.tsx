@@ -38,13 +38,33 @@ export function AdminDashboard({ rooms, bookings, role }: AdminDashboardProps) {
     { name: 'Maintenance', value: stats.maintenanceRooms, color: '#f59e0b' },
   ];
 
-  const monthlyData = [
-    { month: 'Jan', bookings: 12 },
-    { month: 'Feb', bookings: 19 },
-    { month: 'Mar', bookings: 15 },
-    { month: 'Apr', bookings: 22 },
-    { month: 'May', bookings: bookings.length },
-  ];
+  const monthsOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthlyCounts: Record<string, number> = {};
+  monthsOrder.forEach(m => {
+    monthlyCounts[m] = 0;
+  });
+
+  bookings.forEach(b => {
+    try {
+      const date = b.checkIn instanceof Date ? b.checkIn : new Date(b.checkIn);
+      if (!isNaN(date.getTime())) {
+        const monthName = format(date, 'MMM');
+        if (monthName in monthlyCounts) {
+          monthlyCounts[monthName]++;
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  });
+
+  const currentMonthIdx = new Date().getMonth();
+  const monthlyData = monthsOrder
+    .map(month => ({
+      month,
+      bookings: monthlyCounts[month]
+    }))
+    .filter((d, idx) => idx <= currentMonthIdx || d.bookings > 0);
 
   return (
     <div className="space-y-6">

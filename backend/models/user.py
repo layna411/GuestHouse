@@ -15,7 +15,13 @@ class UserModel(db.Model):
 
     # Relationships
     # Backref for bookings made by this user
-    bookings = db.relationship('BookingModel', backref='booker', lazy=True)
+    bookings = db.relationship(
+        'BookingModel',
+        primaryjoin='UserModel.id == BookingModel.booked_by',
+        foreign_keys='[BookingModel.booked_by]',
+        backref='booker',
+        lazy=True
+    )
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

@@ -18,6 +18,7 @@ from models.notification import NotificationModel
 from models.room_availability import RoomAvailabilityModel
 from models.gallery import GalleryModel
 from models.review import ReviewModel
+from models.customer import CustomerModel
 
 def bootstrap_database():
     """Connects to XAMPP MySQL server directly and creates database if missing."""
@@ -236,34 +237,36 @@ def seed_all_tables(reset=False):
             print("Bookings table already populated.")
 
         # 4. Seed Gallery Table
-        if GalleryModel.query.count() == 0:
-            print("Seeding gallery...")
-            default_gallery = [
-                '/images/lobby_entrance.jpeg',
-                '/images/premium_lounge.jpeg',
-                '/images/facade.jpeg',
-                '/images/exterior_night.jpeg',
-                '/images/swimming_pool.jpeg',
-                '/images/lobby_view.jpeg',
-                '/images/dining_hall.jpeg',
-                '/images/room_suite.jpeg',
-                '/images/bed_detail.jpeg',
-                '/images/bathroom.jpeg',
-                '/images/deluxe_room.jpeg',
-                '/images/room_corner.jpeg',
-                '/images/conference_room.jpeg',
-                '/images/gym.jpeg',
-                '/images/super_deluxe_room.jpeg',
-                '/images/lounge_sitting.jpeg',
-                '/images/suite_balcony.jpeg'
-            ]
-            for img in default_gallery:
+        print("Seeding/validating gallery...")
+        default_gallery = [
+            '/images/lobby_entrance.jpeg',
+            '/images/premium_lounge.jpeg',
+            '/images/facade.jpeg',
+            '/images/exterior_night.jpeg',
+            '/images/swimming_pool.jpeg',
+            '/images/lobby_view.jpeg',
+            '/images/dining_hall.jpeg',
+            '/images/room_suite.jpeg',
+            '/images/bed_detail.jpeg',
+            '/images/bathroom.jpeg',
+            '/images/deluxe_room.jpeg',
+            '/images/room_corner.jpeg',
+            '/images/conference_room.jpeg',
+            '/images/gym.jpeg',
+            '/images/super_deluxe_room.jpeg',
+            '/images/lounge_sitting.jpeg',
+            '/images/suite_balcony.jpeg',
+            '/images/dining_hall_2.jpeg',
+            '/images/main_entrance.jpeg',
+            '/images/elevator_lobby.jpeg'
+        ]
+        for img in default_gallery:
+            g = GalleryModel.query.filter_by(image_url=img).first()
+            if not g:
                 g = GalleryModel(image_url=img, caption="Saveetha Showcase Photo")
                 db.session.add(g)
-            db.session.commit()
-            print("Gallery seeded.")
-        else:
-            print("Gallery table already populated.")
+        db.session.commit()
+        print("Gallery seeded/validated.")
 
         # 5. Seed RoomAvailability (Excel override matching)
         if RoomAvailabilityModel.query.count() == 0:
@@ -380,7 +383,8 @@ if __name__ == "__main__":
     print("="*60)
     try:
         bootstrap_database()
-        seed_all_tables(reset=True)
+        # Do not drop tables by default, only create missing tables and seed them if empty
+        seed_all_tables(reset=False)
         print("="*60)
         print("Database successfully configured!")
         print("You can now run app.py to start the GuestHouse server.")
