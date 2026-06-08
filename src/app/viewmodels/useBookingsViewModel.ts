@@ -27,7 +27,12 @@ export function useBookingsViewModel(
   };
 
   useEffect(() => {
+    if (!currentUserId || !currentUserRole) return;
     fetchBookings();
+    
+    // Set up short polling for real-time bookings updates (every 3 seconds)
+    const interval = setInterval(fetchBookings, 3000);
+    return () => clearInterval(interval);
   }, [currentUserId, currentUserRole]);
 
   const handleBookingSubmit = async (

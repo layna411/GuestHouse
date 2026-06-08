@@ -21,6 +21,10 @@ export function useRoomsViewModel() {
 
   useEffect(() => {
     fetchRooms();
+    
+    // Set up short polling for real-time rooms updates (every 3 seconds)
+    const interval = setInterval(fetchRooms, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleAddRoom = async (roomData: Omit<Room, 'id'>) => {

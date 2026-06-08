@@ -22,8 +22,8 @@ export function useNotificationsViewModel(currentUserRole?: string) {
   useEffect(() => {
     if (currentUserRole === 'admin' || currentUserRole === 'staff') {
       fetchNotifications();
-      // Set up simple polling for real-time updates (every 10 seconds)
-      const interval = setInterval(fetchNotifications, 10000);
+      // Set up simple polling for real-time updates (every 3 seconds)
+      const interval = setInterval(fetchNotifications, 3000);
       return () => clearInterval(interval);
     }
   }, [currentUserRole]);

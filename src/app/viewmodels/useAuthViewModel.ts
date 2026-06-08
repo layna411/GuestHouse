@@ -6,9 +6,26 @@ import { toast } from 'sonner';
 type AppState = 'login' | 'dashboard' | 'landing-page';
 
 export function useAuthViewModel() {
-  const [appState, setAppState] = useState<AppState>('landing-page');
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    const saved = localStorage.getItem('currentUser');
+    try {
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
+
+  const [appState, setAppState] = useState<AppState>(() => {
+    const saved = localStorage.getItem('appState') as AppState;
+    return saved ? saved : 'landing-page';
+  });
+
   const [loading, setLoading] = useState(false);
+
+  const handleSetAppState = (state: AppState) => {
+    setAppState(state);
+    localStorage.setItem('appState', state);
+  };
 
   const handleLogin = async (email: string, password_hash: string) => {
     setLoading(true);
@@ -18,7 +35,8 @@ export function useAuthViewModel() {
         password_hash
       });
       setCurrentUser(user);
-      setAppState('dashboard');
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      handleSetAppState('dashboard');
       toast.success(`Welcome back, ${user.name}!`);
     } catch (err: any) {
       toast.error(err.message || 'Login failed. Please try again.');
@@ -29,7 +47,8 @@ export function useAuthViewModel() {
 
   const handleLogout = () => {
     setCurrentUser(null);
-    setAppState('landing-page');
+    localStorage.removeItem('currentUser');
+    handleSetAppState('landing-page');
     toast.success('Logged out successfully');
   };
 
@@ -42,6 +61,7 @@ export function useAuthViewModel() {
         id: currentUser.id
       });
       setCurrentUser(updatedUser);
+      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
       toast.success('Profile updated successfully!');
     } catch (err: any) {
       toast.error(err.message || 'Failed to update profile.');
@@ -57,6 +77,6 @@ export function useAuthViewModel() {
     handleLogin,
     handleLogout,
     handleUpdateProfile,
-    setAppState
+    setAppState: handleSetAppState
   };
 }
