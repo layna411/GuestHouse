@@ -33,7 +33,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://contest-scolding-karma.ngrok-free.dev',
+        target: 'http://180.235.121.245:8080',
         changeOrigin: true,
       },
     },
